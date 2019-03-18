@@ -21,6 +21,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019031500;
+$plugin->version = 2019031502;
 $plugin->requires = 2018051700; // Moodle 3.5.0.
 $plugin->component = 'block_course_checker';

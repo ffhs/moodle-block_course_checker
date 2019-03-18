@@ -28,7 +28,18 @@ class block_course_checker extends block_base {
     public function init() {
         $this->title = get_string('pluginname', 'block_course_checker');
         $this->content_type = BLOCK_TYPE_TEXT;
+    }
 
+    /**
+     * @return bool
+     */
+    public function instance_create()
+    {
+        if (has_capability('block/course_checker:addinstance', $this->context)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -36,17 +47,20 @@ class block_course_checker extends block_base {
      */
     public function get_content() {
         global $COURSE;
-        if ($this->content !== null) {
+        if (has_capability('moodle/course:update', $this->context)) {
+            if ($this->content !== null) {
+                return $this->content;
+            }
+            $this->content = new \stdClass();
+
+            // This is a test output.
+            $this->content->text = 'Work in progress ' . $this->title;
+            $this->content->text .= '<br><pre>' . $this->run_checks($COURSE) . '</pre>';
+            $this->content->footer = date("Y");
+
             return $this->content;
         }
-        $this->content = new \stdClass();
-
-        // This is a test output.
-        $this->content->text = 'Work in progress ' . $this->title;
-        $this->content->text .= '<br><pre>'.$this->run_checks($COURSE).'</pre>';
-        $this->content->footer = date("Y");
-
-        return $this->content;
+        return null;
     }
 
     /**

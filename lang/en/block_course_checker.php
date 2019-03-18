@@ -22,3 +22,4 @@
 $string['course_checker.php:addinstance'] = 'Add a new course checker block';
 $string['pluginname'] = 'FFHS Course Checker';
 $string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
+$string['course_checker:addinstance'] = 'Course checker create';
