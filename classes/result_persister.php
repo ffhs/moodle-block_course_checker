@@ -27,35 +27,78 @@ use block_course_checker\model\check_manager_persister_interface;
 use block_course_checker\model\check_result_interface;
 
 class result_persister implements check_manager_persister_interface {
-
     /**
-     * @param check_result_interface[] $checks
-     * @return void
+     * @param $record \stdClass
+     * @param array|check_result_interface[] $checkresults
+     * @return \stdClass
      */
-    public function save_checks($courseid, $checks, array $data = []) {
-        global $DB;
-        foreach ($checks as $pluginname => $result) {
-            $this->assert_checks($checks);
-        }
+    private static function encode($record, $checkresults) {
 
-        $playload = [];
-        foreach ($checks as $pluginname => $result) {
+        foreach ($checkresults as $pluginname => $result) {
             $playload[$pluginname] = [
                     "successful" => $result->is_successful(),
                     "details" => $result->get_details(),
                     "link" => $result->get_link()
             ];
         }
-
-        $record = new \stdclass();
-        $record->course_id = is_object($courseid) ? $courseid->id : $courseid;
-        $record->date = date("U");
         $record->result = json_encode($playload);
+
+        return $record;
+    }
+
+    /**
+     * @param $record
+     * @return array
+     */
+    private static function decode($record) {
+        $response = [];
+        $result = json_decode($record->result, true);
+        foreach ($result as $pluginname => $payload) {
+            $result = new check_result();
+            $result
+                ->set_details($payload["details"])
+                ->set_link($payload["link"])
+                ->set_successful($payload["successful"]);
+            $response[$pluginname] = $result;
+        }
+        $record->result = $response;
+
+        return $record;
+    }
+
+    /**
+     * @param $courseid
+     * @param check_result_interface[] $checkresults
+     * @param array $data
+     * @return mixed record
+     */
+    public function save_checks($courseid, $checkresults, array $data = []) {
+        global $DB;
+        foreach ($checkresults as $pluginname => $result) {
+            $this->assert_checks($pluginname, $result);
+        }
+
+        $record = $DB->get_record("block_course_checker", ["course_id" => $courseid]);
+        $isnew = !$record;
+        if ($isnew) {
+            $record = new \stdClass();
+            $record->course_id = $courseid;
+        }
+        $record = self::encode($record, $checkresults);
+
         foreach ($data as $key => $value) {
             $record->${$key} = $value;
         }
+        $record->timestamp = date("U");
 
-        return $DB->insert_record("block_course_checker", $record);
+        // TODO Handle errors.
+        if ($isnew) {
+            $DB->insert_record("block_course_checker", $record);
+        } else {
+            $DB->update_record("block_course_checker", $record);
+        }
+
+        return self::decode($record);
     }
 
     /**
@@ -66,25 +109,21 @@ class result_persister implements check_manager_persister_interface {
         global $DB;
         $record = $DB->get_record("block_course_checker", ["course_id" => $courseid]);
         if (!$record) {
-            return null;
+            return [];
         }
-
-        $record->result = json_decode($record->result);
-        $response = [];
-        foreach ($record->result as $pluginname => $payload) {
-            $result = new check_result();
-            $result->set_details($payload["details"])
-                    ->set_link($payload["link"])
-                    ->set_successful($payload["link"]);
-            $response[$pluginname] = $result;
-        }
-        $record->result = $response;
-        return (array)$response;
+        $record = self::decode($record);
+        return (array) $record;
     }
 
-    private function assert_checks($check) {
-        if (!$check instanceof check_result_interface) {
-            throw new \RuntimeException("Object must be an instance of " . check_result_interface::class);
+    /**
+     * Check that the checkresult is an instance of check_result_interface
+     *
+     * @param $checkresult
+     */
+    private function assert_checks($pluginname, $checkresult) {
+        if (!$checkresult instanceof check_result_interface) {
+            throw new \RuntimeException(sprintf("Result for %s must be an instance of %s, got %s", $pluginname,
+                    check_result_interface::class, get_class($checkresult)));
         }
     }
 }

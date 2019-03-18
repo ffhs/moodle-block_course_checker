@@ -13,12 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This file contains the course_checker modules block.
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
+
+use block_course_checker\result_persister;
+
 defined('MOODLE_INTERNAL') || die();
 
 class block_course_checker extends block_base {
@@ -56,10 +60,28 @@ class block_course_checker extends block_base {
         ob_start();
 
         // Run the checks with an output buffer.
-        $checks = $this->run_checks($COURSE);
+        $persister = new result_persister();
+        $loadedchecks = $persister->load_last_checks($COURSE->id);
+        if ($loadedchecks != []) {
+            $checks = $loadedchecks["result"];
+            $rundate = $loadedchecks['timestamp'];
+            $human = $loadedchecks['manual_date'];
+        } else {
+            $rundate = null;
+            $human = null;
+        }
+
+        // TODO Don't necessary run tests, just display the result.
+        if (true) {
+            $checks = $this->run_checks($COURSE);
+            $persister->save_checks($COURSE->id, $checks);
+        }
+
+        // Render the checks results.
+        $this->content->text = $this->render_checks($checks);
 
         // TODO Remove this useless if when debug is over.
-        if (false) {
+        if (true) {
             $output = ob_get_contents();
             if (!empty($output) && debugging()) {
                 $this->content->text .= $output;
@@ -67,18 +89,13 @@ class block_course_checker extends block_base {
             ob_end_clean();
         }
 
-        // Render the checks results.
-        $this->content->text = $this->render_checks($checks);
-
-        $rundate = date('d.m.Y - H:i');
-
         /** @var \block_course_checker\output\block_renderer_footer $footerrenderer */
         $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
         $this->content->footer = $footerrenderer->renderer([
-            'automaticcheck' => $rundate,
-            'humancheck' => $rundate, // TODO: Change me after DB saving
-            'automaticcheckstring' => get_string('automaticcheck', 'block_course_checker'),
-            'humancheckstring' => get_string('humancheck', 'block_course_checker')
+                'automaticcheck' => $rundate,
+                'humancheck' => $human,
+                'automaticcheckstring' => get_string('automaticcheck', 'block_course_checker'),
+                'humancheckstring' => get_string('humancheck', 'block_course_checker')
         ]);
 
         return $this->content;

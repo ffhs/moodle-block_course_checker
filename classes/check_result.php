@@ -102,7 +102,7 @@ class check_result implements check_result_interface {
      * @param bool $value
      * @return check_result
      */
-    public function set_successful(bool $value){
+    public function set_successful(bool $value) {
         $this->successful = $value;
 
         return $this;

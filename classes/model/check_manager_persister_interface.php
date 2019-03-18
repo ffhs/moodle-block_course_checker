@@ -33,12 +33,12 @@ interface check_manager_persister_interface {
 
     /**
      * @param int $courseid
-     * @param check_result_interface[] $checks
+     * @param check_result_interface[] $checkresults
      *
      * @param array $data
      * @return void
      */
-    public function save_checks($courseid, $checks, array $data = []);
+    public function save_checks($courseid, $checkresults, array $data = []);
 
     /**
      * @param int $courseid
