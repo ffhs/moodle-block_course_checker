@@ -18,26 +18,31 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_course_checker\model;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Goal is to persist/load tests results for all checks in a specific course.
+ * TODO Improve this.
  *
  * @package block_course_checker\model
  */
-interface check_manager_persister_interface{
-
-    /**
-     * @param check_result_interface|array $checks
-     * @return void
-     */
-    public function save_checks(array $checks);
+interface check_manager_persister_interface {
 
     /**
      * @param int $courseid
-     * @return check_result_interface[]
+     * @param check_result_interface[] $checks
+     *
+     * @param array $data
+     * @return void
+     */
+    public function save_checks($courseid, $checks, array $data = []);
+
+    /**
+     * @param int $courseid
+     * @return mixed record with check_result_interface[] inside result key
      */
     public function load_last_checks(int $courseid): array;
 

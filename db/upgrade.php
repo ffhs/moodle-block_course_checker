@@ -14,13 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Version details
- *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019031504;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+/**
+ * Upgrade the badges block
+ *
+ * @param int $oldversion
+ */
+function xmldb_block_course_checker_upgrade($oldversion) {
+    global $DB, $CFG;
+    $file = $CFG->dirroot . '/blocks/course_checker/db/install.xml';
+
+    if (!$oldversion) {
+        return true;
+    }
+
+    if (intval($oldversion) < 2019031504) {
+        $tableexists = $DB->get_manager()->table_exists('block_course_checker');
+        if (!$tableexists) {
+            $DB->get_manager()->install_from_xmldb_file($file);
+        }
+    }
+    return true;
+}

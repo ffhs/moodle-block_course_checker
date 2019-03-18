@@ -99,6 +99,16 @@ class check_result implements check_result_interface {
     }
 
     /**
+     * @param bool $value
+     * @return check_result
+     */
+    public function set_successful(bool $value){
+        $this->successful = $value;
+
+        return $this;
+    }
+
+    /**
      * Function to export the renderer data in a format that is suitable for a
      * mustache template. This means:
      * 1. No complex types - only stdClass, array, int, string, float, bool
