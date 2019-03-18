@@ -41,7 +41,7 @@ class block_course_checker extends block_base {
      * @return string
      */
     public function get_content() {
-        global $COURSE;
+        global $COURSE, $PAGE;
         if (!has_capability('moodle/course:update', $this->context)) {
             return null;
         }
@@ -54,7 +54,6 @@ class block_course_checker extends block_base {
 
         // This is a test output.
         $this->content->text = 'Work in progress ' . $this->title;
-        $this->content->footer = date("Y");
 
         // TODO Remove ob_start.
         ob_start();
@@ -73,6 +72,18 @@ class block_course_checker extends block_base {
 
         // Render the checks results.
         $this->content->text .= $this->render_checks($checks);
+
+        $rundate = date('d.m.Y - H:i');
+
+        /** @var \block_course_checker\output\block_renderer_footer $footerRenderer */
+        $footerRenderer = $PAGE->get_renderer('block_course_checker', "footer");
+
+        $this->content->footer = $footerRenderer->renderer([
+            'automaticcheck' => $rundate,
+            'humancheck' => $rundate, // TODO: Change me after DB saving
+            'automaticcheckstring' => get_string('automaticcheck', 'block_course_checker'),
+            'humancheckstring' => get_string('humancheck', 'block_course_checker')
+        ]);
 
         return $this->content;
     }

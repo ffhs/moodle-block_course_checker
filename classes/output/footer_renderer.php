@@ -13,15 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Strings for component 'block_course_checker'.
- *
- * @package   block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- */
-$string['course_checker.php:addinstance'] = 'Add a new course checker block';
-$string['pluginname'] = 'FFHS Course Checker';
-$string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
-$string['course_checker:addinstance'] = 'Course checker create';
-$string['automaticcheck'] = 'Last automatic check';
-$string['humancheck'] = 'Last manual check';
+namespace block_course_checker\output;
+defined('MOODLE_INTERNAL') || die();
+
+class footer_renderer extends \plugin_renderer_base {
+    public function renderer($context) {
+        return $this->render_from_template("block_course_checker/footer", $context);
+    }
+}
