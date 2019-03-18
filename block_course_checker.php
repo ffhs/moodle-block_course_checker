@@ -52,9 +52,6 @@ class block_course_checker extends block_base {
 
         $this->content = new \stdClass();
 
-        // This is a test output.
-        $this->content->text = 'Work in progress ' . $this->title;
-
         // TODO Remove ob_start.
         ob_start();
 
@@ -62,7 +59,7 @@ class block_course_checker extends block_base {
         $checks = $this->run_checks($COURSE);
 
         // TODO Remove this useless if when debug is over.
-        if (true) {
+        if (false) {
             $output = ob_get_contents();
             if (!empty($output) && debugging()) {
                 $this->content->text .= $output;
@@ -71,14 +68,13 @@ class block_course_checker extends block_base {
         }
 
         // Render the checks results.
-        $this->content->text .= $this->render_checks($checks);
+        $this->content->text = $this->render_checks($checks);
 
         $rundate = date('d.m.Y - H:i');
 
-        /** @var \block_course_checker\output\block_renderer_footer $footerRenderer */
-        $footerRenderer = $PAGE->get_renderer('block_course_checker', "footer");
-
-        $this->content->footer = $footerRenderer->renderer([
+        /** @var \block_course_checker\output\block_renderer_footer $footerrenderer */
+        $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
+        $this->content->footer = $footerrenderer->renderer([
             'automaticcheck' => $rundate,
             'humancheck' => $rundate, // TODO: Change me after DB saving
             'automaticcheckstring' => get_string('automaticcheck', 'block_course_checker'),

@@ -1,10 +1,20 @@
-<h1>TEST RESULTS</h1>
+<style>
+    hr {
+        border-top: 1px solid rgba(0,0,0,.1) !important;
+    }
+</style>
+
+<h2 class="text-muted">TEST RESULTS</h2>
 
 {{#results}}
-    <h2>{{{name}}}</h2>
-    {{{result}}}
+    <hr>
+    <div class="mt-2">
+        <h3>{{{name}}}</h3>
+        {{{result}}}
+    </div>
 {{/results}}
 
 {{^results}}
     No results yet
 {{/results}}
+<hr>

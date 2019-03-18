@@ -29,14 +29,42 @@ class renderer extends \block_course_checker\abstract_plugin_renderer {
      * @return string
      */
     public function render_for_block(check_result_interface $result): string {
-        ob_start();
+        $render = '';
+        $resultDetail = $result->get_details();
+        $link = $result->get_link();
+        if (false) {
+            ob_start();
+            // TODO. Render a template or something nicer that a var_dump.
+            var_dump($result);
+            $result = ob_get_contents();
+            ob_end_clean();
+            return $result;
+        }
 
-        // TODO. Render a template or something nicer that a var_dump.
-        var_dump($result);
+        if ($result->is_successful()) {
+            $render .= '<h4 class="text-success">Success</h4>';
+            $render .= '<div class="table-responsive">';
+            $render .= '<table class="table">';
+            $render .= '<thead><tr>';
+            $render .= '<th scope="col">Result</th><th scope="col">Message</th><th scope="col">Link</th>';
+            $render .= '</thead></tr>';
+            $render .= '<tbody>';
+            foreach ($resultDetail as $index => $detail) {
+                $render .= '<tr>';
+                $render .= '<td>'. $detail['successful'] . '</td>';
+                $render .= '<td>'. $detail['message'] . '</td>';
+                $render .= '<td>'. $detail['link'] . '</td>';
+                $render .= '</tr>';
+            }
+            $render .= '</tbody>';
+            $render .= '</table>';
+            $render .= '</div>';
+        }
+        else {
+            $render .= '<h4 class="text-warning">Failure</h4>';
+        }
 
-        $result = ob_get_contents();
-        ob_end_clean();
-        return $result;
+        return $render;
     }
 
     /**
