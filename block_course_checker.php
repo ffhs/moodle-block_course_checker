@@ -33,13 +33,8 @@ class block_course_checker extends block_base {
     /**
      * @return bool
      */
-    public function instance_create()
-    {
-        if (has_capability('block/course_checker:addinstance', $this->context)) {
-            return true;
-        }
-
-        return false;
+    public function instance_create() {
+        return has_capability('block/course_checker:addinstance', $this->context);
     }
 
     /**
@@ -47,7 +42,7 @@ class block_course_checker extends block_base {
      */
     public function get_content() {
         global $COURSE;
-        if (! has_capability('moodle/course:update', $this->context)) {
+        if (!has_capability('moodle/course:update', $this->context)) {
             return null;
         }
 

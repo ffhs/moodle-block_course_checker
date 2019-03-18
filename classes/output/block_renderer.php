@@ -13,7 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-namespace block_course_checker;
+namespace block_course_checker\output;
 defined('MOODLE_INTERNAL') || die();
 
 class block_renderer extends \plugin_renderer_base {
