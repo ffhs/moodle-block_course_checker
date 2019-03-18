@@ -35,12 +35,17 @@ class block_course_checker extends block_base {
      * @return string
      */
     public function get_content() {
+        global $COURSE;
         if ($this->content !== null) {
             return $this->content;
         }
         $this->content = new \stdClass();
+
+        // This is a test output.
         $this->content->text = 'Work in progress ' . $this->title;
+        $this->content->text .= '<br><pre>'.$this->run_checks($COURSE).'</pre>';
         $this->content->footer = date("Y");
+
         return $this->content;
     }
 
@@ -49,6 +54,22 @@ class block_course_checker extends block_base {
      */
     public function has_config() {
         return false;
+    }
+
+    /**
+     * Run checks and var dump the results.
+     * @param $COURSE
+     * @return false|string
+     */
+    protected function run_checks($COURSE) {
+        // This is a test to output each checker results.
+        $manager = \block_course_checker\plugin_manager::instance();
+        ob_start();
+        $results = $manager->run_checks($COURSE);
+        var_dump($results);
+        $output = ob_get_contents();
+        ob_end_clean();
+        return $output;
     }
 
     /**
