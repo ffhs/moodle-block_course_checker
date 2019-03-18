@@ -23,17 +23,17 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
+    'block/course_checker:addinstance' => array(
+            'riskbitmask' => RISK_SPAM | RISK_XSS,
 
-        'block/course_checker:addinstance' => array(
-                'riskbitmask' => RISK_SPAM | RISK_XSS,
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_BLOCK,
+            'archetypes' => array(
+                'editingteacher' => CAP_ALLOW,
+                'manager' => CAP_ALLOW,
+                'student' => CAP_PROHIBIT
+            ),
 
-                'captype' => 'write',
-                'contextlevel' => CONTEXT_BLOCK,
-                'archetypes' => array(
-                        'editingteacher' => CAP_ALLOW,
-                        'manager' => CAP_ALLOW
-                ),
-
-                'clonepermissionsfrom' => 'moodle/site:manageblocks'
-        ),
+            'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    )
 );
