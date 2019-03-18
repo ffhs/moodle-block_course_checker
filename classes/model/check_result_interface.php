@@ -24,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Interface that every check must implement.
  */
-interface check_result_interface{
+interface check_result_interface extends \renderable, \templatable{
 
     /**
      * Tels if the check pass successfully or not

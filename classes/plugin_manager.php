@@ -18,6 +18,7 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_course_checker;
 
 defined('MOODLE_INTERNAL') || die();
@@ -30,9 +31,10 @@ class plugin_manager implements check_manager_interface {
 
     const PLUGIN_FILE = 'checker.php';
     const PLUGIN_OUTPUT_FILE = 'renderer.php';
-    const PLUGIN_INTERFACE = 'block_course_checker\model\check_plugin_interface';
+    const PLUGIN_INTERFACE = 'block_course_checker\\model\\check_plugin_interface';
     const PLUGIN_TYPE = "checker";
-    const PLUGIN_CLASS = "block_course_checker\checkers\%s\checker";
+    const PLUGIN_CLASS = "block_course_checker\checkers\\%s\\checker";
+    const PLUGIN_OUTPUT_CLASS = "block_course_checker\\checkers\\%s\\renderer";
 
     /**
      * A singleton instance of this class.
@@ -75,7 +77,7 @@ class plugin_manager implements check_manager_interface {
         if (!empty($plugins)) {
             return $plugins;
         }
-        $pluginroot = __DIR__ . "/checkers";
+        $pluginroot = $this->get_checkers_folders();
 
         // Check that directory exists.
         if (!is_dir($pluginroot)) {
@@ -89,26 +91,48 @@ class plugin_manager implements check_manager_interface {
             if ($item->isDot() or !$item->isDir()) {
                 continue;
             }
-            $checkername = $item->getFilename();
-            $filelocation = $pluginroot . "/" . $checkername . "/" . self::PLUGIN_FILE;
+            $pluginname = $item->getFilename();
+            $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_FILE;
             if (false === file_exists($filelocation)) {
-                debugging(sprintf("Checker %s has a missing file: %s", $checkername, $filelocation));
+                debugging(sprintf("Checker %s has a missing file: %s", $pluginname, $filelocation));
                 continue;
             }
 
-            $classname = sprintf(self::PLUGIN_CLASS, $checkername);
-            if (! class_exists($classname, true)) {
+            $classname = sprintf(self::PLUGIN_CLASS, $pluginname);
+            if (!class_exists($classname, true)) {
+                debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
+
                 continue;
             }
             // Instantiate the plugin.
-            $plugins[$checkername] = new $classname();
+            $plugins[$pluginname] = new $classname();
         }
 
         return $plugins;
     }
 
-    protected function get_renderer($pluginname) {
+    /**
+     * Get the plugin renderer for a specific check
+     *
+     * @param string $pluginname plugin name
+     * @return abstract_plugin_renderer|null
+     */
+    public function get_renderer($pluginname) {
+        global $PAGE;
+        $pluginroot = $this->get_checkers_folders();
+        $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_OUTPUT_FILE;
+        if (false === file_exists($filelocation)) {
+            debugging(sprintf("Checker %s has a missing renderer file: %s", $pluginname, $filelocation));
+            return null;
+        }
 
+        $classname = sprintf(self::PLUGIN_OUTPUT_CLASS, $pluginname);
+        if (!class_exists($classname, true)) {
+            debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
+            return null;
+        }
+
+        return new $classname($PAGE, RENDERER_TARGET_GENERAL);
     }
 
     /**
@@ -121,5 +145,14 @@ class plugin_manager implements check_manager_interface {
             $results[$pluginname] = $plugin->run($course);
         }
         return $results;
+    }
+
+    /**
+     * Get the folder where checkers must be located.
+     *
+     * @return string
+     */
+    private function get_checkers_folders() {
+        return __DIR__ . "/checkers";
     }
 }

@@ -28,11 +28,11 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      */
     public function run($course) {
         return (new check_result())->add_detail([
-                "successfull" => true,
-                "message" => "this is a successfull test",
+                "successful" => true,
+                "message" => "this is a successful test",
                 "link" => "https://success.example.com"
         ])->add_detail([
-                "successfull" => false,
+                "successful" => false,
                 "message" => "this is failed test",
                 "link" => "https://failed.example.com"
         ]);

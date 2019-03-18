@@ -43,8 +43,25 @@ class block_course_checker extends block_base {
 
         // This is a test output.
         $this->content->text = 'Work in progress ' . $this->title;
-        $this->content->text .= '<br><pre>'.$this->run_checks($COURSE).'</pre>';
         $this->content->footer = date("Y");
+
+        // TODO Remove ob_start.
+        ob_start();
+
+        // Run the checks with an output buffer.
+        $checks = $this->run_checks($COURSE);
+
+        // TODO Remove this useless if when debug is over.
+        if (true) {
+            $output = ob_get_contents();
+            if (!empty($output) && debugging()) {
+                $this->content->text .= $output;
+            }
+            ob_end_clean();
+        }
+
+        // Render the checks results.
+        $this->content->text .= $this->render_checks($checks);
 
         return $this->content;
     }
@@ -58,18 +75,38 @@ class block_course_checker extends block_base {
 
     /**
      * Run checks and var dump the results.
+     *
      * @param $COURSE
-     * @return false|string
+     * @return \block_course_checker\check_result[]
      */
     protected function run_checks($COURSE) {
         // This is a test to output each checker results.
         $manager = \block_course_checker\plugin_manager::instance();
-        ob_start();
-        $results = $manager->run_checks($COURSE);
-        var_dump($results);
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
+        return $manager->run_checks($COURSE);
+    }
+
+    /**
+     * @param $results
+     * @return mixed
+     */
+    protected function render_checks($results) {
+        global $PAGE;
+
+        // Render each check result with the dedicated render for this plugin.
+        $manager = \block_course_checker\plugin_manager::instance();
+        $htmlresults = [];
+        foreach ($results as $pluginname => $result) {
+            $htmlresults[] = [
+                    "name" => $pluginname,
+                    "result" => $manager->get_renderer($pluginname)->render_for_block($result)
+            ];
+        }
+
+        /** @var \block_course_checker\output\block_renderer $renderer */
+        $renderer = $PAGE->get_renderer("block_course_checker", "block");
+        return $renderer->renderer([
+                "results" => $htmlresults
+        ]);
     }
 
     /**

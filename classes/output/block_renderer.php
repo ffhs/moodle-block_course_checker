@@ -14,17 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace block_course_checker;
-
-use block_course_checker\model\check_result_interface;
-
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Class abstract_plugin_renderer
- *
- * @package block_course_checker
- */
-abstract class abstract_plugin_renderer extends \plugin_renderer_base {
-    abstract public function render_for_block(check_result_interface $result): string;
-    abstract public function render_for_page(check_result_interface $result): string;
+class block_renderer extends \plugin_renderer_base {
+    public function renderer($context) {
+        return $this->render_from_template("block_course_checker/block", $context);
+    }
 }

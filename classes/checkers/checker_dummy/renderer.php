@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace block_course_checker\checkers;
+namespace block_course_checker\checkers\checker_dummy;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -22,11 +22,30 @@ use block_course_checker\model\check_result_interface;
 
 class renderer extends \block_course_checker\abstract_plugin_renderer {
 
-    public function render_block(check_result_interface $result): string {
-        return "This is the output for a block";
+    /**
+     * Output a check_result for inside the block
+     *
+     * @param check_result_interface $result
+     * @return string
+     */
+    public function render_for_block(check_result_interface $result): string {
+        ob_start();
+
+        // TODO. Render a template or something nicer that a var_dump.
+        var_dump($result);
+
+        $result = ob_get_contents();
+        ob_end_clean();
+        return $result;
     }
 
-    public function render_pager(check_result_interface $result): string {
+    /**
+     * Output a check_result for inside the result page
+     *
+     * @param check_result_interface $result
+     * @return string
+     */
+    public function render_for_page(check_result_interface $result): string {
         return "This is the output for a page";
     }
 }
