@@ -77,6 +77,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $render .= \html_writer::end_tag('tbody');
         $render .= \html_writer::end_tag('table');
         $render .= \html_writer::end_tag('div');
+        if ($globallink != null) {
+            $render .= \html_writer::start_div('mt-1');
+            $render .= \html_writer::label(get_string('resolutionlink', 'block_course_checker'),
+                null, true, ['style' => 'margin-right: 5px;']
+            );
+            $render .= \html_writer::link($globallink, $globallink, ['style' => 'font-weight: 600;']);
+            $render .= \html_writer::end_div();
+        }
         return $render;
     }
 

@@ -28,3 +28,4 @@ $string['humancheck'] = 'Last manual check';
 $string['result'] = 'Result';
 $string['message'] = 'Message';
 $string['link'] = 'Link';
+$string['resolutionlink'] = 'Resolution: ';
