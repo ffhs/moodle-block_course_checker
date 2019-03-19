@@ -32,5 +32,6 @@ interface check_plugin_interface{
      * @return check_result_interface The check result.
      */
     public function run($course);
+    public static function get_group();
 
 }

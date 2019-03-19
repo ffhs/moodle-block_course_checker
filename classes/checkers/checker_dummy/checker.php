@@ -37,4 +37,11 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 "link" => "https://failed.example.com"
         ]);
     }
+
+    /**
+     * @return string
+     */
+    public static function get_group(): string {
+        return 'course';
+    }
 }

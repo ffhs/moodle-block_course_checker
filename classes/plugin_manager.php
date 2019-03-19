@@ -112,6 +112,28 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * @param $pluginname
+     * @return string
+     */
+    public function get_group($pluginname) {
+        $pluginroot = $this->get_checkers_folders();
+        $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_FILE;
+
+        if (false === file_exists($filelocation)) {
+            debugging(sprintf('File [%s] was not found for [%s] checker', $filelocation, $pluginname));
+            return '';
+        }
+
+        $classname = sprintf(self::PLUGIN_CLASS, $pluginname);
+        if (!class_exists($classname, true)) {
+            debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
+            return '';
+        }
+
+        return new $classname;
+    }
+
+    /**
      * Get the plugin renderer for a specific check
      *
      * @param string $pluginname plugin name
