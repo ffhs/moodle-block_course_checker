@@ -22,6 +22,7 @@
  */
 
 use block_course_checker\result_persister;
+use block_course_checker\run_checker_task;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -56,12 +57,8 @@ class block_course_checker extends block_base {
 
         $this->content = new \stdClass();
 
-        // TODO Remove ob_start.
-        ob_start();
-
         // Run the checks with an output buffer.
-        $persister = new result_persister();
-        $loadedchecks = $persister->load_last_checks($COURSE->id);
+        $loadedchecks = result_persister::instance()->load_last_checks($COURSE->id);
         if ($loadedchecks != []) {
             $checks = $loadedchecks["result"];
             $rundate = $loadedchecks['timestamp'];
@@ -71,23 +68,10 @@ class block_course_checker extends block_base {
             $human = null;
         }
 
-        // TODO Don't necessary run tests, just display the result.
-        if (true) {
-            $checks = $this->run_checks($COURSE);
-            $persister->save_checks($COURSE->id, $checks);
-        }
-
         // Render the checks results.
-        $this->content->text = $this->render_checks($checks);
-
-        // TODO Remove this useless if when debug is over.
-        if (true) {
-            $output = ob_get_contents();
-            if (!empty($output) && debugging()) {
-                $this->content->text .= $output;
-            }
-            ob_end_clean();
-        }
+        $this->content->text = "";
+        $this->content->text .= $this->render_checks($checks);
+        $this->content->text .= $this->render_run_task_button((int) $COURSE->id);
 
         /** @var \block_course_checker\output\block_renderer_footer $footerrenderer */
         $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
@@ -109,25 +93,14 @@ class block_course_checker extends block_base {
     }
 
     /**
-     * Run checks and var dump the results.
-     *
-     * @param $COURSE
-     * @return \block_course_checker\check_result[]
-     */
-    protected function run_checks($COURSE) {
-        // This is a test to output each checker results.
-        $manager = \block_course_checker\plugin_manager::instance();
-        return $manager->run_checks($COURSE);
-    }
-
-    /**
+     * Render the checks results
      * @param $results
      * @return mixed
      */
     protected function render_checks($results) {
         global $PAGE;
 
-        // Render each check result with the dedicated render for this plugin.
+        // Render each check result with the dedicated render for this checker.
         $manager = \block_course_checker\plugin_manager::instance();
         $htmlresults = [];
         foreach ($results as $pluginname => $result) {
@@ -162,5 +135,51 @@ class block_course_checker extends block_base {
      */
     public function applicable_formats() {
         return ['course-view' => true];
+    }
+
+    /**
+     * Show the button to run a task, execpt if it's already scheduled.
+     * @param int $courseid
+     * @return string
+     */
+    private function render_run_task_button(int $courseid) {
+
+        if ($this->is_task_scheduled($courseid)) {
+            return get_string("runcheckbtn_already", "block_course_checker");
+        }
+
+        global $CFG;
+        $url = $CFG->wwwroot . '/blocks/course_checker/schedule_checker.php';
+        $content = "";
+        $content .= html_writer::start_tag('form',
+                array('method' => "post", 'action' => new \moodle_url($url, ["courseid" => $courseid])));
+
+        if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
+            $content .= html_writer::tag("input", '',
+                    ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
+        }
+        $content .= html_writer::tag("input", '', [
+                "type" => "submit",
+                "value" => get_string("runcheckbtn", "block_course_checker"),
+                "class" => "btn btn-primary"
+        ]);
+        $content .= html_writer::end_tag("form");
+
+        return $content;
+    }
+
+    /**
+     * Tells if a check for the specific course is already scheduled
+     * @param int $courseid
+     * @return bool
+     * @throws dml_exception
+     */
+    private function is_task_scheduled(int $courseid) {
+        global $DB;
+
+        $params = ["\\" . run_checker_task::class, json_encode(["course_id" => $courseid])];
+        $sql = 'classname = ? AND ' .
+                $DB->sql_compare_text('customdata', \core_text::strlen($params[1]) + 1) . ' = ?';
+        return $DB->record_exists_select('task_adhoc', $sql, $params);
     }
 }

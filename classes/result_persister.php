@@ -27,6 +27,37 @@ use block_course_checker\model\check_manager_persister_interface;
 use block_course_checker\model\check_result_interface;
 
 class result_persister implements check_manager_persister_interface {
+
+    /**
+     * A singleton instance of this class.
+     *
+     * @var \block_course_checker\result_persister
+     */
+    private static $instance;
+
+    /**
+     * Force singleton
+     */
+    protected function __construct() {
+    }
+
+    /**
+     * Don't allow to clone singleton
+     */
+    protected function __clone() {
+    }
+
+    /**
+     * Factory method for this class .
+     *
+     * @return \block_course_checker\result_persister the singleton instance
+     */
+    public static function instance() {
+        if (is_null(static::$instance)) {
+            static::$instance = new static();
+        }
+        return static::$instance;
+    }
     /**
      * @param $record \stdClass
      * @param array|check_result_interface[] $checkresults
@@ -55,10 +86,7 @@ class result_persister implements check_manager_persister_interface {
         $result = json_decode($record->result, true);
         foreach ($result as $pluginname => $payload) {
             $result = new check_result();
-            $result
-                ->set_details($payload["details"])
-                ->set_link($payload["link"])
-                ->set_successful($payload["successful"]);
+            $result->set_details($payload["details"])->set_link($payload["link"])->set_successful($payload["successful"]);
             $response[$pluginname] = $result;
         }
         $record->result = $response;
@@ -93,7 +121,8 @@ class result_persister implements check_manager_persister_interface {
 
         // TODO Handle errors.
         if ($isnew) {
-            $DB->insert_record("block_course_checker", $record);
+            $result = $DB->insert_record("block_course_checker", $record);
+
         } else {
             $DB->update_record("block_course_checker", $record);
         }
