@@ -35,7 +35,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 "successful" => false,
                 "message" => "this is failed test",
                 "link" => "https://failed.example.com"
-        ]);
+        ])->set_link('www.google.com');
     }
 
     /**
