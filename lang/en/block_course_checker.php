@@ -29,3 +29,5 @@ $string['result'] = 'Result';
 $string['message'] = 'Message';
 $string['link'] = 'Link';
 $string['resolutionlink'] = 'Resolution: ';
+$string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
+$string['checker_link_summary'] = 'Course summary';
