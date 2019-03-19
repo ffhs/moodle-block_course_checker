@@ -32,28 +32,32 @@ class renderer extends \block_course_checker\abstract_plugin_renderer {
         $render = '';
         $resultdetail = $result->get_details();
         $link = $result->get_link();
-        if ($result->is_successful()) {
-            $render .= '<h4 class="text-success">Success</h4>';
-            $render .= '<div class="table-responsive">';
-            $render .= '<table class="table">';
-            $render .= '<thead><tr>';
-            $render .= '<th scope="col">Result</th><th scope="col">Message</th><th scope="col">Link</th>';
-            $render .= '</thead></tr>';
-            $render .= '<tbody>';
-            foreach ($resultdetail as $index => $detail) {
-                $render .= '<tr>';
-                $render .= '<td>' . $detail['successful'] . '</td>';
-                $render .= '<td>' . $detail['message'] . '</td>';
-                $render .= '<td>' . $detail['link'] . '</td>';
-                $render .= '</tr>';
-            }
-            $render .= '</tbody>';
-            $render .= '</table>';
-            $render .= '</div>';
-        } else {
-            $render .= '<h4 class="text-warning">Failure</h4>';
-        }
 
+        $tableheaders = ['Result', 'Message', 'Link'];
+
+        $render .= $result->is_successful() ? \html_writer::label('Success', null, true, ['class' => 'text-success']):
+            \html_writer::label('Failure', null, true, ['class' => 'text-warning']);
+
+        $render .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
+        $render .= \html_writer::start_tag('table', ['class' => 'table']);
+        $render .= \html_writer::start_tag('thead');
+        $render .= \html_writer::start_tag('tr');
+        foreach ($tableheaders as $tableheader) {
+            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col']);
+        }
+        $render .= \html_writer::end_tag('thead');
+        $render .= \html_writer::end_tag('tr');
+        $render .= \html_writer::start_tag('tbody');
+        foreach ($resultdetail as $index => $detail) {
+            $render .= \html_writer::start_tag('tr');
+            $render .= \html_writer::tag('td', $detail['successful']);
+            $render .= \html_writer::tag('td', $detail['message']);
+            $render .= \html_writer::tag('td', $detail['link']);
+            $render .= \html_writer::end_tag('tr');
+        }
+        $render .= \html_writer::end_tag('tbody');
+        $render .= \html_writer::end_tag('table');
+        $render .= \html_writer::end_tag('div');
         return $render;
     }
 
