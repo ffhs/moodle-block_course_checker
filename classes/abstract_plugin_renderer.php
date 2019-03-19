@@ -21,7 +21,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class abstract_plugin_renderer
- *
+ * @deprecated use global_plugin_renderer
  * @package block_course_checker
  */
 abstract class abstract_plugin_renderer extends \plugin_renderer_base {

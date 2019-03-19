@@ -30,7 +30,7 @@ use block_course_checker\model\check_result_interface;
 class plugin_manager implements check_manager_interface {
 
     const PLUGIN_FILE = 'checker.php';
-    const PLUGIN_OUTPUT_FILE = 'renderer.php';
+    const PLUGIN_OUTPUT_FILE = 'global_plugin_renderer.php';
     const PLUGIN_INTERFACE = 'block_course_checker\\model\\check_plugin_interface';
     const PLUGIN_TYPE = "checker";
     const PLUGIN_CLASS = "block_course_checker\checkers\\%s\\checker";
@@ -115,15 +115,15 @@ class plugin_manager implements check_manager_interface {
      * Get the plugin renderer for a specific check
      *
      * @param string $pluginname plugin name
-     * @return abstract_plugin_renderer|null
+     * @return global_plugin_renderer
      */
     public function get_renderer($pluginname) {
         global $PAGE;
-        $pluginroot = $this->get_checkers_folders();
-        $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_OUTPUT_FILE;
+        $pluginroot = $this->get_classes_folder();
+        $filelocation = $pluginroot . "/" . self::PLUGIN_OUTPUT_FILE;
         if (false === file_exists($filelocation)) {
             debugging(sprintf("Checker %s has a missing renderer file: %s", $pluginname, $filelocation));
-            return null;
+            throw new \RuntimeException(sprintf('Missing [%s] in plugin root.', self::PLUGIN_OUTPUT_FILE));
         }
 
         $classname = sprintf(self::PLUGIN_OUTPUT_CLASS, $pluginname);
@@ -154,5 +154,14 @@ class plugin_manager implements check_manager_interface {
      */
     private function get_checkers_folders() {
         return __DIR__ . "/checkers";
+    }
+
+    /**
+     * Get the class folder
+     *
+     * @return string
+     */
+    private function get_classes_folder() {
+        return __DIR__;
     }
 }

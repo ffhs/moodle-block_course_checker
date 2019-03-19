@@ -13,22 +13,30 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-namespace block_course_checker\checkers\checker_dummy;
+/**
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+namespace block_course_checker;
+use block_course_checker\model\check_result_interface;
 
 defined('MOODLE_INTERNAL') || die();
 
-use block_course_checker\model\check_result_interface;
-
-class renderer extends \block_course_checker\abstract_plugin_renderer {
+/**
+ * Class global_plugin_renderer
+ *
+ * @package block_course_checker
+ */
+class global_plugin_renderer extends \plugin_renderer_base {
 
     /**
      * Output a check_result for inside the block
-     * @deprecated use global_plugin_renderer render_for_block method
+     *
      * @param check_result_interface $result
      * @return string
      */
-    public function render_for_block(check_result_interface $result): string {
+    public function render_for_block(check_result_interface $result) : string {
         $render = '';
         $resultdetail = $result->get_details();
         $globallink = $result->get_link();
@@ -68,7 +76,7 @@ class renderer extends \block_course_checker\abstract_plugin_renderer {
 
     /**
      * Output a check_result for inside the result page
-     * @deprecated use global_plugin_renderer render_for_page method
+     * TODO
      * @param check_result_interface $result
      * @return string
      */
