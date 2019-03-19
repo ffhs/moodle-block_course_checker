@@ -27,6 +27,7 @@ class check_result implements check_result_interface {
      * @var bool
      */
     protected $successful = true;
+
     /**
      * @var array
      */
