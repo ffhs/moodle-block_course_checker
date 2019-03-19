@@ -40,7 +40,8 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     public function run($course) {
         $this->result = new check_result();
         $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
-        $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl, "checker_link_summary");
+        $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
+                get_string("checker_link_summary", "block_course_checker"));
 
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
