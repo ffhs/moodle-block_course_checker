@@ -31,12 +31,13 @@ class renderer extends \block_course_checker\abstract_plugin_renderer {
     public function render_for_block(check_result_interface $result): string {
         $render = '';
         $resultdetail = $result->get_details();
-        $link = $result->get_link();
+        $globallink = $result->get_link();
 
         $tableheaders = ['Result', 'Message', 'Link'];
 
-        $render .= $result->is_successful() ? \html_writer::label('Success', null, true, ['class' => 'text-success']):
-            \html_writer::label('Failure', null, true, ['class' => 'text-warning']);
+        $render .= $result->is_successful() ?
+            \html_writer::tag('h4','Success', ['class' => 'text-success']):
+            \html_writer::tag('h4','Failure', ['class' => 'text-warning']);
 
         $render .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
         $render .= \html_writer::start_tag('table', ['class' => 'table']);
@@ -49,10 +50,13 @@ class renderer extends \block_course_checker\abstract_plugin_renderer {
         $render .= \html_writer::end_tag('tr');
         $render .= \html_writer::start_tag('tbody');
         foreach ($resultdetail as $index => $detail) {
+            $humanresult = $detail['successful'] == 1 ? '✅': '❌';
             $render .= \html_writer::start_tag('tr');
-            $render .= \html_writer::tag('td', $detail['successful']);
+            $render .= \html_writer::tag('td', $humanresult);
             $render .= \html_writer::tag('td', $detail['message']);
-            $render .= \html_writer::tag('td', $detail['link']);
+            if ($detail['link'] != null) {
+                $render .= \html_writer::tag('td', \html_writer::link($detail['link'], 'Resolve me'));
+            }
             $render .= \html_writer::end_tag('tr');
         }
         $render .= \html_writer::end_tag('tbody');
