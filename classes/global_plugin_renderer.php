@@ -41,8 +41,6 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $resultdetail = $result->get_details();
         $globallink = $result->get_link();
 
-        $tableheaders = ['Result', 'Message', 'Link'];
-
         $render .= $result->is_successful() ?
             \html_writer::tag('h4','Success', ['class' => 'text-success']):
             \html_writer::tag('h4','Failure', ['class' => 'text-warning']);
@@ -51,6 +49,9 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $render .= \html_writer::start_tag('table', ['class' => 'table']);
         $render .= \html_writer::start_tag('thead');
         $render .= \html_writer::start_tag('tr');
+
+        $tableheaders = ['result', 'message', 'link'];
+        $tableheaders = array_map(function($el){ return get_string($el, "block_course_checker"); }, $tableheaders);
         foreach ($tableheaders as $tableheader) {
             $render .= \html_writer::tag('th', $tableheader, ['class' => 'col']);
         }
@@ -59,7 +60,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $render .= \html_writer::start_tag('tbody');
 
         foreach ($resultdetail as $index => $detail) {
-            $humanresult = $detail['successful'] == 1 ? '✅': '❌';
+            $humanresult = $detail['successful'] ? '✅': '❌';
             $render .= \html_writer::start_tag('tr');
             $render .= \html_writer::tag('td', $humanresult);
             $render .= \html_writer::tag('td', $detail['message']);

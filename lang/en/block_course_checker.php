@@ -25,3 +25,6 @@ $string['privacy:metadata'] = 'The Course Checker block only contains anonymous 
 $string['course_checker:addinstance'] = 'Course checker create';
 $string['automaticcheck'] = 'Last automatic check';
 $string['humancheck'] = 'Last manual check';
+$string['result'] = 'Result';
+$string['message'] = 'Message';
+$string['link'] = 'Link';

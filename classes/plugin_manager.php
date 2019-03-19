@@ -30,7 +30,7 @@ use block_course_checker\model\check_result_interface;
 class plugin_manager implements check_manager_interface {
 
     const PLUGIN_FILE = 'checker.php';
-    const PLUGIN_OUTPUT_FILE = 'global_plugin_renderer.php';
+    const PLUGIN_OUTPUT_FILE = 'renderer.php';
     const PLUGIN_INTERFACE = 'block_course_checker\\model\\check_plugin_interface';
     const PLUGIN_TYPE = "checker";
     const PLUGIN_CLASS = "block_course_checker\checkers\\%s\\checker";
@@ -119,19 +119,18 @@ class plugin_manager implements check_manager_interface {
      */
     public function get_renderer($pluginname) {
         global $PAGE;
-        $pluginroot = $this->get_classes_folder();
-        $filelocation = $pluginroot . "/" . self::PLUGIN_OUTPUT_FILE;
+        $pluginroot = $this->get_checkers_folders();
+        $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_OUTPUT_FILE;
+
         if (false === file_exists($filelocation)) {
-            debugging(sprintf("Checker %s has a missing renderer file: %s", $pluginname, $filelocation));
-            throw new \RuntimeException(sprintf('Missing [%s] in plugin root.', self::PLUGIN_OUTPUT_FILE));
+            return $this->default_render();
         }
 
         $classname = sprintf(self::PLUGIN_OUTPUT_CLASS, $pluginname);
         if (!class_exists($classname, true)) {
             debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
-            return null;
+            return $this->default_render();
         }
-
         return new $classname($PAGE, RENDERER_TARGET_GENERAL);
     }
 
@@ -157,11 +156,11 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
-     * Get the class folder
-     *
-     * @return string
+     * @return global_plugin_renderer
      */
-    private function get_classes_folder() {
-        return __DIR__;
+    private function default_render()
+    {
+        global $PAGE;
+        return new global_plugin_renderer($PAGE, RENDERER_TARGET_GENERAL);
     }
 }
