@@ -42,8 +42,8 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $globallink = $result->get_link();
 
         $render .= $result->is_successful() ?
-            \html_writer::tag('h4','Success', ['class' => 'text-success']):
-            \html_writer::tag('h4','Failure', ['class' => 'text-warning']);
+            \html_writer::tag('h4', 'Success', ['class' => 'text-success']) :
+            \html_writer::tag('h4', 'Failure', ['class' => 'text-warning']);
 
         $render .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
         $render .= \html_writer::start_tag('table', ['class' => 'table']);
@@ -51,7 +51,9 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $render .= \html_writer::start_tag('tr');
 
         $tableheaders = ['result', 'message', 'link'];
-        $tableheaders = array_map(function($el){ return get_string($el, "block_course_checker"); }, $tableheaders);
+        $tableheaders = array_map(function($el) {
+            return get_string($el, "block_course_checker");
+        }, $tableheaders);
         foreach ($tableheaders as $tableheader) {
             $render .= \html_writer::tag('th', $tableheader, ['class' => 'col', 'style' => 'width: min-content;']);
         }
@@ -62,7 +64,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $icons = [
             'success' => \html_writer::tag('i', null, ['class' => 'fas fa-check-circle text-success']),
             'failure' => \html_writer::tag('i', null, ['class' => 'fas fa-times text-danger']),
-            'link' => \html_writer::tag('i',null, ['class' => 'fas fa-link text-muted'])
+            'link' => \html_writer::tag('i', null, ['class' => 'fas fa-link text-muted'])
         ];
         foreach ($resultdetail as $index => $detail) {
             $humanresult = $detail['successful'] ? $icons['success'] : $icons['failure'];

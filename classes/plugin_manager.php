@@ -158,8 +158,7 @@ class plugin_manager implements check_manager_interface {
     /**
      * @return global_plugin_renderer
      */
-    private function default_render()
-    {
+    private function default_render() {
         global $PAGE;
         return new global_plugin_renderer($PAGE, RENDERER_TARGET_GENERAL);
     }
