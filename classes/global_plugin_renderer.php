@@ -53,19 +53,24 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $tableheaders = ['result', 'message', 'link'];
         $tableheaders = array_map(function($el){ return get_string($el, "block_course_checker"); }, $tableheaders);
         foreach ($tableheaders as $tableheader) {
-            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col']);
+            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col', 'style' => 'width: min-content;']);
         }
         $render .= \html_writer::end_tag('thead');
         $render .= \html_writer::end_tag('tr');
         $render .= \html_writer::start_tag('tbody');
 
+        $icons = [
+            'success' => \html_writer::tag('i', null, ['class' => 'fas fa-check-circle text-success']),
+            'failure' => \html_writer::tag('i', null, ['class' => 'fas fa-times text-danger']),
+            'link' => \html_writer::tag('i',null, ['class' => 'fas fa-link text-muted'])
+        ];
         foreach ($resultdetail as $index => $detail) {
-            $humanresult = $detail['successful'] ? '✅': '❌';
+            $humanresult = $detail['successful'] ? $icons['success'] : $icons['failure'];
             $render .= \html_writer::start_tag('tr');
             $render .= \html_writer::tag('td', $humanresult);
             $render .= \html_writer::tag('td', $detail['message']);
             if ($detail['link'] != null) {
-                $render .= \html_writer::tag('td', \html_writer::link($detail['link'], 'Resolve me'));
+                $render .= \html_writer::tag('td', \html_writer::link($detail['link'], $icons['link']));
             }
             $render .= \html_writer::end_tag('tr');
         }
