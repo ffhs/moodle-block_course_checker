@@ -55,7 +55,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
             return get_string($el, "block_course_checker");
         }, $tableheaders);
         foreach ($tableheaders as $tableheader) {
-            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col', 'style' => 'width: min-content;']);
+            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col w-25']);
         }
         $render .= \html_writer::end_tag('thead');
         $render .= \html_writer::end_tag('tr');
@@ -82,9 +82,9 @@ class global_plugin_renderer extends \plugin_renderer_base {
         if ($globallink != null) {
             $render .= \html_writer::start_div('mt-1');
             $render .= \html_writer::label(get_string('resolutionlink', 'block_course_checker'),
-                null, true, ['style' => 'margin-right: 5px;']
+                null, true, ['class' => 'mr-1']
             );
-            $render .= \html_writer::link($globallink, $globallink, ['style' => 'font-weight: 600;']);
+            $render .= \html_writer::link($globallink, $globallink, ['class' => 'font-weight-bold']);
             $render .= \html_writer::end_div();
         }
         return $render;
