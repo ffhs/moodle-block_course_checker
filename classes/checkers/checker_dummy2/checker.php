@@ -39,9 +39,9 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public static function get_group(): string {
-        return 'course';
+        return 'activities';
     }
 }

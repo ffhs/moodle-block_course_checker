@@ -32,6 +32,12 @@ interface check_plugin_interface{
      * @return check_result_interface The check result.
      */
     public function run($course);
+
+    /**
+     * Get the group defined for this check.
+     * This is used to display checks from the same group together.
+     * @return string
+     */
     public static function get_group();
 
 }

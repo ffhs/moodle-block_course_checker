@@ -44,6 +44,11 @@ class plugin_manager implements check_manager_interface {
     private static $instance;
 
     /**
+     * @var array Cache of the instantiated checkers.
+     */
+    private static $plugins = [];
+
+    /**
      * Force singleton
      */
     protected function __construct() {
@@ -73,9 +78,9 @@ class plugin_manager implements check_manager_interface {
      * @return check_plugin_interface[]
      */
     protected function get_checkers_plugins() {
-        static $plugins = [];
-        if (!empty($plugins)) {
-            return $plugins;
+        // Use cache if set.
+        if (!empty(self::$plugins)) {
+            return self::$plugins;
         }
         $pluginroot = $this->get_checkers_folders();
 
@@ -104,32 +109,41 @@ class plugin_manager implements check_manager_interface {
 
                 continue;
             }
-            // Instantiate the plugin.
-            $plugins[$pluginname] = new $classname();
+            self::$plugins[$pluginname] = $this->get_checker($pluginname);
         }
 
-        return $plugins;
+        // Remove empty checkers.
+        array_filter(self::$plugins, function($checker) {
+            return $checker !== null;
+        });
+        return self::$plugins;
     }
 
     /**
      * Get the plugin checker for a specific check.
      *
      * @param $pluginname
-     * @return object|string
+     * @return object|null
      */
-    public function get_checker($pluginname) {
+    protected function get_checker($pluginname) {
+        // Use the plugin if it has been instantiated.
+        // Otherwise we just instantiate it, without caching for avoiding side effects with get_checkers_plugins.
+        if (!empty(self::$plugins) && array_key_exists($pluginname, self::$plugins)) {
+            return self::$plugins[$pluginname];
+        }
+
         $pluginroot = $this->get_checkers_folders();
         $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_FILE;
 
         if (false === file_exists($filelocation)) {
             debugging(sprintf('File [%s] was not found for [%s] checker', $filelocation, $pluginname));
-            return '';
+            return null;
         }
 
         $classname = sprintf(self::PLUGIN_CLASS, $pluginname);
         if (!class_exists($classname, true)) {
             debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
-            return '';
+            return null;
         }
 
         return new $classname;
@@ -159,11 +173,12 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
-     * @param $pluginname
+     * @param string $pluginname
      * @return string
      */
-    public function get_group($pluginname) {
-        return $this->get_checker($pluginname)->get_group();
+    public function get_group(string $pluginname): string {
+        $checker = $this->get_checker($pluginname);
+        return $checker !== null ? $checker->get_group() : "";
     }
 
     /**
