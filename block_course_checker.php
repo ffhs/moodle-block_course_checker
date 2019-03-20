@@ -139,14 +139,17 @@ class block_course_checker extends block_base {
 
         // Sort results by group.
         $groupedresults = [];
-        foreach ($htmlresults as $result) {
+        foreach ($htmlresults as $count => $result) {
             $checker = $manager->get_group($result['name']);
             $group = $checker->get_group();
-            if (!isset($groupedresults[$group])) {
+
+            if (!array_key_exists($group, $groupedresults)) {
                 $groupedresults[$group] = ['results' => [], "group" => $group];
             }
-            $groupedresults[$group]['results'] = $result;
+
+            $groupedresults[$group]['results'][] = $result;
         }
+
         $groupedresults = array_values($groupedresults);
 
         /** @var \block_course_checker\output\block_renderer $renderer */
