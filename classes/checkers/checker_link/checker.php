@@ -27,9 +27,10 @@ use block_course_checker\model\check_result_interface;
  */
 class checker implements \block_course_checker\model\check_plugin_interface {
     /**
-     * @var mixed
+     * @var string|null Last CURL error after a call to check_url.
      */
     protected $lasterror = "";
+
     /** @var check_result */
     protected $result = null;
 
@@ -45,16 +46,21 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
-            $modurl = "#fixme-mod";
             // Exclude activities which are not visible or have no link (=label).
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
             switch ($cm->modname) {
                 case "url":
-                    $name = get_string("checker_link_activity", "block_course_checker",
+                    $message = get_string("checker_link_activity", "block_course_checker",
                             (object) ["modname" => get_string("pluginname", $cm->modname), "name" => $cm->name]);
-                    $this->check_urls_with_resolution_url([$cm->url], $modurl, $name);
+
+                    $record = $this->get_mod_url_link_record($cm, $course->id);
+                    // Check the link itself.
+                    $this->check_urls_with_resolution_url([$record->externalurl], $cm->url, $message);
+                    // Check the link intro text.
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->url, $message);
+
                     break;
                 default:
                     break; // FFHSCC-38 Add new type of activities here !
@@ -66,26 +72,26 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     /**
      * Check all urls for a single resolution_url
      *
-     * @param $urls
-     * @param $resolutionlink
+     * @param string[] $urls
+     * @param string|null $resolutionlink
      * @param string|null $message
      */
-    protected function check_urls_with_resolution_url($urls, $resolutionlink, $message = null) {
-        foreach ($urls as $url) {
+    protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $message = null) {
+        foreach ($urls as $i => $url) {
             $successful = $this->check_url($url);
-            $message = empty($message) ? ($this->lasterror ? $this->lasterror : $url) : $message;
+            $message = empty($this->lasterror) ? $message : $this->lasterror;
             $this->result->set_successful($this->result->is_successful() & $successful);
             $this->result->add_detail([
                     "successful" => $successful,
                     "message" => $message,
-                    "link" => $successful ? $url : $resolutionlink
+                    "link" => $resolutionlink,
+                    "resource" => $url, // The custom-renderer will display the resource correctly.
             ]);
         }
     }
 
     /**
      * Fetch an url and return true if the code is between 200 and 400.
-     * TODO Check timeout behaviour.
      *
      * @param string $url
      * @return bool
@@ -114,6 +120,36 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             return $match[0];
         }
         return [];
+    }
 
+    /**
+     * Get the record for a mod_url. Note that they are loaded by course_id in a single query.
+     *
+     * @param \cm_info $cm Mod info
+     * @param int $courseid the course id
+     * @return mixed|null the record or null
+     */
+    private function get_mod_url_link_record(\cm_info $cm, int $courseid) {
+        global $DB;
+        static $cache = null;
+        static $cachecourseid = 0;
+        // Reset cache.
+        if ($cachecourseid !== $courseid) {
+            $cachecourseid = $courseid;
+            $cache = null;
+        }
+        // Load all the url for the same course for performance reasons.
+        if ($cache === null) {
+            foreach ($DB->get_records_select("url", "course = " . (int) $courseid) as $record) {
+                $cache[(int) $record->id] = $record;
+            };
+        }
+        // Fail if the mod_url is not saved.
+        if (!array_key_exists((int) $cm->instance, $cache)) {
+            return null;
+        }
+
+        // Return the mod_url record.
+        return $cache[(int) $cm->instance];
     }
 }

@@ -18,16 +18,19 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_course_checker\model;
 
 defined('MOODLE_INTERNAL') || die();
+
 /**
  * Interface that every check must implement.
  */
-interface check_result_interface extends \renderable, \templatable{
+interface check_result_interface extends \renderable, \templatable {
 
     /**
      * Tels if the check pass successfully or not
+     *
      * @return bool
      */
     public function is_successful(): bool;
@@ -38,14 +41,23 @@ interface check_result_interface extends \renderable, \templatable{
      * - success: bool Is the check successful
      * - message: string a message description
      * - link: string|null The link to fix this issue or a null string.
+     *
      * @return array
      */
     public function get_details(): array;
 
     /**
      * The link to solve this problem. Or a null string.
+     *
      * @return string|null
      */
     public function get_link();
 
+    /**
+     * Set the details !
+     *
+     * @param array $details
+     * @return mixed
+     */
+    public function set_details(array $details = []);
 }
