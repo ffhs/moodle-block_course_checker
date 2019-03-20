@@ -50,11 +50,19 @@ class checker implements \block_course_checker\model\check_plugin_interface {
         $assignmentmodid = $module_assign->id;
 
         // Get all assignment activities for the course.
-        $course_modules = $DB->get_records('course_modules',
-            array('course'=> $course->id, 'module'=> $assignmentmodid));
+        $modinfo = get_fast_modinfo($course);
 
-        // For all assigments in the course.
-        foreach ($course_modules as $cm) {
+        foreach ($modinfo->cms as $cm) {
+
+            // Skip activities that are not assignements.
+            if ($cm->modname != self::MOD_TYPE_ASSIGN) {
+                continue;
+            }
+
+            // Skip activities that are not visible.
+            if (!$cm->uservisible or !$cm->has_view()) {
+                continue;
+            }
 
             // Get the assignment record from the assignment table.
             // The instance of the course_modules table is used as a foreign key to the assign table.
