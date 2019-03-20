@@ -28,7 +28,7 @@ use block_course_checker\model\check_result_interface;
  */
 class checker implements \block_course_checker\model\check_plugin_interface {
 
-    // Module name for assignments in moodle
+    // Module name for assignments in Moodle.
     const MOD_TYPE_ASSIGN = 'assign';
 
     /**
@@ -41,20 +41,15 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     public function run($course) {
         global $DB;
 
-        // Initalize check result array.
-        $check_result = new check_result();
-
-        // Get the id of the module assign in moodle.
-        $module_assign = $DB->get_record('modules',
-            array('name' => self::MOD_TYPE_ASSIGN));
-        $assignmentmodid = $module_assign->id;
+        // Initialize check result array.
+        $checkresult = new check_result();
 
         // Get all assignment activities for the course.
         $modinfo = get_fast_modinfo($course);
 
         foreach ($modinfo->cms as $cm) {
 
-            // Skip activities that are not assignements.
+            // Skip activities that are not assignments.
             if ($cm->modname != self::MOD_TYPE_ASSIGN) {
                 continue;
             }
@@ -67,25 +62,24 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             // Get the assignment record from the assignment table.
             // The instance of the course_modules table is used as a foreign key to the assign table.
             $assign = $DB->get_record('assign',
-                array('course'=> $course->id, 'id'=> $cm->instance));
-
-            // Make the url to the activity.
-            $assign_url = new \moodle_url('/mod/assign/view.php',
-                array('id' => $cm->id));
+                    ['course' => $course->id, 'id' => $cm->instance]);
 
             // Get the settings from the assign table: these are the settings used for group submission.
             $groupmode = $assign->teamsubmission;
             $groupingid = $assign->teamsubmissiongroupingid;
 
+            // Prepare a common message.
+            $message = get_string("groups_activity", "block_course_checker", (object) ["name" => $cm->name]);
             // Now the groups settings can be checked.
             // These are the settings of assignment group submission in the corresponding activity.
 
-            // Case 1: the group mode deactivated: okay.
+            // Case 1: the group mode is deactivated -> check okay.
             if ($groupmode == 0) {
-                $check_result->add_detail([
-                    "successful" => true,
-                    "message" => get_string('group_deactivated', 'block_course_checker'),
-                    "link" => $assign_url
+                $message .= get_string('groups_deactivated', 'block_course_checker');
+                $checkresult->add_detail([
+                        "successful" => true,
+                        "message" => $message,
+                        "link" => $cm->url
                 ]);
                 continue;
             }
@@ -94,10 +88,12 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
             // If the groupingid is not set -> check fails.
             if ($groupingid == 0) {
-                $check_result->add_detail([
-                    "successful" => false,
-                    "message" => get_string('groupid_missing', 'block_course_checker'),
-                    "link" => $assign_url
+                $message .= get_string('groups_idmissing', 'block_course_checker');
+
+                $checkresult->add_detail([
+                        "successful" => false,
+                        "message" => $message,
+                        "link" => $cm->url
                 ]);
                 continue;
             }
@@ -105,10 +101,11 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             // If the grouping does not exist -> check fails.
             $groupingexists = $DB->record_exists('groupings', array('id' => $groupingid));
             if (!$groupingexists) {
-                $check_result->add_detail([
-                    "successful" => false,
-                    "message" => get_string('groups_missing', 'block_course_checker'),
-                    "link" => $assign_url
+                $message .= get_string('groups_missing', 'block_course_checker');
+                $checkresult->add_detail([
+                        "successful" => false,
+                        "message" => $message,
+                        "link" => $cm->url
                 ]);
                 continue;
             }
@@ -116,24 +113,26 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             // If the grouping has less then 2 groups -> check fails.
             $groupcount = $DB->count_records('groupings_groups', array('groupingid' => $groupingid));
             if ($groupcount < 2) {
-                $check_result->add_detail([
-                    "successful" => false,
-                    "message" => get_string('lessthentwogroups', 'block_course_checker'),
-                    "link" => $assign_url
+                $message .= get_string('groups_lessthantwogroups', 'block_course_checker');
+                $checkresult->add_detail([
+                        "successful" => false,
+                        "message" => $message,
+                        "link" => $cm->url
                 ]);
                 continue;
             }
 
             // The group submission is activated and all checks have passed -> check okay.
-            $check_result->add_detail([
-                "successful" => true,
-                "message" => get_string('groupsdefined', 'block_course_checker'),
-                "link" => $assign_url
+            $message .= get_string('groups_success', 'block_course_checker');
+            $checkresult->add_detail([
+                    "successful" => true,
+                    "message" => $message,
+                    "link" => $cm->url
             ]);
         }
 
         // Return the check results.
-        return $check_result;
+        return $checkresult;
     }
 
 }
