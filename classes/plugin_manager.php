@@ -112,10 +112,12 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * Get the plugin checker for a specific check.
+     *
      * @param $pluginname
-     * @return string
+     * @return object|string
      */
-    public function get_group($pluginname) {
+    public function get_checker($pluginname) {
         $pluginroot = $this->get_checkers_folders();
         $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_FILE;
 
@@ -154,6 +156,14 @@ class plugin_manager implements check_manager_interface {
             return $this->default_render();
         }
         return new $classname($PAGE, RENDERER_TARGET_GENERAL);
+    }
+
+    /**
+     * @param $pluginname
+     * @return string
+     */
+    public function get_group($pluginname) {
+        return $this->get_checker($pluginname)->get_group();
     }
 
     /**
