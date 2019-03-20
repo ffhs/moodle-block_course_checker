@@ -133,7 +133,7 @@ class block_course_checker extends block_base {
         foreach ($results as $pluginname => $result) {
             $htmlresults[] = [
                     "name" => $pluginname,
-                    "result" => $manager->get_renderer($pluginname)->render_for_block($result)
+                    "result" => $manager->get_renderer($pluginname)->render_for_block(clone $result)
             ];
         }
 
