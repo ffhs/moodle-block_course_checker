@@ -58,6 +58,7 @@ class result_persister implements check_manager_persister_interface {
         }
         return static::$instance;
     }
+
     /**
      * @param $record \stdClass
      * @param array|check_result_interface[] $checkresults
@@ -83,11 +84,13 @@ class result_persister implements check_manager_persister_interface {
      */
     private static function decode($record) {
         $response = [];
-        $result = json_decode($record->result, true);
-        foreach ($result as $pluginname => $payload) {
-            $result = new check_result();
-            $result->set_details($payload["details"])->set_link($payload["link"])->set_successful($payload["successful"]);
-            $response[$pluginname] = $result;
+        if ($record->result !== null) {
+            $result = json_decode($record->result, true);
+            foreach ($result as $pluginname => $payload) {
+                $result = new check_result();
+                $result->set_details($payload["details"])->set_link($payload["link"])->set_successful($payload["successful"]);
+                $response[$pluginname] = $result;
+            }
         }
         $record->result = $response;
 
@@ -102,8 +105,10 @@ class result_persister implements check_manager_persister_interface {
      */
     public function save_checks($courseid, $checkresults, array $data = []) {
         global $DB;
-        foreach ($checkresults as $pluginname => $result) {
-            $this->assert_checks($pluginname, $result);
+        if (is_array($checkresults)) {
+            foreach ($checkresults as $pluginname => $result) {
+                $this->assert_checks($pluginname, $result);
+            }
         }
 
         $record = $DB->get_record("block_course_checker", ["course_id" => $courseid]);
@@ -112,16 +117,22 @@ class result_persister implements check_manager_persister_interface {
             $record = new \stdClass();
             $record->course_id = $courseid;
         }
-        $record = self::encode($record, $checkresults);
 
-        foreach ($data as $key => $value) {
-            $record->${$key} = $value;
+        // Skip this if we don't have results.
+        if ($checkresults !== false) {
+            $record = self::encode($record, $checkresults);
         }
-        $record->timestamp = date("U");
+        foreach ($data as $key => $value) {
+            $record->{$key} = $value;
+        }
 
-        // TODO Handle errors.
+        // If the results are false, we do not alter the result itself, but one of the other field.
+        if ($checkresults !== false) {
+            $record->timestamp = date("U");
+        }
+
         if ($isnew) {
-            $result = $DB->insert_record("block_course_checker", $record);
+            $DB->insert_record("block_course_checker", $record);
 
         } else {
             $DB->update_record("block_course_checker", $record);
