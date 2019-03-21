@@ -152,4 +152,14 @@ class checker implements \block_course_checker\model\check_plugin_interface {
         // Return the mod_url record.
         return $cache[(int) $cm->instance];
     }
+
+    /**
+     * Get the group defined for this check.
+     * This is used to display checks from the same group together.
+     *
+     * @return string
+     */
+    public static function get_group() {
+        return "course";
+    }
 }
