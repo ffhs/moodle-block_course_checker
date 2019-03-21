@@ -43,7 +43,6 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
         // Initialize check result array.
         $checkresult = new check_result();
-
         // Get all assignment activities for the course.
         $modinfo = get_fast_modinfo($course);
 
@@ -80,7 +79,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                         "successful" => true,
                         "message" => $message,
                         "link" => $cm->url
-                ]);
+                ])->set_successful(false);
                 continue;
             }
 
@@ -94,7 +93,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                         "successful" => false,
                         "message" => $message,
                         "link" => $cm->url
-                ]);
+                ])->set_successful(false);
                 continue;
             }
 
@@ -106,7 +105,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                         "successful" => false,
                         "message" => $message,
                         "link" => $cm->url
-                ]);
+                ])->set_successful(false);
                 continue;
             }
 
@@ -118,7 +117,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                         "successful" => false,
                         "message" => $message,
                         "link" => $cm->url
-                ]);
+                ])->set_successful(false);
                 continue;
             }
 
