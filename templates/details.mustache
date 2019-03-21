@@ -1,0 +1,29 @@
+<style>
+    hr {
+        border-top: 1px solid rgba(0,0,0,.1) !important;
+        /*TODO: Move this on a CSS sheet.*/
+    }
+    table {
+        /*margin-bottom: 0 !important;*/
+    }
+</style>
+
+<h2 class="text-muted">Specific Course Check Results Page</h2>
+
+{{#groupedresults}}
+    <hr>
+    <div class="mt-2">
+        <h4 class="mb-1 pb-2 text-muted text-capitalize">{{{group}}}</h4>
+        <div class="mt-1 pt-2 container-fluid">
+            {{#results}}
+                <h3>{{{name}}}</h3>
+                {{{result}}}
+            {{/results}}
+        </div>
+    </div>
+{{/groupedresults}}
+
+{{^groupedresults}}
+    No results yet
+{{/groupedresults}}
+<hr>

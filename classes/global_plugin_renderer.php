@@ -104,6 +104,63 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @return string
      */
     public function render_for_page(check_result_interface $result): string {
-        return "This is the output for a page";
+        $render = '';
+        $resultdetail = $result->get_details();
+        $globallink = $result->get_link();
+
+        $render .= $result->is_successful() ?
+            \html_writer::tag('h4', 'Success', ['class' => 'text-success']) :
+            \html_writer::tag('h4', 'Failure', ['class' => 'text-warning']);
+
+        $render .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
+        $render .= \html_writer::start_tag('table', ['class' => 'table']);
+        $render .= \html_writer::start_tag('thead');
+        $render .= \html_writer::start_tag('tr');
+
+        $tableheaders = ['result', 'message', 'link'];
+        $tableheaders = array_map(function($el) {
+            return get_string($el, "block_course_checker");
+        }, $tableheaders);
+        foreach ($tableheaders as $tableheader) {
+            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col w-25']);
+        }
+        $render .= \html_writer::end_tag('thead');
+        $render .= \html_writer::end_tag('tr');
+        $render .= \html_writer::start_tag('tbody');
+
+        $icons = [
+            'success' => \html_writer::tag('i', null, ['class' => 'fas fa-check-circle text-success']),
+            'failure' => \html_writer::tag('i', null, ['class' => 'fas fa-times text-danger']),
+            'link' => \html_writer::tag('i', null, ['class' => 'fas fa-link text-muted'])
+        ];
+        foreach ($resultdetail as $index => $detail) {
+            $humanresult = $detail['successful'] ? $icons['success'] : $icons['failure'];
+            $render .= \html_writer::start_tag('tr');
+            $render .= \html_writer::tag('td', $humanresult);
+
+            if (!array_key_exists("message_safe", $detail) || !$detail["message_safe"]) {
+                $message = s($detail['message']);
+            } else {
+                $message = $detail['message'];
+            }
+            $render .= \html_writer::tag('td', $message);
+
+            if ($detail['link'] != null) {
+                $render .= \html_writer::tag('td', \html_writer::link($detail['link'], $icons['link']));
+            }
+            $render .= \html_writer::end_tag('tr');
+        }
+        $render .= \html_writer::end_tag('tbody');
+        $render .= \html_writer::end_tag('table');
+        $render .= \html_writer::end_tag('div');
+        if ($globallink != null) {
+            $render .= \html_writer::start_div('mt-1');
+            $render .= \html_writer::label(get_string('resolutionlink', 'block_course_checker'),
+                null, true, ['class' => 'mr-1']
+            );
+            $render .= \html_writer::link($globallink, $globallink, ['class' => 'font-weight-bold']);
+            $render .= \html_writer::end_div();
+        }
+        return $render;
     }
 }
