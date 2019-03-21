@@ -35,11 +35,26 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         return true;
     }
 
+    // Install the database from a file.
     if (intval($oldversion) < 2019031504) {
         $tableexists = $DB->get_manager()->table_exists('block_course_checker');
         if (!$tableexists) {
             $DB->get_manager()->install_from_xmldb_file($file);
         }
+    }
+
+    // Migration to add the field "last_activity_edition".
+    if (intval($oldversion) === 2019031507) {
+        $xmldbfile = new xmldb_file($file);
+        if (!$xmldbfile->fileExists()) {
+            throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
+        }
+
+        // Add the last_modification field (by loading the definition from the install.xml file).
+        $xmldbfile->loadXMLStructure();
+        $table = $xmldbfile->getStructure()->getTable("block_course_checker");
+        $field = $table->getField("last_activity_edition");
+        $DB->get_manager()->add_field($table, $field);
     }
     return true;
 }

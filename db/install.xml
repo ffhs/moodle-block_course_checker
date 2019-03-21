@@ -12,6 +12,7 @@
         <FIELD NAME="result" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="manual_date" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="manual_reason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="last_activity_edition" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
