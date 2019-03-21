@@ -1,9 +1,10 @@
+<hr>
 <b>{{automaticcheckstring}}:</b><br>
 {{#automaticcheck}}
     {{#userdate}} {{automaticcheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
 {{/automaticcheck}}
 {{^automaticcheck}}
-    No date found.
+    No date found. <!-- TODO translate this. -->
 {{/automaticcheck}}
 <br>
 <b>{{humancheckstring}}:</b><br>
@@ -11,5 +12,5 @@
     {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
 {{/humancheck}}
 {{^humancheck}}
-    No date found.
+    No date found. <!-- TODO translate this. -->
 {{/humancheck}}

@@ -58,6 +58,8 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 continue;
             }
 
+            // FIXME Sometime links are not serialized ?
+            $link = $cm->url ? $cm->url->out_as_local_url() : null;
             // Get the assignment record from the assignment table.
             // The instance of the course_modules table is used as a foreign key to the assign table.
             $assign = $DB->get_record('assign',
@@ -78,7 +80,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 $checkresult->add_detail([
                         "successful" => true,
                         "message" => $message,
-                        "link" => $cm->url
+                        "link" => $link
                 ])->set_successful(false);
                 continue;
             }
@@ -92,7 +94,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
-                        "link" => $cm->url
+                        "link" => $link
                 ])->set_successful(false);
                 continue;
             }
@@ -104,7 +106,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
-                        "link" => $cm->url
+                        "link" => $link
                 ])->set_successful(false);
                 continue;
             }
@@ -116,7 +118,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
-                        "link" => $cm->url
+                        "link" => $link
                 ])->set_successful(false);
                 continue;
             }
@@ -126,7 +128,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             $checkresult->add_detail([
                     "successful" => true,
                     "message" => $message,
-                    "link" => $cm->url
+                    "link" => $link
             ]);
         }
 

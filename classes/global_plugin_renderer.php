@@ -18,7 +18,9 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_course_checker;
+
 use block_course_checker\model\check_result_interface;
 
 defined('MOODLE_INTERNAL') || die();
@@ -29,93 +31,131 @@ defined('MOODLE_INTERNAL') || die();
  * @package block_course_checker
  */
 class global_plugin_renderer extends \plugin_renderer_base {
+    // Output the details as var dump.
+    const DEBUG = false;
 
     /**
      * Output a check_result for inside the block
      *
+     * @param string $pluginname
      * @param check_result_interface $result
      * @return string
+     * @throws \coding_exception
      */
-    public function render_for_block(check_result_interface $result) : string {
-        return $this->render_generic($result, false);
+    public function render_for_block(string $pluginname, check_result_interface $result): string {
+        $resulticon = $result->is_successful() ? $this->get_success_icon() : $this->get_failed_icon();
+        $name = get_string($pluginname, "block_course_checker");
+        $name = \html_writer::tag("p", $name, ["class" => "m-a-1"]);
+        $output = \html_writer::tag('div', $resulticon . $name,
+                ["class" => "d-flex", "style" => "justify-content: flex-start; align-items: center;"]); // TODO remove style.
+        $output .= $this->debug($result);
+        return $output;
     }
 
+    /**
+     * @return string
+     */
+    private function get_success_icon() {
+        return \html_writer::tag('i', null, ['class' => 'fa fa-check-circle text-success']);
+    }
+
+    /**
+     * @return string
+     */
+    private function get_failed_icon() {
+        return \html_writer::tag('i', null, ['class' => 'fa fa-times text-danger']);
+    }
 
     /**
      * Output a check_result for inside the page
      *
+     * @param string $pluginname
      * @param check_result_interface $result
      * @return string
+     * @throws \coding_exception
      */
-    public function render_for_page(check_result_interface $result): string {
-        return $this->render_generic($result, true);
-    }
-
-    /**
-     * Build up the check results table
-     *
-     * @param check_result_interface $result
-     * @param bool $showdetails
-     * @return string
-     */
-    protected function render_generic(check_result_interface $result, $showdetails = true) :string {
-        $render = '';
+    public function render_for_page(string $pluginname, check_result_interface $result): string {
+        $name = get_string($pluginname, "block_course_checker") . ": ";
         $resultdetail = $result->get_details();
         $globallink = $result->get_link();
 
-        $render .= $result->is_successful() ?
-            \html_writer::tag('h4', 'Success', ['class' => 'text-success']) :
-            \html_writer::tag('h4', 'Failure', ['class' => 'text-warning']);
+        $success = get_string('check_successful', "block_course_checker");
+        $failure = get_string('check_failed', "block_course_checker");
+        $output = $result->is_successful() ?
+                \html_writer::tag('h4', $name . $success, ['class' => 'text-success']) :
+                \html_writer::tag('h4', $name . $failure, ['class' => 'text-warning']);
 
-        $render .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
-        $render .= \html_writer::start_tag('table', ['class' => 'table']);
-        $render .= \html_writer::start_tag('thead');
-        $render .= \html_writer::start_tag('tr');
+        $output .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
+
+        $output .= $this->debug($result);
+
+        $output .= \html_writer::start_tag('table', ['class' => 'table']);
+        $output .= \html_writer::start_tag('thead');
+        $output .= \html_writer::start_tag('tr');
 
         $tableheaders = ['result', 'message', 'link'];
         $tableheaders = array_map(function($el) {
             return get_string($el, "block_course_checker");
         }, $tableheaders);
         foreach ($tableheaders as $tableheader) {
-            $render .= \html_writer::tag('th', $tableheader, ['class' => 'col w-25']);
+            $output .= \html_writer::tag('th', $tableheader, ['class' => 'col w-25']);
         }
-        $render .= \html_writer::end_tag('thead');
-        $render .= \html_writer::end_tag('tr');
-        $render .= \html_writer::start_tag('tbody');
+        $output .= \html_writer::end_tag('thead');
+        $output .= \html_writer::end_tag('tr');
+        $output .= \html_writer::start_tag('tbody');
 
-        $icons = [
-            'success' => \html_writer::tag('i', null, ['class' => 'fas fa-check-circle text-success']),
-            'failure' => \html_writer::tag('i', null, ['class' => 'fas fa-times text-danger']),
-            'link' => \html_writer::tag('i', null, ['class' => 'fas fa-link text-muted'])
-        ];
         foreach ($resultdetail as $index => $detail) {
-            $humanresult = $detail['successful'] ? $icons['success'] : $icons['failure'];
-            $render .= \html_writer::start_tag('tr');
-            $render .= \html_writer::tag('td', $humanresult);
+            $resulticon = $detail['successful'] ? $this->get_success_icon() : $this->get_failed_icon();
+            $output .= \html_writer::start_tag('tr');
+            $output .= \html_writer::tag('td', $resulticon);
 
             if (!array_key_exists("message_safe", $detail) || !$detail["message_safe"]) {
                 $message = s($detail['message']);
             } else {
                 $message = $detail['message'];
             }
-            $render .= \html_writer::tag('td', $message);
+            $output .= \html_writer::tag('td', $message);
 
             if ($detail['link'] != null) {
-                $render .= \html_writer::tag('td', \html_writer::link($detail['link'], $icons['link']));
+                $output .= \html_writer::tag('td', \html_writer::link($detail['link'], $this->get_link_icon()));
             }
-            $render .= \html_writer::end_tag('tr');
+            $output .= \html_writer::end_tag('tr');
         }
-        $render .= \html_writer::end_tag('tbody');
-        $render .= \html_writer::end_tag('table');
-        $render .= \html_writer::end_tag('div');
+        $output .= \html_writer::end_tag('tbody');
+        $output .= \html_writer::end_tag('table');
+        $output .= \html_writer::end_tag('div');
         if ($globallink != null) {
-            $render .= \html_writer::start_div('mt-1');
-            $render .= \html_writer::label(get_string('resolutionlink', 'block_course_checker'),
-                null, true, ['class' => 'mr-1']
+            $output .= \html_writer::start_div('mt-1');
+            $output .= \html_writer::label(get_string('resolutionlink', 'block_course_checker'),
+                    null, true, ['class' => 'mr-1']
             );
-            $render .= \html_writer::link($globallink, $globallink, ['class' => 'font-weight-bold']);
-            $render .= \html_writer::end_div();
+            $output .= \html_writer::link($globallink, $globallink, ['class' => 'font-weight-bold']);
+            $output .= \html_writer::end_div();
         }
-        return $render;
+        return $output;
+    }
+
+    /**
+     * @return string
+     */
+    private function get_link_icon() {
+        return \html_writer::tag('i', null, ['class' => 'fa fa-link text-muted']);
+    }
+
+    /**
+     * For debug purpose.
+     *
+     * @param check_result_interface $result
+     * @return check_result_interface|false|string
+     */
+    private function debug(check_result_interface $result) {
+        if (! self::DEBUG) {
+            return '';
+        }
+        ob_start();
+        var_dump($result->get_details());
+        $result = ob_get_contents();
+        ob_end_clean();
+        return $result;
     }
 }

@@ -69,6 +69,10 @@ class block_course_checker extends block_base {
             $checks = [];
         }
 
+        // Run the test directly.
+        if (\block_course_checker\plugin_manager::IMMEDIATE_RUN) {
+            $checks = \block_course_checker\plugin_manager::instance()->run_checks($COURSE);
+        }
         // Render the checks results.
         $this->content->text = "";
         $this->content->text .= $this->render_checks($checks);
@@ -100,7 +104,7 @@ class block_course_checker extends block_base {
      * @return mixed
      */
     protected function render_checks($results) {
-        global $PAGE;
+        global $PAGE, $COURSE;
 
         // Render each check result with the dedicated render for this checker.
         $manager = \block_course_checker\plugin_manager::instance();
@@ -113,7 +117,7 @@ class block_course_checker extends block_base {
             }
             $htmlresults[] = [
                     "name" => $pluginname,
-                    "result" => $manager->get_renderer($pluginname)->render_for_page(clone $result)
+                    "result" => $manager->get_renderer($pluginname)->render_for_block($pluginname, clone $result)
             ];
         }
 
@@ -133,7 +137,8 @@ class block_course_checker extends block_base {
         /** @var \block_course_checker\output\block_renderer $renderer */
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
-                "groupedresults" => $groupedresults
+                "groupedresults" => $groupedresults,
+                "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id])
         ]);
     }
 

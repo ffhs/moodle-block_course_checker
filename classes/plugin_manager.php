@@ -28,6 +28,8 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 
 class plugin_manager implements check_manager_interface {
+    // Enable this if you want to run the test directly. This is helpful for debugging.
+    const IMMEDIATE_RUN = true; // FIXME set to false.
 
     const PLUGIN_FILE = 'checker.php';
     const PLUGIN_OUTPUT_FILE = 'renderer.php';

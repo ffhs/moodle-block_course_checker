@@ -20,22 +20,30 @@ defined('MOODLE_INTERNAL') || die();
 use block_course_checker\global_plugin_renderer;
 use block_course_checker\model\check_result_interface;
 
+/**
+ * Alter the message to display the url.
+ *
+ * @package block_course_checker\checkers\checker_link
+ */
 class renderer extends global_plugin_renderer {
     /**
      * @inheritdoc
      */
-    public function render_for_block(check_result_interface $result): string {
+    public function render_for_block(string $pluginname, check_result_interface $result): string {
         $this->altermessage($result);
-        return parent::render_for_block($result);
+        return parent::render_for_block($pluginname, $result);
     }
-
-    public function render_for_page(check_result_interface $result): string {
+    /**
+     * @inheritdoc
+     */
+    public function render_for_page(string $pluginname, check_result_interface $result): string {
         $this->altermessage($result);
-        return parent::render_for_page($result);
+        return parent::render_for_page($pluginname, $result);
     }
 
     /**
      * Alter the message to provide a link to the url.
+     *
      * @param check_result_interface $result
      */
     private function altermessage(check_result_interface $result) {

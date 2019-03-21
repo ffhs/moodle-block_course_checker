@@ -16,7 +16,6 @@
 
 require_once("../../config.php");
 
-//require_once($CFG->dirroot.'/blocks/course_checker/locallib.php');
 use block_course_checker\result_persister;
 
 $courseid = required_param('id', PARAM_INT);
@@ -26,11 +25,11 @@ require_login($courseid, false);
 $course = get_course($courseid);
 $PAGE->set_url(new moodle_url('/blocks/course_checker/details.php', array('id' => $courseid)));
 $PAGE->set_context(context_course::instance($courseid));
-$PAGE->set_title('Course Checker Report Page'); // TODO translate
-$PAGE->set_heading('Course Checker Report Page'); // TODO translate
+$PAGE->set_title('Course Checker Report Page'); // TODO translate.
+$PAGE->set_heading('Course Checker Report Page'); // TODO translate.
 $PAGE->set_pagelayout('report');
 
-// checks are loaded
+// Load previous check results.
 $record = result_persister::instance()->load_last_checks($COURSE->id);
 if ($record) {
     $results = $record["result"];
@@ -38,13 +37,15 @@ if ($record) {
     $results = [];
 }
 
-// Render each check result with the dedicated render for this checker.
-$manager = \block_course_checker\plugin_manager::instance();
-$htmlresults = [];
+// Run the test directly.
+if (\block_course_checker\plugin_manager::IMMEDIATE_RUN) {
+    $results = \block_course_checker\plugin_manager::instance()->run_checks($COURSE);
+}
 
 // Render each check result with the dedicated render for this checker.
 $manager = \block_course_checker\plugin_manager::instance();
 $htmlresults = [];
+
 foreach ($results as $pluginname => $result) {
 
     // Ignore missing checker.
@@ -53,7 +54,7 @@ foreach ($results as $pluginname => $result) {
     }
     $htmlresults[] = [
             "name" => $pluginname,
-            "result" => $manager->get_renderer($pluginname)->render_for_block(clone $result)
+            "result" => $manager->get_renderer($pluginname)->render_for_page($pluginname, clone $result)
     ];
 }
 
@@ -74,5 +75,7 @@ $groupedresults = array_values($groupedresults);
 $renderer = $PAGE->get_renderer("block_course_checker", "page");
 
 echo $OUTPUT->header();
-echo $renderer->renderer(["groupedresults" => $groupedresults]);
+echo $renderer->renderer([
+        "groupedresults" => $groupedresults,
+        "back" => new \moodle_url("/course/view.php", ["id" => $courseid])]);
 echo $OUTPUT->footer();
