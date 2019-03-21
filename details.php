@@ -31,8 +31,7 @@ $PAGE->set_title('Course Checker Report Page');
 $PAGE->set_heading('Course Checker Report Page');
 $PAGE->set_pagelayout('report');
 
-//$this->render_checks($checks);
-
+// checks are loaded
 $loadedchecks = result_persister::instance()->load_last_checks($COURSE->id);
 $results = $loadedchecks["result"];
 
@@ -40,18 +39,7 @@ $results = $loadedchecks["result"];
 $manager = \block_course_checker\plugin_manager::instance();
 $htmlresults = [];
 
-
-foreach ($results as $pluginname => $result) {
-
-    // Ignore missing checker.
-    if ($manager->get_checker($pluginname) == null) {
-        continue;
-    }
-    $htmlresults[] = [
-        "name" => $pluginname,
-        "result" => $manager->get_renderer($pluginname)->render_for_page(clone $result)
-    ];
-}
+echo $OUTPUT->header();
 
 foreach ($results as $pluginname => $result) {
     // Ignore missing checker.
@@ -61,27 +49,6 @@ foreach ($results as $pluginname => $result) {
     echo $pluginname;
     $renderable = $manager->get_renderer($pluginname)->render_for_page(clone $result);
     echo $renderable;
-
 }
 
-
-// Sort results by group.
-$groupedresults = [];
-foreach ($htmlresults as $count => $result) {
-    $group = $manager->get_group($result['name']);
-    if (!array_key_exists($group, $groupedresults)) {
-        $groupedresults[$group] = ['results' => [], "group" => $group];
-    }
-
-    $groupedresults[$group]['results'][] = $result;
-}
-
-$groupedresults = array_values($groupedresults);
-
-$renderer = $PAGE->get_renderer("block_course_checker", "page");
-echo $OUTPUT->header();
-echo $OUTPUT->heading(format_string($title));
-$renderer->renderer([
-    "groupedresults" => $groupedresults
-]);
-
+echo $OUTPUT->footer();
