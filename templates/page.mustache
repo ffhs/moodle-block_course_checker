@@ -1,0 +1,16 @@
+{{#groupedresults}}
+    <hr>
+    <div class="mt-2">
+        <h4 class="mb-1 pb-2 text-muted text-capitalize">{{{group}}}</h4>
+        <div class="mt-1 pt-2 container-fluid">
+            {{#results}}
+                <h3>{{{name}}}</h3>
+                {{{result}}}
+            {{/results}}
+        </div>
+    </div>
+{{/groupedresults}}
+
+{{^groupedresults}}
+    No results yet
+{{/groupedresults}}

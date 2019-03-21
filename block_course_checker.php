@@ -112,7 +112,7 @@ class block_course_checker extends block_base {
             }
             $htmlresults[] = [
                     "name" => $pluginname,
-                    "result" => $manager->get_renderer($pluginname)->render_for_block(clone $result)
+                    "result" => $manager->get_renderer($pluginname)->render_for_page(clone $result)
             ];
         }
 
