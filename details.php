@@ -15,40 +15,64 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once("../../config.php");
+
 //require_once($CFG->dirroot.'/blocks/course_checker/locallib.php');
 use block_course_checker\result_persister;
 
-$courseid   = optional_param('id', 0, PARAM_INT);
-
-$course = $DB->get_record('course', array('id' => $courseid));
+$courseid = required_param('id', PARAM_INT);
 
 require_login($courseid, false);
-//$PAGE->set_url('/blocks/course_checker/courseindex1.php', );
+
+$course = get_course($courseid);
 $PAGE->set_url(new moodle_url('/blocks/course_checker/details.php', array('id' => $courseid)));
 $PAGE->set_context(context_course::instance($courseid));
-//$systemcontext = context_course::instance();
-$PAGE->set_title('Course Checker Report Page');
-$PAGE->set_heading('Course Checker Report Page');
+$PAGE->set_title('Course Checker Report Page'); // TODO translate
+$PAGE->set_heading('Course Checker Report Page'); // TODO translate
 $PAGE->set_pagelayout('report');
 
 // checks are loaded
-$loadedchecks = result_persister::instance()->load_last_checks($COURSE->id);
-$results = $loadedchecks["result"];
+$record = result_persister::instance()->load_last_checks($COURSE->id);
+if ($record) {
+    $results = $record["result"];
+} else {
+    $results = [];
+}
 
 // Render each check result with the dedicated render for this checker.
 $manager = \block_course_checker\plugin_manager::instance();
 $htmlresults = [];
 
-echo $OUTPUT->header();
-
+// Render each check result with the dedicated render for this checker.
+$manager = \block_course_checker\plugin_manager::instance();
+$htmlresults = [];
 foreach ($results as $pluginname => $result) {
+
     // Ignore missing checker.
     if ($manager->get_checker($pluginname) == null) {
         continue;
     }
-    echo $pluginname;
-    $renderable = $manager->get_renderer($pluginname)->render_for_page(clone $result);
-    echo $renderable;
+    $htmlresults[] = [
+            "name" => $pluginname,
+            "result" => $manager->get_renderer($pluginname)->render_for_block(clone $result)
+    ];
 }
 
+// Sort results by group.
+$groupedresults = [];
+foreach ($htmlresults as $count => $result) {
+    $group = $manager->get_group($result['name']);
+    if (!array_key_exists($group, $groupedresults)) {
+        $groupedresults[$group] = ['results' => [], "group" => $group];
+    }
+
+    $groupedresults[$group]['results'][] = $result;
+}
+
+$groupedresults = array_values($groupedresults);
+
+/** @var \block_course_checker\output\page_renderer $renderer */
+$renderer = $PAGE->get_renderer("block_course_checker", "page");
+
+echo $OUTPUT->header();
+echo $renderer->renderer(["groupedresults" => $groupedresults]);
 echo $OUTPUT->footer();
