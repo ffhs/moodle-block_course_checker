@@ -31,6 +31,7 @@ $string['resultpagetitle'] = 'detailed resutls';
 $string['resultpageheader'] = 'View detailed results';
 $string['resultpagetitle'] = 'View detailed results for course {$a->name}';
 $string['automaticcheck'] = 'Last automatic check';
+$string['lastactivityedition'] = 'Last activity change';
 $string['automaticcheckempty'] = 'The checks have never been launched for this course';
 $string['humancheck'] = 'Last manual check';
 $string['humancheckempty'] = 'This course has never been manually checked';
