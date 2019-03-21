@@ -49,9 +49,10 @@ class renderer extends global_plugin_renderer {
     private function altermessage(check_result_interface $result) {
         $details = $result->get_details();
         // We output the resource as an external link into the message column.
+        $attr = ["target" => "_blank"];
         foreach ($details as $key => &$data) {
             $details[$key]["message"] = sprintf("%s<br>%s", s($data["message"]),
-                    \html_writer::link($data["resource"], '<i class="fa fa-external-link"></i>'));
+                    \html_writer::link($data["resource"], '<i class="fa fa-external-link"></i>', $attr));
             $details[$key]["message_safe"] = true;
         }
         $result->set_details($details);

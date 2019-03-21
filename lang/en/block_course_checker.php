@@ -42,6 +42,7 @@ $string['check_failed'] = 'Failure';
 $string['resolutionlink'] = 'Resolution: ';
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
 $string['checker_link_summary'] = 'Course summary';
+$string['checker_link_error'] = 'Error {$a->http_code} on {$a->host}'; // You can get any curl info or pare_url field in $a.
 $string['groupsettingstitle'] = 'Settings for Group Submission of Assignments';
 $string['groups_deactivated'] = 'Group is deactivated';
 $string['groups_idmissing'] = 'Group is missing';

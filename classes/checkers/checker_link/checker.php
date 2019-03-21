@@ -105,7 +105,8 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             $this->lasterror = null;
             return true;
         }
-        $this->lasterror = $code;
+        $context = parse_url($url) + ["url" => $url] + $infos;
+        $this->lasterror = get_string("checker_link_error", "block_course_checker", $context);
         return false;
     }
 
