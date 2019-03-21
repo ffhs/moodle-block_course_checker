@@ -137,10 +137,23 @@ class block_course_checker extends block_base {
             ];
         }
 
+        // Sort results by group.
+        $groupedresults = [];
+        foreach ($htmlresults as $count => $result) {
+            $group = $manager->get_group($result['name']);
+            if (!array_key_exists($group, $groupedresults)) {
+                $groupedresults[$group] = ['results' => [], "group" => $group];
+            }
+
+            $groupedresults[$group]['results'][] = $result;
+        }
+
+        $groupedresults = array_values($groupedresults);
+
         /** @var \block_course_checker\output\block_renderer $renderer */
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
-                "results" => $htmlresults
+                "groupedresults" => $groupedresults
         ]);
     }
 

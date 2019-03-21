@@ -13,7 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-namespace block_course_checker\checkers\checker_dummy;
+namespace block_course_checker\checkers\checker_dummy2;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -28,20 +28,20 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      */
     public function run($course) {
         return (new check_result())->add_detail([
-                "successful" => true,
-                "message" => "this is a successful test",
-                "link" => "https://success.example.com"
+            "successful" => true,
+            "message" => "this is a successful test",
+            "link" => "https://success.example.com"
         ])->add_detail([
-                "successful" => false,
-                "message" => "this is failed test",
-                "link" => "https://failed.example.com"
+            "successful" => false,
+            "message" => "this is failed test",
+            "link" => "https://failed.example.com"
         ])->set_link('www.google.com');
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public static function get_group(): string {
-        return 'course';
+        return 'activities';
     }
 }

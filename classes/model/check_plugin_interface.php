@@ -33,4 +33,11 @@ interface check_plugin_interface{
      */
     public function run($course);
 
+    /**
+     * Get the group defined for this check.
+     * This is used to display checks from the same group together.
+     * @return string
+     */
+    public static function get_group();
+
 }
