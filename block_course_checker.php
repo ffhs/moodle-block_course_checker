@@ -66,6 +66,7 @@ class block_course_checker extends block_base {
         } else {
             $rundate = null;
             $human = null;
+            $checks = [];
         }
 
         // Render the checks results.
