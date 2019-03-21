@@ -25,6 +25,20 @@ class renderer extends global_plugin_renderer {
      * @inheritdoc
      */
     public function render_for_block(check_result_interface $result): string {
+        $this->altermessage($result);
+        return parent::render_for_block($result);
+    }
+
+    public function render_for_page(check_result_interface $result): string {
+        $this->altermessage($result);
+        return parent::render_for_page($result);
+    }
+
+    /**
+     * Alter the message to provide a link to the url.
+     * @param check_result_interface $result
+     */
+    private function altermessage(check_result_interface $result) {
         $details = $result->get_details();
         // We output the resource as an external link into the message column.
         foreach ($details as $key => &$data) {
@@ -33,7 +47,5 @@ class renderer extends global_plugin_renderer {
             $details[$key]["message_safe"] = true;
         }
         $result->set_details($details);
-        // We render it as any other checks.
-        return parent::render_for_block($result);
     }
 }
