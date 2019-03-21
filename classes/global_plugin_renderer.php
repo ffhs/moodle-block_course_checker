@@ -70,7 +70,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
             $humanresult = $detail['successful'] ? $icons['success'] : $icons['failure'];
             $render .= \html_writer::start_tag('tr');
             $render .= \html_writer::tag('td', $humanresult);
-            $render .= \html_writer::tag('td', $detail['message']);
+
+            if (!array_key_exists("message_safe", $detail) || !$detail["message_safe"]) {
+                $message = s($detail['message']);
+            } else {
+                $message = $detail['message'];
+            }
+            $render .= \html_writer::tag('td', $message);
+
             if ($detail['link'] != null) {
                 $render .= \html_writer::tag('td', \html_writer::link($detail['link'], $icons['link']));
             }
