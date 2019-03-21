@@ -94,6 +94,7 @@ class block_course_checker extends block_base {
 
     /**
      * Render the checks results
+     *
      * @param $results
      * @return mixed
      */
@@ -104,6 +105,11 @@ class block_course_checker extends block_base {
         $manager = \block_course_checker\plugin_manager::instance();
         $htmlresults = [];
         foreach ($results as $pluginname => $result) {
+
+            // Ignore missing checker.
+            if ($manager->get_checker($pluginname) == null) {
+                continue;
+            }
             $htmlresults[] = [
                     "name" => $pluginname,
                     "result" => $manager->get_renderer($pluginname)->render_for_block(clone $result)
@@ -139,6 +145,7 @@ class block_course_checker extends block_base {
 
     /**
      * Show the button to run a task, execpt if it's already scheduled.
+     *
      * @param int $courseid
      * @return string
      */
@@ -170,6 +177,7 @@ class block_course_checker extends block_base {
 
     /**
      * Tells if a check for the specific course is already scheduled
+     *
      * @param int $courseid
      * @return bool
      * @throws dml_exception

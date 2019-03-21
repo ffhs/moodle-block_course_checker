@@ -125,7 +125,7 @@ class plugin_manager implements check_manager_interface {
      * @param $pluginname
      * @return object|null
      */
-    protected function get_checker($pluginname) {
+    public function get_checker($pluginname) {
         // Use the plugin if it has been instantiated.
         // Otherwise we just instantiate it, without caching for avoiding side effects with get_checkers_plugins.
         if (!empty(self::$plugins) && array_key_exists($pluginname, self::$plugins)) {
