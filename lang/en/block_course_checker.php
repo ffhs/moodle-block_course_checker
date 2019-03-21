@@ -34,6 +34,7 @@ $string['link'] = 'Link';
 $string['resolutionlink'] = 'Resolution: ';
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
 $string['checker_link_summary'] = 'Course summary';
+$string['groupsettingstitle'] = 'Settings for Group Submission of Assignments';
 $string['groups_deactivated'] = 'Group is deactivated';
 $string['groups_idmissing'] = 'Group is missing';
 $string['groups_missing'] = 'Groups have not been set up';
