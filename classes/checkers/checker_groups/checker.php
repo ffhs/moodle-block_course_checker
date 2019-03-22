@@ -69,19 +69,20 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             $groupmode = $assign->teamsubmission;
             $groupingid = $assign->teamsubmissiongroupingid;
 
-            // Prepare a common message.
-            $message = get_string("groups_activity", "block_course_checker", (object) ["name" => $cm->name]);
+            $targetcontext = (object) ["name" => strip_tags($cm->name)];
+            $target = get_string("groups_activity", "block_course_checker", $targetcontext);
             // Now the groups settings can be checked.
             // These are the settings of assignment group submission in the corresponding activity.
 
             // Case 1: the group mode is deactivated -> check okay.
             if ($groupmode == 0) {
-                $message .= get_string('groups_deactivated', 'block_course_checker');
+                $message = get_string('groups_deactivated', 'block_course_checker');
                 $checkresult->add_detail([
                         "successful" => true,
                         "message" => $message,
+                        "target" => $target,
                         "link" => $link
-                ])->set_successful(false);
+                ]); // Note that set_successful should not be false here.
                 continue;
             }
 
@@ -89,11 +90,12 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
             // If the groupingid is not set -> check fails.
             if ($groupingid == 0) {
-                $message .= get_string('groups_idmissing', 'block_course_checker');
+                $message = get_string('groups_idmissing', 'block_course_checker');
 
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
+                        "target" => $target,
                         "link" => $link
                 ])->set_successful(false);
                 continue;
@@ -102,10 +104,11 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             // If the grouping does not exist -> check fails.
             $groupingexists = $DB->record_exists('groupings', array('id' => $groupingid));
             if (!$groupingexists) {
-                $message .= get_string('groups_missing', 'block_course_checker');
+                $message = get_string('groups_missing', 'block_course_checker');
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
+                        "target" => $target,
                         "link" => $link
                 ])->set_successful(false);
                 continue;
@@ -114,20 +117,22 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             // If the grouping has less then 2 groups -> check fails.
             $groupcount = $DB->count_records('groupings_groups', array('groupingid' => $groupingid));
             if ($groupcount < 2) {
-                $message .= get_string('groups_lessthantwogroups', 'block_course_checker');
+                $message = get_string('groups_lessthantwogroups', 'block_course_checker');
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
+                        "target" => $target,
                         "link" => $link
                 ])->set_successful(false);
                 continue;
             }
 
             // The group submission is activated and all checks have passed -> check okay.
-            $message .= get_string('groups_success', 'block_course_checker');
+            $message = get_string('groups_success', 'block_course_checker');
             $checkresult->add_detail([
                     "successful" => true,
                     "message" => $message,
+                    "target" => $target,
                     "link" => $link
             ]);
         }

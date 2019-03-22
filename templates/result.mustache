@@ -6,7 +6,7 @@
             <i class="fa fa-check-circle text-success"></i>
         {{/successful}}
         {{^successful}}
-            <i class="fa fa-times text-danger"></i>
+            <i class="fa fa-times-circle text-danger"></i>
         {{/successful}}
         <span class="{{#successful}}text-success{{/successful}}{{^successful}}text-danger{{/successful}}">
         {{#successful}}
@@ -19,7 +19,7 @@
     </h4>
 
     {{#hasresults}}
-        <div class="table">
+        <div class="table-like">
             <div class="row header">
             {{#tableheaders}}
                 <div class="col {{{classname}}}">
@@ -28,15 +28,17 @@
             {{/tableheaders}}
             </div>
         </div>
-    {{/hasresults}}
 
-    {{#resultdetails}}
-        <div class="{{{classname}}}">
-            <div class="col result">{{{icon}}}</div>
-            <div class="col message">{{{message}}}</div>
-            <div class="col link">{{{link}}}</div>
-        </div>
-    {{/resultdetails}}
+        <div class="table-like">
+        {{#resultdetails}}
+            <div class="{{{classname}}}">
+                <div class="col result">{{{icon}}}</div>
+                <div class="col message">{{{message}}}</div>
+                <div class="col link">{{{link}}}</div>
+            </div>
+        {{/resultdetails}}
+    </div>
+    {{/hasresults}}
 
     {{^hasresults}}
         {{#str}} noresults, block_course_checker {{/str}}

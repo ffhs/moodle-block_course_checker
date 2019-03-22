@@ -29,7 +29,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     /**
      * @var string|null Last CURL error after a call to check_url.
      */
-    protected $lasterror = "";
+    protected $lastmessage = "";
 
     /** @var check_result */
     protected $result = null;
@@ -52,14 +52,14 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             }
             switch ($cm->modname) {
                 case "url":
-                    $message = get_string("checker_link_activity", "block_course_checker",
-                            (object) ["modname" => get_string("pluginname", $cm->modname), "name" => $cm->name]);
+                    $target = get_string("checker_link_activity", "block_course_checker",
+                            (object) ["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)]);
 
                     $record = $this->get_mod_url_link_record($cm, $course->id);
                     // Check the link itself.
-                    $this->check_urls_with_resolution_url([$record->externalurl], $cm->url, $message);
+                    $this->check_urls_with_resolution_url([$record->externalurl], $cm->url, $target);
                     // Check the link intro text.
-                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->url, $message);
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->url, $target);
 
                     break;
                 default:
@@ -74,17 +74,17 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      *
      * @param string[] $urls
      * @param string|null $resolutionlink
-     * @param string|null $message
+     * @param string|null $target
      */
-    protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $message = null) {
+    protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
         foreach ($urls as $i => $url) {
             $successful = $this->check_url($url);
-            $message = empty($this->lasterror) ? $message : $this->lasterror;
             $this->result->set_successful($this->result->is_successful() & $successful);
             $this->result->add_detail([
                     "successful" => $successful,
-                    "message" => $message,
+                    "target" => $target,
                     "link" => $resolutionlink,
+                    "message" => $this->lastmessage,
                     "resource" => $url, // The custom-renderer will display the resource correctly.
             ]);
         }
@@ -101,12 +101,20 @@ class checker implements \block_course_checker\model\check_plugin_interface {
         $curl->get($url, ["CURLOPT_CONNECTTIMEOUT" => 15, "CURLOPT_HEADER" => 1, "CURLOPT_VERBOSE" => 1]);
         $infos = $curl->get_info();
         $code = (int) $infos["http_code"];
+        if ($code === 0) {
+            // Code 0: timeout or other curl error.
+            $context = parse_url($url) + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
+            $this->lastmessage = get_string("checker_link_error_curl", "block_course_checker", $context);
+            return false;
+        }
+
+        $context = parse_url($url) + ["url" => $url, "http_code" => $code];
         if ($code >= 200 && $code < 400) {
-            $this->lasterror = null;
+            $this->lastmessage = get_string("checker_link_ok", "block_course_checker", $context);
             return true;
         }
-        $context = parse_url($url) + ["url" => $url] + $infos;
-        $this->lasterror = get_string("checker_link_error", "block_course_checker", $context);
+        // Code != 0 means it's a http error.
+        $this->lastmessage = get_string("checker_link_error_code", "block_course_checker", $context);
         return false;
     }
 

@@ -56,7 +56,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @return string
      */
     private function get_success_icon() {
-        return \html_writer::tag('i', null, ['class' => 'fa fa-check-circle text-success']);
+        return \html_writer::tag('i', null, ['class' => 'fa fa-check text-success']);
     }
 
     /**
@@ -90,7 +90,23 @@ class global_plugin_renderer extends \plugin_renderer_base {
             } else {
                 $message = $detail['message'];
             }
-            $link = $detail['link'] != null ? \html_writer::link($detail['link'], $this->get_link_icon()) : null;
+
+            // Wrap the message with a target block.
+            if (isset($detail['target'])) {
+                $target = $detail['target'] ? \html_writer::div(s($detail['target'])) : '';
+                $classname = $detail['successful'] ? "text-success" : "text-danger";
+                $message = \html_writer::tag('span', $message, ["class" => $classname]);
+                $message = \html_writer::tag('span', $target . $message);
+            }
+
+            // Display a resource url at the end of the message.
+            if (isset($detail["resource"]) && $detail["resource"]) {
+                $message .= \html_writer::link($detail["resource"], '<i class="text-muted fa fa-external-link"></i>',
+                        ["target" => "_blank"]);
+            }
+
+            $link = isset($detail['link']) && $detail['link'] != null ?
+                    \html_writer::link($detail['link'], $this->get_link_icon()) : null;
             $resultdetails[$index] = [
                     "classname" => trim("row " . ($index % 2 == 0 ? "odd" : "")),
                     "icon" => $resulticon,
