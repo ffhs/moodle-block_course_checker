@@ -37,11 +37,14 @@ interface check_result_interface extends \renderable, \templatable {
 
     /**
      * Return the details of a check
-     * This is an array of \stdClass containing:
+     * This is an array containing:
      * - success: bool Is the check successful
      * - message: string a message description
+     * - (message_safe): bool Avoid escaping the message if true.
      * - link: string|null The link to fix this issue or a null string.
-     *
+     * - (target): string The concerned object (course header, activity, etc)
+     * - (resources): string Url to an external resource
+     * Note that the key can differ for each checks and that the renderer must support them.
      * @return array
      */
     public function get_details(): array;
