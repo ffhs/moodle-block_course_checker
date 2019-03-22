@@ -24,10 +24,15 @@ require_login($courseid, false);
 
 $course = get_course($courseid);
 $PAGE->set_url(new moodle_url('/blocks/course_checker/details.php', array('id' => $courseid)));
-$PAGE->set_context(context_course::instance($courseid));
-$PAGE->set_title('Course Checker Report Page'); // TODO translate.
-$PAGE->set_heading('Course Checker Report Page'); // TODO translate.
+$context = context_course::instance($courseid);
+$PAGE->set_context($context);
+$PAGE->set_title(get_string("resultpagetitle", "block_course_checker", $course));
+$PAGE->set_heading(get_string("resultpageheader", "block_course_checker", $course));
 $PAGE->set_pagelayout('report');
+
+if (!has_capability('block/course_checker:view_report', $context)) {
+    print_error('resultpermissiondenied', 'block_course_checker');
+}
 
 // Load previous check results.
 $record = result_persister::instance()->load_last_checks($COURSE->id);

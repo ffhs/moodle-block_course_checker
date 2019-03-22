@@ -20,6 +20,7 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
 $string['course_checker.php:addinstance'] = 'Add a new course checker block';
+$string['course_checker:view_report'] = 'View the check result page';
 $string['pluginname'] = 'FFHS Course Checker';
 $string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
 $string['course_checker:addinstance'] = 'Course checker create';
@@ -27,6 +28,8 @@ $string['noresults'] = 'This course has never been checked automatically';
 $string['backtocourse'] = 'Back to course';
 $string['resultpagegoto'] = 'View detailed results';
 $string['resultpagetitle'] = 'detailed resutls';
+$string['resultpageheader'] = 'View detailed results';
+$string['resultpagetitle'] = 'View detailed results for course {$a->name}';
 $string['automaticcheck'] = 'Last automatic check';
 $string['automaticcheckempty'] = 'The checks have never been launched for this course';
 $string['humancheck'] = 'Last manual check';
@@ -35,6 +38,7 @@ $string['invalidtoken'] = 'Your token is invalid';
 $string['runcheckbtn'] = 'Check this course';
 $string['runcheckbtn_already'] = 'This course is already scheduled to be checked automatically';
 $string['result'] = 'Result';
+$string['resultpermissiondenied'] = 'You are not allowed to access this page';
 $string['message'] = 'Message';
 $string['link'] = 'Link';
 $string['check_successful'] = 'Success';

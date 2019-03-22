@@ -135,6 +135,7 @@ class block_course_checker extends block_base {
 
         $groupedresults = array_values($groupedresults);
 
+        $context = context_course::instance($COURSE->id);
         /** @var \block_course_checker\output\block_renderer $renderer */
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
@@ -142,6 +143,7 @@ class block_course_checker extends block_base {
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
                 "runscheduled" => $this->is_task_scheduled($COURSE->id),
+                "detailsallowed" => has_capability('block/course_checker:view_report', $context),
 
         ]);
     }

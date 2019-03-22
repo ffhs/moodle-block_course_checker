@@ -16,6 +16,7 @@
 
 /**
  * Access permission for block course_checker
+ *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
@@ -23,17 +24,29 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
-    'block/course_checker:addinstance' => array(
-            'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'block/course_checker:addinstance' => array(
+                'riskbitmask' => RISK_SPAM | RISK_XSS,
 
-            'captype' => 'write',
-            'contextlevel' => CONTEXT_BLOCK,
-            'archetypes' => array(
-                'editingteacher' => CAP_ALLOW,
-                'manager' => CAP_ALLOW,
-                'student' => CAP_PROHIBIT
-            ),
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_BLOCK,
+                'archetypes' => array(
+                        'editingteacher' => CAP_ALLOW,
+                        'manager' => CAP_ALLOW,
+                        'student' => CAP_PROHIBIT
+                ),
 
-            'clonepermissionsfrom' => 'moodle/site:manageblocks'
-    )
+                'clonepermissionsfrom' => 'moodle/site:manageblocks'
+        ),
+        'block/course_checker:view_report' => array(
+                'riskbitmask' => RISK_PERSONAL,
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_BLOCK,
+                'archetypes' => array(
+                        'editingteacher' => CAP_ALLOW,
+                        'manager' => CAP_ALLOW,
+                        'student' => CAP_PROHIBIT
+                ),
+
+                'clonepermissionsfrom' => 'moodle/site:manageblocks'
+        )
 );
