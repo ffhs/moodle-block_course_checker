@@ -31,7 +31,7 @@ $token = required_param('token', PARAM_TEXT);
 $referer = optional_param('ref', get_local_referer(), PARAM_TEXT);
 
 if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
-    if ($token != \core\session\manager::get_login_token($token)) {
+    if ($token != \core\session\manager::get_login_token()) {
         print_error("invalidtoken", 'block_course_checker');
     }
 }

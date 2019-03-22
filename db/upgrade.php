@@ -25,6 +25,7 @@ defined('MOODLE_INTERNAL') || die();
  * Upgrade the badges block
  *
  * @param int $oldversion
+ * @return bool
  */
 function xmldb_block_course_checker_upgrade($oldversion) {
     global $DB, $CFG;

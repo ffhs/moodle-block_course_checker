@@ -158,9 +158,11 @@ class result_persister implements check_manager_persister_interface {
     /**
      * Check that the checkresult is an instance of check_result_interface
      *
-     * @param $checkresult
+     * @param string $pluginname
+     * @param mixed $checkresult
+     * @throws \RuntimeException
      */
-    private function assert_checks($pluginname, $checkresult) {
+    private function assert_checks(string $pluginname, $checkresult) {
         if (!$checkresult instanceof check_result_interface) {
             throw new \RuntimeException(sprintf("Result for %s must be an instance of %s, got %s", $pluginname,
                     check_result_interface::class, get_class($checkresult)));
