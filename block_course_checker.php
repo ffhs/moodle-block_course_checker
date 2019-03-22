@@ -115,17 +115,19 @@ class block_course_checker extends block_base {
                 continue;
             }
             $htmlresults[] = [
-                    "name" => $pluginname,
-                    "result" => $manager->get_renderer($pluginname)->render_for_block($pluginname, clone $result)
+                    "pluginname" => $pluginname,
+                    "name" => get_string($pluginname, "block_course_checker"),
+                    "output" => $manager->get_renderer($pluginname)->render_for_block($pluginname, clone $result)
             ];
         }
 
         // Sort results by group.
         $groupedresults = [];
         foreach ($htmlresults as $count => $result) {
-            $group = $manager->get_group($result['name']);
+            $group = $manager->get_group($result['pluginname']);
+            $groupname = get_string($group, "block_course_checker");
             if (!array_key_exists($group, $groupedresults)) {
-                $groupedresults[$group] = ['results' => [], "group" => $group];
+                $groupedresults[$group] = ['results' => [], "group" => $group, "groupname" => $groupname];
             }
 
             $groupedresults[$group]['results'][] = $result;

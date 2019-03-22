@@ -28,14 +28,20 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 
 class plugin_manager implements check_manager_interface {
-    // Enable this if you want to run the test directly. This is helpful for debugging.
-    const IMMEDIATE_RUN = true; // FIXME set to false.
+    // Enable this if you want to run the checks directly. This is helpful for debugging.
+    const IMMEDIATE_RUN = false;
+    // Enable this if you want to save the checks results after a run directly. This is helpful for debugging.
+    const IMMEDIATE_SAVE_AFTER_RUN = false;
 
+    // The checker filename.
     const PLUGIN_FILE = 'checker.php';
+    // The renderer filename (this is an optional file).
     const PLUGIN_OUTPUT_FILE = 'renderer.php';
+    // The interface tha the checker must implement (This is not verified yet).
     const PLUGIN_INTERFACE = 'block_course_checker\\model\\check_plugin_interface';
-    const PLUGIN_TYPE = "checker";
+    // The plugin expected class, The token represent the folder_name.
     const PLUGIN_CLASS = "block_course_checker\checkers\\%s\\checker";
+    // The renderer expected class, The token represent the folder_name.
     const PLUGIN_OUTPUT_CLASS = "block_course_checker\\checkers\\%s\\renderer";
 
     /**
@@ -124,10 +130,10 @@ class plugin_manager implements check_manager_interface {
     /**
      * Get the plugin checker for a specific check.
      *
-     * @param $pluginname
-     * @return object|null
+     * @param string $pluginname
+     * @return check_plugin_interface|null
      */
-    public function get_checker($pluginname) {
+    public function get_checker(string $pluginname) {
         // Use the plugin if it has been instantiated.
         // Otherwise we just instantiate it, without caching for avoiding side effects with get_checkers_plugins.
         if (!empty(self::$plugins) && array_key_exists($pluginname, self::$plugins)) {
@@ -152,7 +158,7 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
-     * Get the plugin renderer for a specific check
+     * Get the plugin renderer for a specific check, if it doesn't exist, fallback to the default one.
      *
      * @param string $pluginname plugin name
      * @return global_plugin_renderer
@@ -175,6 +181,8 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * Get the checker group.
+     *
      * @param string $pluginname
      * @return string
      */
@@ -191,6 +199,11 @@ class plugin_manager implements check_manager_interface {
         $results = [];
         foreach ($this->get_checkers_plugins() as $pluginname => $plugin) {
             $results[$pluginname] = $plugin->run($course);
+        }
+
+        // For debug purpose.
+        if (self::IMMEDIATE_SAVE_AFTER_RUN) {
+            result_persister::instance()->save_checks($course->id, $results);
         }
         return $results;
     }

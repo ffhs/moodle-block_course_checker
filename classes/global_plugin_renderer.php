@@ -43,11 +43,11 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @throws \coding_exception
      */
     public function render_for_block(string $pluginname, check_result_interface $result): string {
-        $resulticon = $result->is_successful() ? $this->get_success_icon() : $this->get_failed_icon();
-        $name = get_string($pluginname, "block_course_checker");
-        $name = \html_writer::tag("p", $name, ["class" => "m-a-1"]);
-        $output = \html_writer::tag('div', $resulticon . $name,
-                ["class" => "d-flex", "style" => "justify-content: flex-start; align-items: center;"]); // TODO remove style.
+        $output = $this->render_from_template("block_course_checker/check_block", [
+                "successful" => $result->is_successful(),
+                "pluginame" => $pluginname,
+                "name" => get_string($pluginname, "block_course_checker")
+        ]);
         $output .= $this->debug($result);
         return $output;
     }
@@ -127,7 +127,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $output = "";
         $output .= $this->debug($pluginname);
         $output .= $this->debug($context);
-        $output .= $this->render_from_template("block_course_checker/result", $context);
+        $output .= $this->render_from_template("block_course_checker/check_result", $context);
         return $output;
 
     }

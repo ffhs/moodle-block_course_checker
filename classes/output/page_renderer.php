@@ -18,6 +18,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class page_renderer extends \plugin_renderer_base {
     public function renderer($context) {
-        return $this->render_from_template("block_course_checker/page", $context);
+        return $this->render_from_template("block_course_checker/full_page", $context);
     }
 }

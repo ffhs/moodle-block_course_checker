@@ -145,6 +145,6 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      * @inheritdoc
      */
     public static function get_group() {
-        return "course";
+        return "group_course";
     }
 }

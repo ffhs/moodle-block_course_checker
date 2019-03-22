@@ -54,7 +54,7 @@ foreach ($results as $pluginname => $result) {
     }
     $htmlresults[] = [
             "name" => $pluginname,
-            "result" => $manager->get_renderer($pluginname)->render_for_page($pluginname, clone $result)
+            "output" => $manager->get_renderer($pluginname)->render_for_page($pluginname, clone $result)
     ];
 }
 
@@ -62,8 +62,9 @@ foreach ($results as $pluginname => $result) {
 $groupedresults = [];
 foreach ($htmlresults as $count => $result) {
     $group = $manager->get_group($result['name']);
+    $groupname = get_string($group, "block_course_checker");
     if (!array_key_exists($group, $groupedresults)) {
-        $groupedresults[$group] = ['results' => [], "group" => $group];
+        $groupedresults[$group] = ['results' => [], "group" => $group, "groupname" => $groupname];
     }
 
     $groupedresults[$group]['results'][] = $result;

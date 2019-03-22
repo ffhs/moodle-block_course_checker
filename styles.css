@@ -6,6 +6,11 @@
 }
 .course_checker_block .actions input[type="submit"]{ width:100%;}
 
+.course_checker_block .checkblock{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 
 .course_checker_result{
     margin-bottom:30px;
