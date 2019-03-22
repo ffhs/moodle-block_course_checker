@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @package block_course_checker
  */
 class global_plugin_renderer extends \plugin_renderer_base {
-    // Output the details as var dump.
+    // Dump debug information in the page.
     const DEBUG = false;
 
     /**
@@ -75,64 +75,45 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @throws \coding_exception
      */
     public function render_for_page(string $pluginname, check_result_interface $result): string {
-        $name = get_string($pluginname, "block_course_checker") . ": ";
-        $resultdetail = $result->get_details();
-        $globallink = $result->get_link();
+        // Note that the headers are hardcoded in the template too.
+        $tableheaders = [
+                ['classname' => 'result', 'name' => get_string('result', "block_course_checker")],
+                ['classname' => 'message', 'name' => get_string('message', "block_course_checker")],
+                ['classname' => 'link', 'name' => get_string('link', "block_course_checker")],
+        ];
 
-        $success = get_string('check_successful', "block_course_checker");
-        $failure = get_string('check_failed', "block_course_checker");
-        $output = $result->is_successful() ?
-                \html_writer::tag('h4', $name . $success, ['class' => 'text-success']) :
-                \html_writer::tag('h4', $name . $failure, ['class' => 'text-warning']);
-
-        $output .= \html_writer::start_tag('div', ['class' => 'table-responsive']);
-
-        $output .= $this->debug($result);
-
-        $output .= \html_writer::start_tag('table', ['class' => 'table']);
-        $output .= \html_writer::start_tag('thead');
-        $output .= \html_writer::start_tag('tr');
-
-        $tableheaders = ['result', 'message', 'link'];
-        $tableheaders = array_map(function($el) {
-            return get_string($el, "block_course_checker");
-        }, $tableheaders);
-        foreach ($tableheaders as $tableheader) {
-            $output .= \html_writer::tag('th', $tableheader, ['class' => 'col w-25']);
-        }
-        $output .= \html_writer::end_tag('thead');
-        $output .= \html_writer::end_tag('tr');
-        $output .= \html_writer::start_tag('tbody');
-
-        foreach ($resultdetail as $index => $detail) {
+        $resultdetails = $result->get_details();
+        foreach ($resultdetails as $index => $detail) {
             $resulticon = $detail['successful'] ? $this->get_success_icon() : $this->get_failed_icon();
-            $output .= \html_writer::start_tag('tr');
-            $output .= \html_writer::tag('td', $resulticon);
-
             if (!array_key_exists("message_safe", $detail) || !$detail["message_safe"]) {
                 $message = s($detail['message']);
             } else {
                 $message = $detail['message'];
             }
-            $output .= \html_writer::tag('td', $message);
+            $link = $detail['link'] != null ? \html_writer::link($detail['link'], $this->get_link_icon()) : null;
+            $resultdetails[$index] = [
+                    "classname" => trim("row " . ($index % 2 == 0 ? "odd" : "")),
+                    "icon" => $resulticon,
+                    "message" => $message,
+                    "link" => $link
+            ];
+        }
 
-            if ($detail['link'] != null) {
-                $output .= \html_writer::tag('td', \html_writer::link($detail['link'], $this->get_link_icon()));
-            }
-            $output .= \html_writer::end_tag('tr');
-        }
-        $output .= \html_writer::end_tag('tbody');
-        $output .= \html_writer::end_tag('table');
-        $output .= \html_writer::end_tag('div');
-        if ($globallink != null) {
-            $output .= \html_writer::start_div('mt-1');
-            $output .= \html_writer::label(get_string('resolutionlink', 'block_course_checker'),
-                    null, true, ['class' => 'mr-1']
-            );
-            $output .= \html_writer::link($globallink, $globallink, ['class' => 'font-weight-bold']);
-            $output .= \html_writer::end_div();
-        }
+        $context = [
+                "pluginname" => get_string($pluginname, "block_course_checker"),
+                "successful" => $result->is_successful(),
+                "link" => $result->get_link(),
+                "resultdetails" => $resultdetails,
+                "hasresults" => !empty($resultdetails),
+                "tableheaders" => $tableheaders
+        ];
+
+        $output = "";
+        $output .= $this->debug($pluginname);
+        $output .= $this->debug($context);
+        $output .= $this->render_from_template("block_course_checker/result", $context);
         return $output;
+
     }
 
     /**
@@ -145,15 +126,15 @@ class global_plugin_renderer extends \plugin_renderer_base {
     /**
      * For debug purpose.
      *
-     * @param check_result_interface $result
-     * @return check_result_interface|false|string
+     * @param mixed
+     * @return string
      */
-    private function debug(check_result_interface $result) {
-        if (! self::DEBUG) {
+    private function debug($result) {
+        if (!self::DEBUG) {
             return '';
         }
         ob_start();
-        var_dump($result->get_details());
+        var_dump($result);
         $result = ob_get_contents();
         ob_end_clean();
         return $result;

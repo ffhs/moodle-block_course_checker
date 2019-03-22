@@ -1,16 +1,17 @@
 <hr>
-<b>{{automaticcheckstring}}:</b><br>
+<b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
+<br>
 {{#automaticcheck}}
     {{#userdate}} {{automaticcheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
 {{/automaticcheck}}
 {{^automaticcheck}}
-    No date found. <!-- TODO translate this. -->
+    {{#str}} automaticcheckempty, block_course_checker {{/str}}
 {{/automaticcheck}}
 <br>
-<b>{{humancheckstring}}:</b><br>
+<b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
 {{#humancheck}}
     {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
 {{/humancheck}}
 {{^humancheck}}
-    No date found. <!-- TODO translate this. -->
+    {{#str}} humancheckempty, block_course_checker {{/str}}
 {{/humancheck}}

@@ -1,17 +1,18 @@
-{{#groupedresults}}
-    <div class="mt-2">
-        <h4 class="mb-1 pb-2 text-muted text-capitalize">{{{group}}}</h4>
-        <div class="mt-1 pt-2 container-fluid">
-            {{#results}}
-                {{{result}}}
-            {{/results}}
+<div class="course_checker course_checker_page container-fluid">
+    {{#groupedresults}}
+        <div class="mt-2">
+            <h4  class="mb-1 pb-2 text-muted text-capitalize">{{{group}}}</h4>
+            <div class="mb-1 pb-2">
+                {{#results}}
+                    {{{result}}}
+                {{/results}}
+            </div>
         </div>
-    </div>
-{{/groupedresults}}
+    {{/groupedresults}}
 
-{{^groupedresults}}
-    No results yet <!-- TODO translate this. -->
-{{/groupedresults}}
+    {{^groupedresults}}
+        {{#str}} noresults, block_course_checker {{/str}}
+    {{/groupedresults}}
 
-<!-- TODO translate -->
-<a class="btn-primary btn" href="{{back}}">Back to course</a>
+    <a class="btn-primary btn" href="{{back}}">{{#str}} backtocourse, block_course_checker {{/str}}</a>
+</div>

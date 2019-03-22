@@ -1,0 +1,47 @@
+<div class="course_checker course_checker_result">
+
+    <h4>
+        {{pluginname}} :
+        {{#successful}}
+            <i class="fa fa-check-circle text-success"></i>
+        {{/successful}}
+        {{^successful}}
+            <i class="fa fa-times text-danger"></i>
+        {{/successful}}
+        <span class="{{#successful}}text-success{{/successful}}{{^successful}}text-danger{{/successful}}">
+        {{#successful}}
+            {{#str}} check_successful, block_course_checker {{/str}}
+        {{/successful}}
+        {{^successful}}
+            {{#str}} check_failed, block_course_checker {{/str}}
+        {{/successful}}
+        </span>
+    </h4>
+
+    {{#hasresults}}
+        <div class="table">
+            <div class="row header">
+            {{#tableheaders}}
+                <div class="col {{{classname}}}">
+                    {{name}}
+                </div>
+            {{/tableheaders}}
+            </div>
+        </div>
+    {{/hasresults}}
+
+    {{#resultdetails}}
+        <div class="{{{classname}}}">
+            <div class="col result">{{{icon}}}</div>
+            <div class="col message">{{{message}}}</div>
+            <div class="col link">{{{link}}}</div>
+        </div>
+    {{/resultdetails}}
+
+    {{^hasresults}}
+        {{#str}} noresults, block_course_checker {{/str}}
+    {{/hasresults}}
+    {{#link}}
+        <a href="{{link}}" class="btn btn-secondary">{{#str}} resolutionlink, block_course_checker {{/str}}</a>
+    {{/link}}
+</div>

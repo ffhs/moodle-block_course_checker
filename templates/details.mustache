@@ -1,14 +1,4 @@
-<style>
-    hr {
-        border-top: 1px solid rgba(0,0,0,.1) !important;
-        /*TODO: Move this on a CSS sheet.*/
-    }
-    table {
-        /*margin-bottom: 0 !important;*/
-    }
-</style>
-
-<h2 class="text-muted">Specific Course Check Results Page</h2>
+<h2 class="text-muted">{{#str}} resultpagetitle, block_course_checker {{/str}}</h2>
 
 {{#groupedresults}}
     <hr>
@@ -24,6 +14,6 @@
 {{/groupedresults}}
 
 {{^groupedresults}}
-    No results yet
+    {{#str}} noresults, block_course_checker {{/str}}
 {{/groupedresults}}
 <hr>

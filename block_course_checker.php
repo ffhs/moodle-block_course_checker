@@ -75,16 +75,13 @@ class block_course_checker extends block_base {
         }
         // Render the checks results.
         $this->content->text = "";
-        $this->content->text .= $this->render_checks($checks);
-        $this->content->text .= $this->render_run_task_button((int) $COURSE->id);
+        $this->content->text .= $this->render_block($checks);
 
-        /** @var \block_course_checker\output\block_renderer_footer $footerrenderer */
+        /** @var \block_course_checker\output\footer_renderer $footerrenderer */
         $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
         $this->content->footer = $footerrenderer->renderer([
                 'automaticcheck' => $rundate,
                 'humancheck' => $human,
-                'automaticcheckstring' => get_string('automaticcheck', 'block_course_checker'),
-                'humancheckstring' => get_string('humancheck', 'block_course_checker')
         ]);
 
         return $this->content;
@@ -100,10 +97,12 @@ class block_course_checker extends block_base {
     /**
      * Render the checks results
      *
-     * @param $results
+     * @param array $results
      * @return mixed
+     * @throws coding_exception
+     * @throws moodle_exception
      */
-    protected function render_checks($results) {
+    protected function render_block(array $results) {
         global $PAGE, $COURSE;
 
         // Render each check result with the dedicated render for this checker.
@@ -138,7 +137,10 @@ class block_course_checker extends block_base {
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
                 "groupedresults" => $groupedresults,
-                "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id])
+                "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
+                "runbtn" => $this->render_run_task_button($COURSE->id),
+                "runscheduled" => $this->is_task_scheduled($COURSE->id),
+
         ]);
     }
 
@@ -152,15 +154,10 @@ class block_course_checker extends block_base {
     /**
      * Show the button to run a task, execpt if it's already scheduled.
      *
-     * @param int $courseid
+     * @param int A$courseid
      * @return string
      */
     private function render_run_task_button(int $courseid) {
-
-        if ($this->is_task_scheduled($courseid)) {
-            return get_string("runcheckbtn_already", "block_course_checker");
-        }
-
         global $CFG;
         $url = $CFG->wwwroot . '/blocks/course_checker/schedule_checker.php';
         $content = "";
