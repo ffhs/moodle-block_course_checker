@@ -63,7 +63,9 @@ class block_course_checker extends block_base {
             $checks = $loadedchecks["result"];
             $rundate = $loadedchecks['timestamp'];
             $human = $loadedchecks['manual_date'];
+            $detailsavailable = true;
         } else {
+            $detailsavailable = false;
             $rundate = null;
             $human = null;
             $checks = [];
@@ -73,15 +75,24 @@ class block_course_checker extends block_base {
         if (\block_course_checker\plugin_manager::IMMEDIATE_RUN) {
             $checks = \block_course_checker\plugin_manager::instance()->run_checks($COURSE);
         }
+
         // Render the checks results.
         $this->content->text = "";
         $this->content->text .= $this->render_block($checks);
 
         /** @var \block_course_checker\output\footer_renderer $footerrenderer */
+        if ($loadedchecks != [] && (\has_capability('block/course_checker:view_report',
+                context_course::instance($COURSE->id)))) {
+            $showdetailsbutton = true;
+        }
         $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
         $this->content->footer = $footerrenderer->renderer([
                 'automaticcheck' => $rundate,
                 'humancheck' => $human,
+                "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
+                "runbtn" => $this->render_run_task_button($COURSE->id),
+                "runscheduled" => $this->is_task_scheduled($COURSE->id),
+                "showdetailsbutton" => $showdetailsbutton,
         ]);
 
         return $this->content;
@@ -135,16 +146,10 @@ class block_course_checker extends block_base {
 
         $groupedresults = array_values($groupedresults);
 
-        $context = context_course::instance($COURSE->id);
         /** @var \block_course_checker\output\block_renderer $renderer */
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
                 "groupedresults" => $groupedresults,
-                "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
-                "runbtn" => $this->render_run_task_button($COURSE->id),
-                "runscheduled" => $this->is_task_scheduled($COURSE->id),
-                "detailsallowed" => has_capability('block/course_checker:view_report', $context),
-
         ]);
     }
 
@@ -175,7 +180,7 @@ class block_course_checker extends block_base {
         $content .= html_writer::tag("input", '', [
                 "type" => "submit",
                 "value" => get_string("runcheckbtn", "block_course_checker"),
-                "class" => "btn btn-primary"
+                "class" => "btn btn-primary btn-block"
         ]);
         $content .= html_writer::end_tag("form");
 

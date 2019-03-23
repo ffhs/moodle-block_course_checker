@@ -1,4 +1,4 @@
-    <div class="course_checker course_checker_block">
+<div class="course_checker course_checker_block">
     {{#groupedresults}}
         <div class="mt-2">
             <h4 class="mb-1 pb-2 text-muted text-capitalize">{{{groupname}}}</h4>
@@ -12,18 +12,4 @@
     {{^groupedresults}}
         {{#str}} noresults, block_course_checker {{/str}}
     {{/groupedresults}}
-    <div class="actions d-flex">
-        {{#groupedresults}}
-            {{#detailsallowed}}
-                <a href="{{details}}" class="btn btn-secondary">{{#str}} resultpagegoto, block_course_checker {{/str}}</a>
-            {{/detailsallowed}}
-        {{/groupedresults}}
-        {{^runscheduled}}
-            {{{runbtn}}}
-        {{/runscheduled}}
-    </div>
-
-    {{#runscheduled}}
-        <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
-    {{/runscheduled}}
 </div>

@@ -1,4 +1,19 @@
 <hr>
+<div class="course_checker footer">
+<div class="actions d-flex">
+    {{#showdetailsbutton}}
+         <a href="{{details}}" class="btn btn-secondary">{{#str}} resultpagegoto, block_course_checker {{/str}}</a>
+    {{/showdetailsbutton}}
+    {{^runscheduled}}
+        {{{runbtn}}}
+    {{/runscheduled}}
+</div>
+
+{{#runscheduled}}
+    <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
+{{/runscheduled}}
+
+<hr>
 <b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
 <br>
 {{#automaticcheck}}
@@ -15,3 +30,4 @@
 {{^humancheck}}
     {{#str}} humancheckempty, block_course_checker {{/str}}
 {{/humancheck}}
+</div>
