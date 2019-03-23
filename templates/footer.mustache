@@ -1,33 +1,45 @@
+{{!
+footer of the block
+}}
+
 <hr>
+
+{{!
+buttons to run the checkers and to display the result page
+}}
+
 <div class="course_checker footer">
-<div class="actions d-flex">
-    {{#showdetailsbutton}}
-         <a href="{{details}}" class="btn btn-secondary">{{#str}} resultpagegoto, block_course_checker {{/str}}</a>
-    {{/showdetailsbutton}}
+    <div class="actions d-flex">
+        {{#showdetailsbutton}}
+            <a href="{{details}}" class="btn btn-secondary">{{#str}} resultpagegoto, block_course_checker {{/str}}</a>
+        {{/showdetailsbutton}}
     {{^runscheduled}}
         {{{runbtn}}}
     {{/runscheduled}}
-</div>
+    </div>
 
-{{#runscheduled}}
-    <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
-{{/runscheduled}}
+{{!
+messages about the status of the last run
+}}
 
-<hr>
-<b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
-<br>
-{{#automaticcheck}}
-    {{#userdate}} {{automaticcheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
-{{/automaticcheck}}
-{{^automaticcheck}}
-    {{#str}} automaticcheckempty, block_course_checker {{/str}}
-{{/automaticcheck}}
-<br>
-<b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
-{{#humancheck}}
-    {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
-{{/humancheck}}
-{{^humancheck}}
-    {{#str}} humancheckempty, block_course_checker {{/str}}
-{{/humancheck}}
+    {{#runscheduled}}
+      <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
+    {{/runscheduled}}
+    <hr>
+    <b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
+    <br>
+    {{#automaticcheck}}
+       {{#userdate}} {{automaticcheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+    {{/automaticcheck}}
+    {{^automaticcheck}}
+      {{#str}} automaticcheckempty, block_course_checker {{/str}}
+    {{/automaticcheck}}
+    <br>
+    <b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
+    {{#humancheck}}
+      {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+    {{/humancheck}}
+    {{^humancheck}}
+      {{#str}} humancheckempty, block_course_checker {{/str}}
+    {{/humancheck}}
 </div>

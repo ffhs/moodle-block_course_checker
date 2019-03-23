@@ -16,36 +16,18 @@
     margin-bottom:30px;
 }
 
-.course_checker .row{
-    display: flex;
-    padding:5px;
-    justify-content: space-between;
-    margin: auto;
+/* Table on page */
+.course_checker .table{table-layout:fixed;}
+.course_checker .table .col.message {
+    width:80%;
 }
-.course_checker .col{
-    display: flex;
-    align-items: center;
+.course_checker .table .col.link {
+    width:10%;
 }
-.course_checker .col.result, .course_checker .col.link{
-    flex-shrink: 1;
-    max-width: 50px;
-    justify-content: center;
+.course_checker .table .col.result {
+    width:10%;
 }
-.course_checker .col.message{
-    flex-shrink: 10;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.course_checker .odd{
-    background-color: #f5f5f5;
-}
-.course_checker .row.header{
-    font-weight: bold;
-}
-.course_checker .row:hover{
-    background-color: #f9f9f9;
-}
+
 
 @media (max-width: 1200px){
     .course_checker_block .actions{

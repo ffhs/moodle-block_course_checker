@@ -169,6 +169,6 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      * @return string
      */
     public static function get_group() {
-        return "group_course";
+        return 'group_links';
     }
 }

@@ -64,8 +64,19 @@ $string['groups_success'] = 'Groups are well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
 
 // Name of each group that can be assigned to checkers.
-$string['group_course'] = 'Group course';
+$string['group_course_settings'] = 'Course Settings';
+$string['group_links'] = 'Links';
 // Name of each checker.
-$string['checker_groups'] = 'Group checker';
-$string['checker_link'] = 'Links checker';
+$string['checker_groups'] = 'Group Submission Check';
+$string['checker_link'] = 'Links Check';
+// Display title of each checker.
+$string['checker_groups_display'] = 'Group Submission for Assignments';
+$string['checker_link_display'] = 'Links in Course Summary and Url Activities';
 
+// Check Result Tables.
+$string['result_col_block_header'] = 'Result';
+$string['checker_col_block_header'] = 'Check';
+$string['result_col_page_header'] = 'Result';
+$string['message_col_page_header'] = 'Message';
+$string['link_col_page_header'] = 'Link to Resolve';
+$string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';

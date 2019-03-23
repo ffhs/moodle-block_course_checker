@@ -224,4 +224,13 @@ class plugin_manager implements check_manager_interface {
         global $PAGE;
         return new global_plugin_renderer($PAGE, RENDERER_TARGET_GENERAL);
     }
+
+    /**
+     * Get group order: the order in which the groups are displayed.
+     *
+     * @return array
+     */
+    public function get_group_order() {
+        return array('group_course_settings' => 1, 'group_links' => 2);
+    }
 }

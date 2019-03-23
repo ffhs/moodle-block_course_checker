@@ -65,16 +65,18 @@ foreach ($results as $pluginname => $result) {
 
 // Sort results by group.
 $groupedresults = [];
+$grouporder = $manager->get_group_order();
 foreach ($htmlresults as $count => $result) {
     $group = $manager->get_group($result['name']);
+    $groupnr = $grouporder[$group];
     $groupname = get_string($group, "block_course_checker");
-    if (!array_key_exists($group, $groupedresults)) {
-        $groupedresults[$group] = ['results' => [], "group" => $group, "groupname" => $groupname];
+    if (!array_key_exists($groupnr, $groupedresults)) {
+        $groupedresults[$groupnr] = ['results' => [], "group" => $group, "groupname" => $groupname];
     }
 
-    $groupedresults[$group]['results'][] = $result;
+    $groupedresults[$groupnr]['results'][] = $result;
 }
-
+ksort($groupedresults);
 $groupedresults = array_values($groupedresults);
 
 /** @var \block_course_checker\output\page_renderer $renderer */

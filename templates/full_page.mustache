@@ -1,18 +1,39 @@
+{{!
+template for rendering the page
+}}
 <div class="course_checker course_checker_page container-fluid">
+
+{{!
+when the check was ever run and results exist
+}}
     {{#groupedresults}}
-        <div class="mt-2">
-            <h4  class="mb-1 pb-2 text-muted text-capitalize">{{{groupname}}}</h4>
-            <div class="mb-1 pb-2">
+        <h4  class="mb-1 pb-2 text-muted text-capitalize">{{{groupname}}}</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col message">{{#str}} message_col_page_header, block_course_checker {{/str}}</th>
+                    <th class="col link">{{#str}} link_col_page_header, block_course_checker {{/str}}</th>
+                    <th class="col result">{{#str}} result_col_page_header, block_course_checker {{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
                 {{#results}}
                     {{{output}}}
                 {{/results}}
-            </div>
-        </div>
+            </tbody>
+        </table>
     {{/groupedresults}}
 
+{{!
+when the check was never run
+}}
     {{^groupedresults}}
         {{#str}} noresults, block_course_checker {{/str}}
     {{/groupedresults}}
 
+{{!
+button to return to the block
+}}
     <a class="btn-primary btn" href="{{back}}">{{#str}} backtocourse, block_course_checker {{/str}}</a>
+
 </div>

@@ -41,12 +41,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @param check_result_interface $result
      * @return string
      * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function render_for_block(string $pluginname, check_result_interface $result): string {
+        // Note that the headers are hardcoded in the template too.
         $output = $this->render_from_template("block_course_checker/check_block", [
                 "successful" => $result->is_successful(),
                 "pluginame" => $pluginname,
-                "name" => get_string($pluginname, "block_course_checker")
+                "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
         ]);
         $output .= $this->debug($result);
         return $output;
@@ -73,15 +75,11 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @param check_result_interface $result
      * @return string
      * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function render_for_page(string $pluginname, check_result_interface $result): string {
-        // Note that the headers are hardcoded in the template too.
-        $tableheaders = [
-                ['classname' => 'result', 'name' => get_string('result', "block_course_checker")],
-                ['classname' => 'message', 'name' => get_string('message', "block_course_checker")],
-                ['classname' => 'link', 'name' => get_string('link', "block_course_checker")],
-        ];
 
+        // Format result details.
         $resultdetails = $result->get_details();
         foreach ($resultdetails as $index => $detail) {
             $resulticon = $detail['successful'] ? $this->get_success_icon() : $this->get_failed_icon();
@@ -93,14 +91,19 @@ class global_plugin_renderer extends \plugin_renderer_base {
 
             // Wrap the message with a target block.
             if (isset($detail['target'])) {
-                $target = $detail['target'] ? \html_writer::div(s($detail['target'])) : '';
-                $classname = $detail['successful'] ? "text-success" : "text-danger";
-                $message = \html_writer::tag('span', $message, ["class" => $classname]);
-                $message = \html_writer::tag('span', $target . $message);
+                if ($detail['target']) {
+                    $target = $detail['target'];
+                    \html_writer::start_tag('div');
+                    $classname = $detail['successful'] ? "text-success" : "text-danger";
+                    \html_writer::tag('span', $message, ["class" => $classname]);
+                    $message = \html_writer::tag('span', $target . " : " . $message);
+                    \html_writer::end_tag('div');
+                }
             }
 
             // Display a resource url at the end of the message.
             if (isset($detail["resource"]) && $detail["resource"]) {
+                $message .= ' - ';
                 $message .= \html_writer::link($detail["resource"], '<i class="text-muted fa fa-external-link"></i>',
                         ["target" => "_blank"]);
             }
@@ -116,12 +119,10 @@ class global_plugin_renderer extends \plugin_renderer_base {
         }
 
         $context = [
-                "pluginname" => get_string($pluginname, "block_course_checker"),
+                "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
                 "successful" => $result->is_successful(),
                 "link" => $result->get_link(),
                 "resultdetails" => $resultdetails,
-                "hasresults" => !empty($resultdetails),
-                "tableheaders" => $tableheaders
         ];
 
         $output = "";

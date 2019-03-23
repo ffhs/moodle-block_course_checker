@@ -23,6 +23,7 @@
 
 use block_course_checker\result_persister;
 use block_course_checker\run_checker_task;
+use block_course_checker\result_group;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -63,9 +64,7 @@ class block_course_checker extends block_base {
             $checks = $loadedchecks["result"];
             $rundate = $loadedchecks['timestamp'];
             $human = $loadedchecks['manual_date'];
-            $detailsavailable = true;
         } else {
-            $detailsavailable = false;
             $rundate = null;
             $human = null;
             $checks = [];
@@ -80,11 +79,14 @@ class block_course_checker extends block_base {
         $this->content->text = "";
         $this->content->text .= $this->render_block($checks);
 
-        /** @var \block_course_checker\output\footer_renderer $footerrenderer */
         if ($loadedchecks != [] && (\has_capability('block/course_checker:view_report',
                 context_course::instance($COURSE->id)))) {
             $showdetailsbutton = true;
+        } else {
+            $showdetailsbutton = false;
         }
+
+        /** @var \block_course_checker\output\footer_renderer $footerrenderer */
         $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
         $this->content->footer = $footerrenderer->renderer([
                 'automaticcheck' => $rundate,
@@ -134,22 +136,23 @@ class block_course_checker extends block_base {
 
         // Sort results by group.
         $groupedresults = [];
+        $grouporder = $manager->get_group_order();
         foreach ($htmlresults as $count => $result) {
             $group = $manager->get_group($result['pluginname']);
+            $groupnr = $grouporder[$group];
             $groupname = get_string($group, "block_course_checker");
-            if (!array_key_exists($group, $groupedresults)) {
-                $groupedresults[$group] = ['results' => [], "group" => $group, "groupname" => $groupname];
+            if (!array_key_exists($groupnr, $groupedresults)) {
+                $groupedresults[$groupnr] = ['results' => [], "group" => $group, "groupname" => $groupname];
             }
-
-            $groupedresults[$group]['results'][] = $result;
+            $groupedresults[$groupnr]['results'][] = $result;
         }
-
+        ksort($groupedresults);
         $groupedresults = array_values($groupedresults);
 
         /** @var \block_course_checker\output\block_renderer $renderer */
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
-                "groupedresults" => $groupedresults,
+            "groupedresults" => $groupedresults,
         ]);
     }
 

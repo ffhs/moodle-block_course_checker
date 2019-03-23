@@ -142,9 +142,12 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     }
 
     /**
-     * @inheritdoc
+     * Get the group defined for this check.
+     * This is used to display checks from the same group together.
+     *
+     * @return string
      */
     public static function get_group() {
-        return "group_course";
+        return 'group_course_settings';
     }
 }

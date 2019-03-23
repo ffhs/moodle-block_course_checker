@@ -1,49 +1,37 @@
-<div class="course_checker course_checker_result">
+{{!
+template for displaying the checker result rows in the page result table
+}}
 
-    <h4>
-        {{pluginname}} :
+{{!
+row for the checker displaying its name and whether it had success
+}}
+
+<tr>
+     <th scope="col" colspan="3" class="col message">
         {{#successful}}
             <i class="fa fa-check-circle text-success"></i>
         {{/successful}}
         {{^successful}}
             <i class="fa fa-times-circle text-danger"></i>
         {{/successful}}
-        <span class="{{#successful}}text-success{{/successful}}{{^successful}}text-danger{{/successful}}">
-        {{#successful}}
-            {{#str}} check_successful, block_course_checker {{/str}}
-        {{/successful}}
-        {{^successful}}
-            {{#str}} check_failed, block_course_checker {{/str}}
-        {{/successful}}
-        </span>
-    </h4>
+        {{pluginname_display}}
+     </th>
+</tr>
 
-    {{#hasresults}}
-        <div class="table-like">
-            <div class="row header">
-            {{#tableheaders}}
-                <div class="col {{{classname}}}">
-                    {{name}}
-                </div>
-            {{/tableheaders}}
-            </div>
-        </div>
+{{!
+row for a check result displaying message, link to fix and result
+}}
 
-        <div class="table-like">
-        {{#resultdetails}}
-            <div class="{{{classname}}}">
-                <div class="col result">{{{icon}}}</div>
-                <div class="col message">{{{message}}}</div>
-                <div class="col link">{{{link}}}</div>
-            </div>
-        {{/resultdetails}}
-    </div>
-    {{/hasresults}}
-
-    {{^hasresults}}
-        {{#str}} noresults, block_course_checker {{/str}}
-    {{/hasresults}}
-    {{#link}}
-        <a href="{{link}}" class="btn btn-secondary">{{#str}} resolutionlink, block_course_checker {{/str}}</a>
-    {{/link}}
-</div>
+{{#resultdetails}}
+<tr>
+    <td class="col message">
+        {{{message}}}
+    </td>
+    <td class="col link">
+        {{{link}}}
+    </td>
+    <td class="col result">
+        {{{icon}}}
+    </td>
+</tr>
+{{/resultdetails}}
