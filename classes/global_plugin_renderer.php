@@ -69,6 +69,17 @@ class global_plugin_renderer extends \plugin_renderer_base {
     }
 
     /**
+     * @return string
+     */
+    private function get_link_icon() {
+        return \html_writer::tag('i', null, ['class' => 'fa fa-link text-muted']);
+    }
+
+    private function get_external_link_icon() {
+        return \html_writer::tag('i', null, ['class' => 'text-muted fa fa-external-link']);
+    }
+
+    /**
      * Output a check_result for inside the page
      *
      * @param string $pluginname
@@ -104,7 +115,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
             // Display a resource url at the end of the message.
             if (isset($detail["resource"]) && $detail["resource"]) {
                 $message .= ' - ';
-                $message .= \html_writer::link($detail["resource"], '<i class="text-muted fa fa-external-link"></i>',
+                $message .= \html_writer::link($detail["resource"], $this->get_external_link_icon(),
                         ["target" => "_blank"]);
             }
 
@@ -131,13 +142,6 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $output .= $this->render_from_template("block_course_checker/check_result", $context);
         return $output;
 
-    }
-
-    /**
-     * @return string
-     */
-    private function get_link_icon() {
-        return \html_writer::tag('i', null, ['class' => 'fa fa-link text-muted']);
     }
 
     /**
