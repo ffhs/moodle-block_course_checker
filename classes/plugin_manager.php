@@ -227,6 +227,7 @@ class plugin_manager implements check_manager_interface {
 
     /**
      * Get group order: the order in which the groups are displayed.
+     * TODO: consider putting this into the settings page with FFHSCC-23 to avoid hard coding this.
      *
      * @return array
      */
