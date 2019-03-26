@@ -98,7 +98,10 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      */
     protected function check_url($url) {
         $curl = new \curl();
-        $curl->get($url, ["CURLOPT_CONNECTTIMEOUT" => 15, "CURLOPT_HEADER" => 1, "CURLOPT_VERBOSE" => 1]);
+        $curl->get($url, [], [
+                "CURLOPT_CONNECTTIMEOUT" => 15,
+                'CURLOPT_FOLLOWLOCATION' => 0
+        ]);
         $infos = $curl->get_info();
         $code = (int) $infos["http_code"];
         if ($code === 0) {
