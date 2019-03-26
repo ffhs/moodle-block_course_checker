@@ -102,15 +102,6 @@ class global_plugin_renderer extends \plugin_renderer_base {
 
             // Wrap the message with a target block.
             if (isset($detail['target'])) {
-                /*
-                if ($detail['target']) {
-                    $target = $detail['target'];
-                    \html_writer::start_tag('div');
-                    $classname = $detail['successful'] ? "text-success" : "text-danger";
-                    \html_writer::tag('span', $message, ["class" => $classname]);
-                    $message = \html_writer::tag('span', $target . " : " . $message);
-                    \html_writer::end_tag('div');
-                }*/
                 $target = $detail['target'] ? \html_writer::div(s($detail['target'])) : '';
                 $classname = $detail['successful'] ? "text-success" : "text-danger";
                 $message = \html_writer::tag('span', $message, ["class" => $classname]);
