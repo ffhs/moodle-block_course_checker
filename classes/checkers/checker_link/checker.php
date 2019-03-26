@@ -39,7 +39,6 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      * @return check_result_interface The check result.
      */
     public function run($course) {
-        global $CFG;
         $this->result = new check_result();
         $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
         $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
