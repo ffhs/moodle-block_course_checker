@@ -46,8 +46,8 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
-            // Exclude activities which are not visible or have no link (=label).
-            if (!$cm->uservisible or !$cm->has_view()) {
+            // Exclude activities which are not visible.
+            if (!$cm->uservisible) {
                 continue;
             }
             switch ($cm->modname) {
@@ -55,16 +55,61 @@ class checker implements \block_course_checker\model\check_plugin_interface {
                     $target = get_string("checker_link_activity", "block_course_checker",
                             (object) ["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)]);
 
-                    $record = $this->get_mod_url_link_record($cm, $course->id);
+                    $record = $this->get_mod_url_link_record('url', $cm, $course->id);
                     // Check the link itself.
                     $this->check_urls_with_resolution_url([$record->externalurl], $cm->url, $target);
                     // Check the link intro text.
                     $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->url, $target);
 
                     break;
+
+                case "forum":
+                    $target = get_string("checker_link_activity", "block_course_checker",
+                        (object) ["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)]);
+
+                    $record = $this->get_mod_url_link_record('forum', $cm, $course->id);
+                    // Check the link intro text.
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->forum, $target);
+
+                    break;
+
+                case "assign":
+                    $target = get_string("checker_link_activity", "block_course_checker",
+                        (object) ["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)]);
+
+                    $record = $this->get_mod_url_link_record('assign', $cm, $course->id);
+                    // Check the assignment intro text.
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->assign, $target);
+
+                    break;
+
+                case "page":
+                    $target = get_string("checker_link_activity", "block_course_checker",
+                        (object) ["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)]);
+
+                    $record = $this->get_mod_url_link_record('page', $cm, $course->id);
+                    // Check the page intro text.
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->page, $target);
+                    // Check the page content.
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->page, $target);
+
+                    break;
+                // FFHSCC-38 Add new type of activities here !
+
+                case "label":
+                    $target = get_string("checker_link_activity", "block_course_checker",
+                        (object)["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)]);
+
+                    $record = $this->get_mod_url_link_record('label', $cm, $course->id);
+                    // Check the label intro text.
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($record->intro), $cm->label, $target);
+
+                    break;
+
                 default:
-                    break; // FFHSCC-38 Add new type of activities here !
+                    break;
             }
+
         }
         return $this->result;
     }
@@ -132,13 +177,15 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     }
 
     /**
-     * Get the record for a mod_url. Note that they are loaded by course_id in a single query.
+     * Get the record for a course module instance table. Note that they are loaded by course_id in a single query.
      *
+     * @param string instance table name
      * @param \cm_info $cm Mod info
      * @param int $courseid the course id
      * @return mixed|null the record or null
+     * @throws \moodle_exception
      */
-    private function get_mod_url_link_record(\cm_info $cm, int $courseid) {
+    private function get_mod_url_link_record($cminstancetablename, \cm_info $cm, $courseid) {
         global $DB;
         static $cache = null;
         static $cachecourseid = 0;
@@ -149,7 +196,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
         }
         // Load all the url for the same course for performance reasons.
         if ($cache === null) {
-            foreach ($DB->get_records_select("url", "course = " . (int) $courseid) as $record) {
+            foreach ($DB->get_records_select($cminstancetablename, "course = " . (int) $courseid) as $record) {
                 $cache[(int) $record->id] = $record;
             };
         }
