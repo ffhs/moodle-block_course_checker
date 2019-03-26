@@ -96,6 +96,7 @@ class block_course_checker extends block_base {
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
                 "runscheduled" => $this->is_task_scheduled($COURSE->id),
+                "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
         ]);
 
