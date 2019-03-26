@@ -168,4 +168,13 @@ class result_persister implements check_manager_persister_interface {
                     check_result_interface::class, get_class($checkresult)));
         }
     }
+
+    /**
+     * @param int $courseid
+     * @param int $timestamp
+     * @return mixed record
+     */
+    public function set_last_activity_edition(int $courseid, int $timestamp) {
+        return $this->save_checks((int) $courseid, false, ["last_activity_edition" => $timestamp]);
+    }
 }

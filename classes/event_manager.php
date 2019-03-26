@@ -14,13 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Version details
- *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace block_course_checker;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019031508;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+class event_manager {
+    public static function course_module_updated($event) {
+        $courseid = $event->courseid;
+        $timestamp = $event->timecreated;
+        $other = $event->other;
+        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
+    }
+
+    public static function course_module_created($event) {
+        $courseid = $event->courseid;
+        $timestamp = $event->timecreated;
+        $other = $event->other;
+        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
+    }
+}

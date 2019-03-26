@@ -14,13 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Version details
- *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-
-$plugin->version = 2019031508;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+// List of observers.
+$observers = [
+        [
+                'eventname' => '\core\event\course_module_updated',
+                'callback' => '\block_course_checker\event_manager::course_module_updated',
+        ], [
+                'eventname' => '\core\event\course_module_created',
+                'callback' => '\block_course_checker\event_manager::course_module_created',
+        ],
+];

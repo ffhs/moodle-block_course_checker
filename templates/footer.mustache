@@ -42,4 +42,12 @@ messages about the status of the last run
     {{^humancheck}}
       {{#str}} humancheckempty, block_course_checker {{/str}}
     {{/humancheck}}
+    <br>
+    <b>{{#str}}lastactivityedition, block_course_checker{{/str}}:</b><br>
+    {{#lastactivityedition}}
+        {{#userdate}} {{lastactivityedition}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+    {{/lastactivityedition}}
+    {{^lastactivityedition}}
+        No date found.
+    {{/lastactivityedition}}
 </div>

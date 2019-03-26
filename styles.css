@@ -22,10 +22,12 @@
     width:80%;
 }
 .course_checker .table .col.link {
-    width:10%;
+    width: 7%;
+    max-width: 50px;
 }
 .course_checker .table .col.result {
-    width:10%;
+    width: 7%;
+    max-width: 50px;
 }
 
 
