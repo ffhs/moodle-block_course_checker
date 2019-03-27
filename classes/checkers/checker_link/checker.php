@@ -114,7 +114,6 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
     /**
      * Fetch an url and return true if the code is between 200 and 400.
-     * TODO: Whitelist our own domain.
      * @param string $url
      * @return bool
      */
@@ -153,8 +152,8 @@ class checker implements \block_course_checker\model\check_plugin_interface {
     protected function get_urls_from_text($text) {
         if (false !== preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match)) {
             $match = $match[0];
-            $match = array_unique($match);
-            return $match;
+            // If we have <a href="$url">$url</a> $url is not counted twice.
+            return array_unique($match);
         }
         return [];
     }
