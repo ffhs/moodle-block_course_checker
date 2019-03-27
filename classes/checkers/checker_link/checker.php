@@ -49,9 +49,12 @@ class checker implements \block_course_checker\model\check_plugin_interface {
         foreach ($modinfo->cms as $cm) {
             $modules[] = $cm->modname;
         }
+
+        // Be sure to check each type of activity ONLY once.
+        $modules = array_unique($modules);
+
         // You will got strait to the edition page for theses mods.
         $directmodnames = ["resource", "label"];
-
         foreach ($modules as $modname) {
             $instances = get_all_instances_in_courses($modname, [$course->id => $course]);
             foreach ($instances as $mod) {
@@ -112,14 +115,15 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
     /**
      * Fetch an url and return true if the code is between 200 and 400.
-     *
+     * TODO: Whitelist our own domain.
      * @param string $url
      * @return bool
      */
     protected function check_url($url) {
         $curl = new \curl();
-        $curl->get($url, [], [
-                "CURLOPT_CONNECTTIMEOUT" => 15,
+        $curl->head($url, [], [
+                "CURLOPT_CONNECTTIMEOUT" => 5,
+                "CURLOPT_TIMEOUT" => 13,
                 'CURLOPT_FOLLOWLOCATION' => 0
         ]);
         $infos = $curl->get_info();
