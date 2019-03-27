@@ -49,7 +49,6 @@ class checker implements \block_course_checker\model\check_plugin_interface {
         foreach ($modinfo->cms as $cm) {
             $modules[] = $cm->modname;
         }
-
         // Be sure to check each type of activity ONLY once.
         $modules = array_unique($modules);
 
@@ -153,7 +152,9 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      */
     protected function get_urls_from_text($text) {
         if (false !== preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match)) {
-            return $match[0];
+            $match = $match[0];
+            $match = array_unique($match);
+            return $match;
         }
         return [];
     }
