@@ -20,6 +20,8 @@
 .course_checker .table{table-layout:fixed;}
 .course_checker .table .col.message {
     width:80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .course_checker .table .col.link {
     width: 7%;
