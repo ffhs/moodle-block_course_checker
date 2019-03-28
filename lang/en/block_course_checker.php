@@ -50,12 +50,12 @@ $string['resolutionlink'] = 'Resolution: ';
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
 $string['checker_link_summary'] = 'Course summary';
 $string['checker_link_error_curl'] =
-        'CURL Error {$a->curl_errno} {$a->curl_error} on {$a->scheme}:://{$a->host}'; // You can get any curl info or pare_url field in $a.
+        'CURL Error {$a->curl_errno} {$a->curl_error} on {$a->url}'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_error_code'] =
-        'HTTP Error {$a->http_code} on {$a->scheme}://{$a->host}'; // You can get any curl info or pare_url field in $a.
+        'HTTP Error {$a->http_code} on {$a->url}'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_ok'] =
-        '{$a->scheme}://{$a->host} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
-
+        '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
+$string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group is deactivated';
 $string['groups_idmissing'] = 'Group is missing';

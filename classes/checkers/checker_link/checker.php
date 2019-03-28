@@ -114,26 +114,36 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
     /**
      * Fetch an url and return true if the code is between 200 and 400.
+     *
      * @param string $url
-     * @return bool
+     * @return bool if the url is valid or not.
      */
     protected function check_url($url) {
+        $parseurl = parse_url($url);
+        // Skip whitelisted domains.
+        if ($this->is_ignored_host($parseurl["host"])) {
+            $context = $parseurl + ["url" => $url];
+            $this->lastmessage = get_string("checker_link_error_skipped", "block_course_checker", $context);
+            return true;
+        }
+
         $curl = new \curl();
         $curl->head($url, [], [
                 "CURLOPT_CONNECTTIMEOUT" => 5,
                 "CURLOPT_TIMEOUT" => 13,
                 'CURLOPT_FOLLOWLOCATION' => 0
         ]);
+
         $infos = $curl->get_info();
         $code = (int) $infos["http_code"];
         if ($code === 0) {
             // Code 0: timeout or other curl error.
-            $context = parse_url($url) + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
+            $context = $parseurl + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
             $this->lastmessage = get_string("checker_link_error_curl", "block_course_checker", $context);
             return false;
         }
 
-        $context = parse_url($url) + ["url" => $url, "http_code" => $code];
+        $context = $parseurl + ["url" => $url, "http_code" => $code];
         if ($code >= 200 && $code < 400) {
             $this->lastmessage = get_string("checker_link_ok", "block_course_checker", $context);
             return true;
@@ -150,7 +160,9 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      * @return string[] urls
      */
     protected function get_urls_from_text($text) {
-        if (false !== preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match)) {
+        // Be aware that XMLNS can be used.
+        // Specially «math xmlns=¨http://www.w3.org/1998/Math/MathML¨».
+        if (false !== preg_match_all('#\bhttps?:\/\/[^,\s()<>»¨]+(?:\([\w\d]+\)|([^,[:punct:],¨»\s]|\/))#', $text, $match)) {
             $match = $match[0];
             // If we have <a href="$url">$url</a> $url is not counted twice.
             return array_unique($match);
@@ -166,5 +178,14 @@ class checker implements \block_course_checker\model\check_plugin_interface {
      */
     public static function get_group() {
         return 'group_links';
+    }
+
+    /**
+     * Tells if an url should be skipped.
+     * @param string $host
+     * @return boolean
+     */
+    protected function is_ignored_host(string $host) {
+        return "www.w3.org" == $host;
     }
 }
