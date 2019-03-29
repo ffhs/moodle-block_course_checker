@@ -57,11 +57,11 @@ $string['checker_link_ok'] =
         '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
 // String specific for the group checker.
-$string['groups_deactivated'] = 'Group is deactivated';
-$string['groups_idmissing'] = 'Group is missing';
-$string['groups_missing'] = 'Groups have not been set up';
+$string['groups_deactivated'] = 'Grouping is deactivated';
+$string['groups_idmissing'] = 'Grouping is missing';
+$string['groups_missing'] = 'Grouping has not been set up';
 $string['groups_lessthantwogroups'] = 'Less than 2 groups have been set up';
-$string['groups_success'] = 'Groups are well defined';
+$string['groups_success'] = 'Grouping is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
 
 // Name of each group that can be assigned to checkers.
