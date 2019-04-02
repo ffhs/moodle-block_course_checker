@@ -60,6 +60,7 @@ $string['checker_link_error_code'] =
 $string['checker_link_ok'] =
         '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
+
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';
 $string['groups_idmissing'] = 'Group submission is active, but no grouping is set';
@@ -73,23 +74,33 @@ $string['checker_setting_toggle'] = 'Enable / Disable {$a}';
 $string['checker_link_setting_whitelist'] = 'Link Checker Whitelist';
 $string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
 
-// String specific for the attendance checker
+// String specific for the attendance checker.
 $string['attendance_missingattendanceactivity'] = 'Check Attendance Failed - no attendance activity in this course';
 $string['attendance_onlyoneattendenceactivityallowed'] = 'Check Attendance Failed - only one attendance activity is allowed';
 $string['attendance_sessionsnotemty'] = 'Check Attendance Failed - it\'s not allowed to have any attendance sessions';
 $string['attendance_success'] = 'The attendance activity is configured correctly';
 
+// String specific for the subheadings checker.
+$string['subheadings_wrongfirsthtmltag'] = 'The first html-tag is not a {$a->htmltag}';
+$string['subheadings_iconmissing'] = 'The icon is missing in the first html-tag';
+$string['subheadings_success'] = 'This label have a nice subheading and icon';
+
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
 $string['group_links'] = 'Links';
+
 // Name of each checker.
 $string['checker_groups'] = 'Group Submission Check';
 $string['checker_link'] = 'Links Check';
 $string['checker_attendance'] = 'Attendance Sessions Check';
+$string['checker_subheadings'] = 'Label Subheadings Check';
+
 // Display title of each checker.
 $string['checker_groups_display'] = 'Group Submission for Assignments';
 $string['checker_link_display'] = 'Links in Course Summary and Url Activities';
 $string['checker_attendance_display'] = 'Attendance Sessions';
+$string['checker_subheadings_display'] = 'Label Subheadings';
+
 // Checker last run.
 $string['checker_last_run'] = 'Last run {$a}';
 $string['checker_last_run_global'] = 'Unknown date for this checker. The global course check was on {$a}';
