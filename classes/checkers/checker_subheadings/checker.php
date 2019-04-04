@@ -22,7 +22,7 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 
 /**
- * Checking the labels subheadings
+ * Checking the labels subheadings and the leading icons
  *
  * @package block_course_checker
  */
@@ -63,33 +63,33 @@ class checker implements check_plugin_interface {
                 continue;
             }
 
-            // Load all html elements.
-            print($cm->content);
-            $dom->loadHTML($cm->content);
+            // Link to activity.
+            $target = $this->get_target($cm);
+            $link = $this->get_link_to_modedit_page($cm);
+
+            // Load the html content
+            // - DOMDocument is not loading correctly if there are line breaks.
+            $cmcontentwithoutnewlines = preg_replace("/[\r\n]/", '', $cm->content);
+            $dom->loadHTML($cmcontentwithoutnewlines);
+
             $body = $dom->getElementsByTagName('body');
             if (!is_object($body)) {
-                // TODO: Send error message.
+                $this->add_general_error($target, $link);
                 continue;
             }
 
-            $elements = $body
-                ->item(0)->childNodes
-                ->item(0)->childNodes;
-            $firstitem = $elements->item(0);
+            try {
+                $elements = $body
+                    ->item(0)->childNodes
+                    ->item(0)->childNodes;
+                $firstitem = $elements->item(0);
+            } catch (\Exception $exception) {
+                $this->add_general_error($target, $link);
+                continue;
+            }
 
-            // Link to activity.
-            $targetcontext = (object) ["name" => strip_tags($cm->name)];
-            $target = get_string("groups_activity", "block_course_checker", $targetcontext);
-            $url = new \moodle_url('/course/modedit.php', [
-                    'return' => 0,
-                    "update" => $cm->id,
-                    "sr" => 0,
-                    "sesskey" => sesskey()
-            ]);
-            $link = $url->out_as_local_url(false);
-
-            // Check if the first html element is a correct header.
-            if ($firstitem->tagName != self::FIRST_ITEM_HTML_TAG) {
+            // Check if the first html element is set and has a correct header.
+            if (!isset($firstitem->tagName) or $firstitem->tagName != self::FIRST_ITEM_HTML_TAG) {
                 $message = get_string("subheadings_wrongfirsthtmltag", "block_course_checker",
                         (object) ["htmltag" => self::FIRST_ITEM_HTML_TAG]);
                 $this->result->add_detail([
@@ -137,5 +137,48 @@ class checker implements check_plugin_interface {
      */
     public static function get_group() {
         return 'group_course_settings';
+    }
+
+    /**
+     * @param \cm_info $cm
+     * @return string
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    private function get_link_to_modedit_page(\cm_info $cm) {
+        $url = new \moodle_url('/course/modedit.php', [
+                'return' => 0,
+                "update" => $cm->id,
+                "sr" => 0,
+                "sesskey" => sesskey()
+        ]);
+        $link = $url->out_as_local_url(false);
+        return $link;
+    }
+
+    /**
+     * @param \cm_info $cm
+     * @return string
+     * @throws \coding_exception
+     */
+    private function get_target(\cm_info $cm) {
+        $targetcontext = (object) ["name" => strip_tags($cm->name)];
+        $target = get_string("groups_activity", "block_course_checker", $targetcontext);
+        return $target;
+    }
+
+    /**
+     * @param $target
+     * @param $link
+     * @throws \coding_exception
+     */
+    private function add_general_error($target, $link) {
+        $message = get_string("subheadings_generalerror", "block_course_checker");
+        $this->result->add_detail([
+                "successful" => false,
+                "message" => $message,
+                "target" => $target,
+                "link" => $link
+        ])->set_successful(false);
     }
 }

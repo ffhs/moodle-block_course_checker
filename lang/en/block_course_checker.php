@@ -83,7 +83,8 @@ $string['attendance_success'] = 'The attendance activity is configured correctly
 // String specific for the subheadings checker.
 $string['subheadings_wrongfirsthtmltag'] = 'The first html-tag is not a {$a->htmltag}';
 $string['subheadings_iconmissing'] = 'The icon is missing in the first html-tag';
-$string['subheadings_success'] = 'This label have a nice subheading and icon';
+$string['subheadings_generalerror'] = 'There was a problem executing this check';
+$string['subheadings_success'] = 'This label has a nice subheading and icon';
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
