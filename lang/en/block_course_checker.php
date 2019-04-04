@@ -86,6 +86,14 @@ $string['subheadings_iconmissing'] = 'The icon is missing in the first html-tag'
 $string['subheadings_generalerror'] = 'There was a problem executing this check';
 $string['subheadings_success'] = 'This label has a nice subheading and icon';
 
+// String specific for the referencesettings checker.
+$string['referencesettings_comparison'] = ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
+$string['referencesettings_settingismissing'] = 'The "{$a->setting}" is not a coursesetting';
+$string['referencesettings_failing'] = 'The setting "{$a->setting}" is not correct';
+$string['referencesettings_success'] = 'The setting "{$a->setting}" is correct';
+$string['checker_referencesettings_checklist'] = 'Course Settings Checklist';
+$string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
+
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
 $string['group_links'] = 'Links';
@@ -95,12 +103,14 @@ $string['checker_groups'] = 'Group Submission Check';
 $string['checker_link'] = 'Links Check';
 $string['checker_attendance'] = 'Attendance Sessions Check';
 $string['checker_subheadings'] = 'Label Subheadings Check';
+$string['checker_referencesettings'] = 'Reference Settings Check';
 
 // Display title of each checker.
 $string['checker_groups_display'] = 'Group Submission for Assignments';
 $string['checker_link_display'] = 'Links in Course Summary and Url Activities';
 $string['checker_attendance_display'] = 'Attendance Sessions';
 $string['checker_subheadings_display'] = 'Label Subheadings';
+$string['checker_referencesettings_display'] = 'Settings Compared To Reference Course';
 
 // Checker last run.
 $string['checker_last_run'] = 'Last run {$a}';
