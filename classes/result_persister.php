@@ -142,6 +142,33 @@ class result_persister implements check_manager_persister_interface {
     }
 
     /**
+     * @param $courseid
+     * @param $date
+     * @param $text
+     * @return mixed|null
+     */
+    public function save_human_review($courseid, $date, $text) {
+        global $DB;
+        $formateddate = "";
+        if (is_array($date)) { // If comes from Moodle Api form generator.
+            $day = $date['day'];
+            $month = $date['month'];
+            $year = $date['year'];
+
+            $formateddate = \Datetime::createFromFormat("Y-m-d", $year.'-'.$month.'-'.$day);
+
+            $record = $DB->get_record('block_course_checker', ['course_id' => $courseid]);
+            $record->manual_date = $formateddate->format("U");
+            $record->manual_reason = $text;
+            $DB->update_record("block_course_checker", $record);
+
+            return $record;
+        }
+
+        return null;
+    }
+
+    /**
      * @param int $courseid
      * @return array[]
      */

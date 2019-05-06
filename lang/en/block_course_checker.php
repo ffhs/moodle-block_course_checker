@@ -82,5 +82,7 @@ $string['message_col_page_header'] = 'Message';
 $string['link_col_page_header'] = 'Link to Resolve';
 $string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
 
+$string['humancheck_title'] = 'Human Review';
 $string['date_picker_placeholder'] = 'Select a date.';
 $string['update'] = 'Update human review';
+$string['human_comment'] = 'Set a comment to give on this update.';

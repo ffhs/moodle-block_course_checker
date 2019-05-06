@@ -25,6 +25,8 @@ use block_course_checker\result_persister;
 use block_course_checker\run_checker_task;
 use block_course_checker\result_group;
 
+require_once($CFG->libdir.'/formslib.php');
+
 defined('MOODLE_INTERNAL') || die();
 
 class block_course_checker extends block_base {
@@ -202,37 +204,41 @@ class block_course_checker extends block_base {
      */
     private function render_human_check_form(int $courseid) {
         global $CFG;
+        require_once($CFG->libdir . '/formslib.php');
 
-        $url = $CFG->wwwroot . 'blocks/course_checker/update_human_date.php';
+        $url = $CFG->wwwroot . '/blocks/course_checker/update_human_date.php';
         $content = "";
 
-        $content .= html_writer::tag('div', '', ['class' => 'separator']);
+        $content .= html_writer::div('', 'separator') . html_writer::end_div();
+        $content .= html_writer::label(get_string('humancheck_title', 'block_course_checker'), null, false);
         $content .= html_writer::start_tag('form',
             ['method' => 'post', 'action' => new \moodle_url($url, ['courseid' => $courseid ])]
         );
 
-        $content .= html_writer::start_div('form-row');
         if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
             $content .= html_writer::tag("input", '',
                 ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
         }
 
-        $content .= html_writer::start_div('col');
+        $dateForm = new date_picker_input();
+        $html = $dateForm->toHtmlWriter();
+        $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
+        $properhtml = str_replace('col-md-3', '', $html); // Same but with col-md-3.
+        $content .= html_writer::div($properhtml, 'm-a-0 pt-3');
+        $content .= html_writer::start_div('pb-3');
         $content .= html_writer::tag('input', '', [
-            'type' => 'date',
-            'name' => 'human_review_date',
-            'max' => date('Y-m-d'),
-            'placeholder' => get_string('date_picker_placeholder', 'block_course_checker'),
-            'class' => null //FIXME
+            'type' => 'text',
+            'name' => 'human_comment',
+            'placeholder' => get_string('human_comment', 'block_course_checker'),
+            'class' => 'form-control'
         ]);
         $content .= html_writer::end_div();
-        $content .= html_writer::start_div('col');
         $content .= html_writer::tag('input', '', [
             'type' => 'submit',
             'placeholder' => get_string('update', 'block_course_checker'),
             'class' => 'btn btn-primary btn-block'
         ]);
-        $content .= html_writer::end_div();
+        $content .= html_writer::end_tag('form');
 
         return $content;
     }
@@ -252,4 +258,20 @@ class block_course_checker extends block_base {
                 $DB->sql_compare_text('customdata', \core_text::strlen($params[1]) + 1) . ' = ?';
         return $DB->record_exists_select('task_adhoc', $sql, $params);
     }
+}
+
+class date_picker_input extends moodleform
+{
+    function definition() {
+        $mform = $this->_form;
+        $mform->addElement('date_selector', 'human_review', '', ['stopyear' => date('Y')]);
+    }
+
+    /**
+     * @return string
+     */
+    public function toHtmlWriter() {
+        return $this->_form->toHtml();
+    }
+
 }

@@ -1,10 +1,14 @@
 .course_checker hr {
     border-top: 1px solid rgba(0,0,0,.1) !important;
 }
-.course_checker .actions{
+
+.course_checker .actions {
     flex-direction: column;
 }
-.course_checker_block .actions input[type="submit"]{ width:100%;}
+
+.course_checker_block .actions input[type="submit"] {
+    width:100%;
+}
 
 .course_checker_block .checkblock{
     display: flex;
@@ -17,16 +21,21 @@
 }
 
 /* Table on page */
-.course_checker .table{table-layout:fixed;}
+.course_checker .table {
+    table-layout:fixed;
+}
+
 .course_checker .table .col.message {
     width:80%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .course_checker .table .col.link {
     width: 7%;
     max-width: 50px;
 }
+
 .course_checker .table .col.result {
     width: 7%;
     max-width: 50px;
