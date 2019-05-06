@@ -28,7 +28,7 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $courseid = required_param('courseid', PARAM_INT);
 $token = required_param('token', PARAM_TEXT);
-$date = required_param('human_review', PARAM_RAW); // => ['day' => '5', 'month' => '5', 'year' => '2019'] ...
+$date = required_param_array('human_review', PARAM_RAW); // => ['day' => '5', 'month' => '5', 'year' => '2019'] ...
 $comment = required_param('human_comment', PARAM_TEXT);
 $referer = optional_param('ref', get_local_referer(), PARAM_TEXT);
 
