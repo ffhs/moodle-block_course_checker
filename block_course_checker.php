@@ -95,6 +95,7 @@ class block_course_checker extends block_base {
                 'humancheck' => $human,
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
+                "humancheckbtn" => $this->render_human_check_form($COURSE->id),
                 "runscheduled" => $this->is_task_scheduled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
@@ -189,6 +190,49 @@ class block_course_checker extends block_base {
                 "class" => "btn btn-primary btn-block"
         ]);
         $content .= html_writer::end_tag("form");
+
+        return $content;
+    }
+
+    /**
+     * Shows the form to update the human date review.
+     *
+     * @param int $courseid
+     * @return string
+     */
+    private function render_human_check_form(int $courseid) {
+        global $CFG;
+
+        $url = $CFG->wwwroot . 'blocks/course_checker/update_human_date.php';
+        $content = "";
+
+        $content .= html_writer::tag('div', '', ['class' => 'separator']);
+        $content .= html_writer::start_tag('form',
+            ['method' => 'post', 'action' => new \moodle_url($url, ['courseid' => $courseid ])]
+        );
+
+        $content .= html_writer::start_div('form-row');
+        if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
+            $content .= html_writer::tag("input", '',
+                ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
+        }
+
+        $content .= html_writer::start_div('col');
+        $content .= html_writer::tag('input', '', [
+            'type' => 'date',
+            'name' => 'human_review_date',
+            'max' => date('Y-m-d'),
+            'placeholder' => get_string('date_picker_placeholder', 'block_course_checker'),
+            'class' => null //FIXME
+        ]);
+        $content .= html_writer::end_div();
+        $content .= html_writer::start_div('col');
+        $content .= html_writer::tag('input', '', [
+            'type' => 'submit',
+            'placeholder' => get_string('update', 'block_course_checker'),
+            'class' => 'btn btn-primary btn-block'
+        ]);
+        $content .= html_writer::end_div();
 
         return $content;
     }

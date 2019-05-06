@@ -32,6 +32,10 @@
     max-width: 50px;
 }
 
+.separator {
+    border-top: 1px solid rgba(0,0,0,.1) !important;
+    padding-bottom: 10px;
+}
 
 @media (max-width: 1200px){
     .course_checker_block .actions{
