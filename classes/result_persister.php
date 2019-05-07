@@ -197,4 +197,25 @@ class result_persister implements check_manager_persister_interface {
     public function set_last_activity_edition(int $courseid, int $timestamp) {
         return $this->save_checks((int) $courseid, false, ["last_activity_edition" => $timestamp]);
     }
+
+    /**
+     * Tells if a check is already scheduled. This is done by course id and optionaly by checkername.
+     *
+     * @param int $courseid
+     * @param string|null $checkername
+     * @return bool
+     * @throws \dml_exception
+     */
+    public function is_task_scheduled(int $courseid, string $checkername = null) {
+        global $DB;
+        $data = ["course_id" => $courseid];
+        if (!empty($checkername)) {
+            $data["checker"] = $checkername;
+        }
+        $params = ["\\" . run_checker_task::class, json_encode($data)];
+        $sql = 'classname = ? AND ' .
+                $DB->sql_compare_text('customdata', \core_text::strlen($params[1]) + 1) . ' = ?';
+
+        return $DB->record_exists_select('task_adhoc', $sql, $params);
+    }
 }

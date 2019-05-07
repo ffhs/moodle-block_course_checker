@@ -22,6 +22,7 @@
 namespace block_course_checker;
 
 use block_course_checker\model\check_result_interface;
+use core\session\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -39,16 +40,19 @@ class global_plugin_renderer extends \plugin_renderer_base {
      *
      * @param string $pluginname
      * @param check_result_interface $result
+     * @param int $course_id
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
      */
     public function render_for_block(string $pluginname, check_result_interface $result): string {
-        // Note that the headers are hardcoded in the template too.
+        global $COURSE;
+
         $output = $this->render_from_template("block_course_checker/check_block", [
                 "successful" => $result->is_successful(),
                 "pluginame" => $pluginname,
                 "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
+                'rerun_html' => $this->rerun($pluginname, $COURSE->id)
         ]);
         $output .= $this->debug($result);
         return $output;
@@ -155,5 +159,31 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $result = ob_get_contents();
         ob_end_clean();
         return $result;
+    }
+
+    /**
+     * @param string $checkername
+     * @param int $courseid
+     * @return bool|string
+     * @throws \moodle_exception
+     */
+    protected function rerun(string $checkername, int $courseid) {
+        global $CFG;
+
+        $canrerun = !result_persister::instance()->is_task_scheduled($courseid, $checkername);
+        $token = null;
+        if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
+            $token = manager::get_login_token();
+        }
+
+        $url = new \moodle_url("/blocks/course_checker/schedule_checker.php");
+
+        return $this->render_from_template("block_course_checker/check_block_rerun", [
+                "action" => $url,
+                "course_id" => $courseid,
+                "checker" => $checkername,
+                "token" => $token,
+                "canrerun" => $canrerun,
+        ]);
     }
 }

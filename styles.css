@@ -63,3 +63,7 @@
     }
     .course_checker_block .actions a.btn{margin-right: 5px;}
 }
+
+.fa-input {
+    font-family: FontAwesome, ‘Helvetica Neue’, Helvetica, Arial, sans-serif;
+}

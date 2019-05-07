@@ -28,8 +28,7 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $courseid = required_param('courseid', PARAM_INT);
 $token = required_param('token', PARAM_TEXT);
-$referer = optional_param('ref', get_local_referer(), PARAM_TEXT);
-
+$checker = optional_param('checker', null, PARAM_TEXT);
 if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
     if ($token != \core\session\manager::get_login_token()) {
         print_error("invalidtoken", 'block_course_checker');
@@ -44,15 +43,21 @@ $domination = new \block_course_checker\run_checker_task();
 $domination->set_blocking(false);
 
 // Pass the course-id to the task.
-$domination->set_custom_data(array(
+$data = [
         'course_id' => $courseid
-));
+];
+// Allow checks to be run only for a specific checker.
+if (!empty($checker)) {
+    $data["checker"] = $checker;
+}
+
+$domination->set_custom_data($data);
 
 // Queue the task.
 \core\task\manager::queue_adhoc_task($domination);
 
 // Redirect to referer.
-$referer = new \moodle_url("/course/view.php", ["id" => $courseid]);
-redirect($referer);
+$url = new \moodle_url("/course/view.php", ["id" => $courseid]);
+redirect($url);
 
 

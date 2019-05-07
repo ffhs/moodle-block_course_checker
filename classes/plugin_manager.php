@@ -209,6 +209,24 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * @param $course
+     * @param string $checkname
+     * @return bool success
+     */
+    public function run_single_check($course, string $checkname) :array {
+        // Check that the checker exists.
+        $checker = $this->get_checker($checkname);
+        if (!$checker) {
+            return [];
+        }
+
+        // Run the check.
+        $results = [$checkname => $checker->run($course)];
+
+        return $results;
+    }
+
+    /**
      * Get the folder where checkers must be located.
      *
      * @return string

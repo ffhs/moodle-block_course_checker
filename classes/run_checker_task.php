@@ -40,7 +40,25 @@ class run_checker_task extends \core\task\adhoc_task {
         // See https://docs.moodle.org/dev/Data_manipulation_API#get_course.
         $course = get_course($data->course_id);
 
-        $checksresults = plugin_manager::instance()->run_checks($course);
+        // For a single checker.
+        if (isset($data->checker)) {
+            // We reload all the check from database.
+            $record = result_persister::instance()->load_last_checks($course->id);
+            if ($record) {
+                $checksresults = $record["result"];
+            } else {
+                $checksresults = [];
+            }
+
+            // We run the check.
+            $singleresult = plugin_manager::instance()->run_single_check($course, $data->checker);
+
+            // We merge the check result with the one stored into the database.
+            $checksresults = array_merge($checksresults, $singleresult);
+        } else {
+            $checksresults = plugin_manager::instance()->run_checks($course);
+        }
+
         result_persister::instance()->save_checks($course->id, $checksresults);
     }
 }
