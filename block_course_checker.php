@@ -70,6 +70,7 @@ class block_course_checker extends block_base {
         } else {
             $rundate = null;
             $human = null;
+            $humancomment = null;
             $lastactivityedition = null;
             $checks = [];
         }
