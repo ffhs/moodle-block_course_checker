@@ -25,9 +25,8 @@ use block_course_checker\result_persister;
 use block_course_checker\run_checker_task;
 use block_course_checker\result_group;
 
-require_once($CFG->libdir.'/formslib.php');
-
 defined('MOODLE_INTERNAL') || die();
+require_once($CFG->libdir.'/formslib.php');
 
 class block_course_checker extends block_base {
     /**
@@ -222,8 +221,8 @@ class block_course_checker extends block_base {
                 ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
         }
 
-        $dateForm = new date_picker_input();
-        $html = $dateForm->toHtmlWriter();
+        $dateform = new date_picker_input();
+        $html = $dateform->tohtmlwriter();
         $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
         $properhtml = str_replace('col-md-3', '', $html); // Same but with col-md-3.
         $content .= html_writer::div($properhtml, 'm-a-0');
@@ -263,7 +262,7 @@ class block_course_checker extends block_base {
 
 class date_picker_input extends moodleform
 {
-    function definition() {
+    protected function definition() {
         $mform = $this->_form;
         $mform->addElement('date_selector', 'human_review', '', ['stopyear' => date('Y')]);
     }
@@ -271,7 +270,7 @@ class date_picker_input extends moodleform
     /**
      * @return string
      */
-    public function toHtmlWriter() {
+    public function tohtmlwriter() {
         return $this->_form->toHtml();
     }
 
