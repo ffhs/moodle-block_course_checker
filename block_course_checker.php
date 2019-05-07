@@ -66,6 +66,7 @@ class block_course_checker extends block_base {
             $checks = $loadedchecks["result"];
             $rundate = $loadedchecks['timestamp'];
             $human = $loadedchecks['manual_date'];
+            $humancomment = $loadedchecks['manual_reason'];
             $lastactivityedition = $loadedchecks['last_activity_edition'];
         } else {
             $rundate = null;
@@ -95,6 +96,7 @@ class block_course_checker extends block_base {
         $this->content->footer = $footerrenderer->renderer([
                 'automaticcheck' => $rundate,
                 'humancheck' => $human,
+                'humanreason' => $humancomment,
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
                 "humancheckbtn" => $this->render_human_check_form($COURSE->id),
@@ -224,10 +226,9 @@ class block_course_checker extends block_base {
         $html = $dateForm->toHtmlWriter();
         $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
         $properhtml = str_replace('col-md-3', '', $html); // Same but with col-md-3.
-        $content .= html_writer::div($properhtml, 'm-a-0 pt-3');
+        $content .= html_writer::div($properhtml, 'm-a-0');
         $content .= html_writer::start_div('pb-3');
-        $content .= html_writer::tag('input', '', [
-            'type' => 'text',
+        $content .= html_writer::tag('textarea', '', [
             'name' => 'human_comment',
             'placeholder' => get_string('human_comment', 'block_course_checker'),
             'class' => 'form-control'

@@ -38,7 +38,11 @@ messages about the status of the last run
     <br>
     <b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
     {{#humancheck}}
-      {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+      {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}<br>
+    <b>{{#str}}humanreason, block_course_checker{{/str}}</b><br>
+    <div class="humanreason-container">
+        <a class="form-control" readonly>{{humanreason}}</a>
+    </div>
     {{/humancheck}}
     {{^humancheck}}
       {{#str}} humancheckempty, block_course_checker {{/str}}

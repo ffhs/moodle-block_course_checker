@@ -46,6 +46,16 @@
     padding-bottom: 10px;
 }
 
+.humanreason-container {
+    height: 3.2em;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.humanreason-container a {
+    line-height: 1.2em;
+}
+
 @media (max-width: 1200px){
     .course_checker_block .actions{
         flex-direction: row;
