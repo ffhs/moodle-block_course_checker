@@ -100,7 +100,7 @@ class block_course_checker extends block_base {
                 'humanreason' => $humancomment,
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
-                "humancheckbtn" => $blockrenderer->renderer_human_check_form($COURSE->id, $humancomment),
+                "humancheckbtn" => $this->render_human_check_form($COURSE->id),
                 "runscheduled" => task_helper::instance()->is_task_scheduled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
