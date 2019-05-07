@@ -27,12 +27,11 @@ interface event_manager_persister_interface {
 
     /**
      * @param int $courseid
-     * @param event_result_interface[] $eventresults
-     *
+     * @param int $instanceid
      * @param array $data
      * @return void
      */
-    public function save_event($courseid, $eventresults, array $data = []);
+    public function save_event($courseid, $instanceid, array $data = []);
 
     /**
      * @param int $courseid

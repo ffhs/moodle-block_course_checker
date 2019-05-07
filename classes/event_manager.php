@@ -32,13 +32,13 @@ class event_manager {
         $courseid = $event->courseid;
         $timestamp = $event->timecreated;
         $other = $event->other;
-        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
+        event_persister::instance()->set_last_activity_event($courseid, $timestamp, $other);
     }
 
     public static function course_module_created($event) {
         $courseid = $event->courseid;
         $timestamp = $event->timecreated;
         $other = $event->other;
-        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
+        event_persister::instance()->set_last_activity_event($courseid, $timestamp, $other);
     }
 }

@@ -232,15 +232,15 @@ class block_course_checker extends block_base {
         $content .= html_writer::div($properhtml, 'm-a-0');
         $content .= html_writer::start_div('pb-3');
         $content .= html_writer::tag('textarea', '', [
-                'name' => 'human_comment',
-                'placeholder' => get_string('human_comment', 'block_course_checker'),
-                'class' => 'form-control'
+            'name' => 'human_comment',
+            'placeholder' => get_string('human_comment', 'block_course_checker'),
+            'class' => 'form-control'
         ]);
         $content .= html_writer::end_div();
         $content .= html_writer::tag('input', '', [
-                'type' => 'submit',
-                'placeholder' => get_string('update', 'block_course_checker'),
-                'class' => 'btn btn-primary btn-block'
+            'type' => 'submit',
+            'placeholder' => get_string('update', 'block_course_checker'),
+            'class' => 'btn btn-primary btn-block'
         ]);
         $content .= html_writer::end_tag('form');
 
@@ -260,5 +260,4 @@ class date_picker_input extends moodleform {
     public function tohtmlwriter() {
         return $this->_form->toHtml();
     }
-
 }

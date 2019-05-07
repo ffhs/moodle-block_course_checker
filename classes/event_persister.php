@@ -24,9 +24,9 @@ namespace block_course_checker;
 defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\model\event_manager_persister_interface;
-use block_course_checker\model\event_result_interface;
 
 class event_persister implements event_manager_persister_interface {
+    const TABLENAME = "block_course_checker_events";
 
     /**
      * A singleton instance of this class.
@@ -63,13 +63,51 @@ class event_persister implements event_manager_persister_interface {
 
     /**
      * @param int $courseid
-     * @param event_result_interface[] $eventresults
-     *
+     * @param int $instanceid
      * @param array $data
-     * @return void
+     * @return bool if the save passed.
      */
-    public function save_event($courseid, $eventresults, array $data = []) {
-        // TODO: Implement save_event() method.
+    public function save_event($courseid, $instanceid, array $data = []) {
+        global $DB;
+
+        $record = $DB->get_record(self::TABLENAME,
+                ['course_id' => $courseid, 'instance_id' => $instanceid]
+        );
+        $isnew = !$record;
+        if ($isnew) {
+            $record = new \stdClass();
+            $record->course_id = $courseid;
+            $record->instance_id = $instanceid;
+        }
+        if (!array_key_exists('timestamp', $data)) {
+            $record->timestamp = date('U');
+        }
+        foreach ($data as $key => $value) {
+            $record->{$key} = $value;
+        }
+
+        if ($isnew) {
+            try {
+                $DB->insert_record(self::TABLENAME, $record);
+                return true;
+            } catch (\Exception $e) {
+                debugging($e->getMessage());
+            }
+        } else {
+            try {
+                $DB->update_record(self::TABLENAME, $record);
+                return true;
+            } catch (\Exception $e) {
+                debugging($e->getMessage());
+            }
+        }
+
+        return false;
+    }
+
+    public function set_last_activity_event(int $courseid, $action, $userid, $instanceid, $modulename, int $timestamp) {
+        $data = ['action' => $action, 'user_id' => $userid, 'modulename' => $modulename, 'timestamp' => $timestamp];
+        return $this->save_event($courseid, $instanceid, $data);
     }
 
     /**
