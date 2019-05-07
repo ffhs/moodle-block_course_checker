@@ -55,10 +55,16 @@ class run_checker_task extends \core\task\adhoc_task {
 
             // We merge the check result with the one stored into the database.
             $checksresults = array_merge($checksresults, $singleresult);
+
+            $data = [];
         } else {
+            // For all checkers.
             $checksresults = plugin_manager::instance()->run_checks($course);
+            $data = [
+                "timestamp" => date("U")
+            ];
         }
 
-        result_persister::instance()->save_checks($course->id, $checksresults);
+        result_persister::instance()->save_checks($course->id, $checksresults, $data);
     }
 }

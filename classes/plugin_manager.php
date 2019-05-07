@@ -203,7 +203,9 @@ class plugin_manager implements check_manager_interface {
 
         // For debug purpose.
         if (self::IMMEDIATE_SAVE_AFTER_RUN) {
-            result_persister::instance()->save_checks($course->id, $results);
+            result_persister::instance()->save_checks($course->id, $results, [
+                    "timestamp" => date("U")
+            ]);
         }
         return $results;
     }
@@ -213,7 +215,7 @@ class plugin_manager implements check_manager_interface {
      * @param string $checkname
      * @return bool success
      */
-    public function run_single_check($course, string $checkname) :array {
+    public function run_single_check($course, string $checkname): array {
         // Check that the checker exists.
         $checker = $this->get_checker($checkname);
         if (!$checker) {

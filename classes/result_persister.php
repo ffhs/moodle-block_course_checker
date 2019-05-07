@@ -128,11 +128,6 @@ class result_persister implements check_manager_persister_interface {
             $record->{$key} = $value;
         }
 
-        // If the results are false, we do not alter the result itself, but one of the other field.
-        if ($checkresults !== false) {
-            $record->timestamp = date("U");
-        }
-
         if ($isnew) {
             $DB->insert_record("block_course_checker", $record);
         } else {
