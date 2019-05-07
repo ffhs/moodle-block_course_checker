@@ -30,7 +30,6 @@ $courseid = required_param('courseid', PARAM_INT);
 $token = required_param('token', PARAM_TEXT);
 $date = required_param_array('human_review', PARAM_RAW);
 $comment = required_param('human_comment', PARAM_TEXT);
-$referer = optional_param('ref', get_local_referer(), PARAM_TEXT);
 
 if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
     if ($token != \core\session\manager::get_login_token()) {
@@ -41,7 +40,8 @@ if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
 // Load the course, so whe know it exist before updating human review.
 $course = get_course($courseid);
 
+$date = \Datetime::createFromFormat("Y-m-d", $date['year'] . '-' . $date['month'] . '-' . $date['day']);
 $resultpersister = \block_course_checker\result_persister::instance()->save_human_review($course->id, $date, $comment);
 
-$referer = new \moodle_url("/course/view.php", ["id" => $courseid]);
-redirect($referer);
+$url = new \moodle_url("/course/view.php", ["id" => $courseid]);
+redirect($url);
