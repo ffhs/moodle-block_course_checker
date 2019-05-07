@@ -13,18 +13,18 @@ buttons to run the checkers and to display the result page
         {{#showdetailsbutton}}
             <a href="{{details}}" class="btn btn-secondary">{{#str}} resultpagegoto, block_course_checker {{/str}}</a>
         {{/showdetailsbutton}}
-    {{^runscheduled}}
-        {{{runbtn}}}
-    {{/runscheduled}}
+        {{^runscheduled}}
+            {{{runbtn}}}
+        {{/runscheduled}}
+        {{#runscheduled}}
+            <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
+        {{/runscheduled}}
+        {{{humancheckbtn}}}
     </div>
 
 {{!
 messages about the status of the last run
 }}
-
-    {{#runscheduled}}
-      <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
-    {{/runscheduled}}
     <hr>
     <b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
     <br>
@@ -37,7 +37,11 @@ messages about the status of the last run
     <br>
     <b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
     {{#humancheck}}
-      {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+      {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}<br>
+    <b>{{#str}}humanreason, block_course_checker{{/str}}</b><br>
+    <div class="humanreason-container">
+        <a class="form-control" readonly>{{humanreason}}</a>
+    </div>
     {{/humancheck}}
     {{^humancheck}}
       {{#str}} humancheckempty, block_course_checker {{/str}}

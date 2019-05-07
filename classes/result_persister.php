@@ -66,14 +66,15 @@ class result_persister implements check_manager_persister_interface {
      */
     private static function encode($record, $checkresults) {
 
+        $payload = [];
         foreach ($checkresults as $pluginname => $result) {
-            $playload[$pluginname] = [
+            $payload[$pluginname] = [
                     "successful" => $result->is_successful(),
                     "details" => $result->get_details(),
                     "link" => $result->get_link()
             ];
         }
-        $record->result = json_encode($playload);
+        $record->result = json_encode($payload);
 
         return $record;
     }
@@ -99,7 +100,7 @@ class result_persister implements check_manager_persister_interface {
 
     /**
      * @param $courseid
-     * @param check_result_interface[] $checkresults
+     * @param check_result_interface[]|false $checkresults False if we dont want to update the automatic check date and the results.
      * @param array $data
      * @return mixed record
      */
@@ -116,6 +117,7 @@ class result_persister implements check_manager_persister_interface {
         if ($isnew) {
             $record = new \stdClass();
             $record->course_id = $courseid;
+            $record->result = null;
         }
 
         // Skip this if we don't have results.
@@ -133,12 +135,30 @@ class result_persister implements check_manager_persister_interface {
 
         if ($isnew) {
             $DB->insert_record("block_course_checker", $record);
-
         } else {
             $DB->update_record("block_course_checker", $record);
         }
 
         return self::decode($record);
+    }
+
+    /**
+     * @param int $courseid
+     * @param \DateTime $date
+     * @param string $text
+     * @return mixed|null
+     */
+    public function save_human_review(int $courseid, \DateTime $date, string $text = null) {
+
+        $text = trim($text);
+        if (empty($text)) {
+            $text = null;
+        }
+
+        return $this->save_checks($courseid, false, [
+                "manual_date" => $date->format("U"),
+                "manual_reason" => $text,
+        ]);
     }
 
     /**
