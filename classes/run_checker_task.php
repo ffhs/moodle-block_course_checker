@@ -63,7 +63,7 @@ class run_checker_task extends adhoc_task {
             // For all checkers.
             $checksresults = plugin_manager::instance()->run_checks($course);
             $data = [
-                "timestamp" => date("U")
+                    "timestamp" => date("U")
             ];
         }
 
