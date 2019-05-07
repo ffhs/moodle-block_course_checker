@@ -174,7 +174,7 @@ class block_course_checker extends block_base {
     /**
      * Show the button to run a task, execpt if it's already scheduled.
      *
-     * @param int A$courseid
+     * @param int $courseid
      * @return string
      */
     private function render_run_task_button(int $courseid) {
