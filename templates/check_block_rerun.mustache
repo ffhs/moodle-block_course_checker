@@ -1,0 +1,15 @@
+{{#canrerun}}
+<form action="{{action}}" method="post">
+    <input type="hidden" name="checker" value="{{checker}}">
+    <input type="hidden" name="courseid" value="{{course_id}}">
+    <input type="hidden" name="token" value="{{token}}">
+    {{! See https://fontawesome.com/cheatsheet?from=io for the HTML Code of "REDO" }}
+    <input type="submit" class="btn btn-secondary fa-input" value="&#xf01e;" title="{{#str}}rerun_col_block_header, block_course_checker{{/str}}">
+</form>
+{{/canrerun}}
+
+{{^canrerun}}
+    <div class="btn btn-secondary disabled">
+        <i class="fa fa-redo" title="{{#str}}rerun_disabled_col_block_header, block_course_checker{{/str}}"></i>
+    </div>
+{{/canrerun}}

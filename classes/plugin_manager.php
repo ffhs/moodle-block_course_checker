@@ -104,20 +104,20 @@ class plugin_manager implements check_manager_interface {
             if ($item->isDot() or !$item->isDir()) {
                 continue;
             }
-            $pluginname = $item->getFilename();
-            $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_FILE;
+            $filename = $item->getFilename();
+            $filelocation = $pluginroot . "/" . $filename . "/" . self::PLUGIN_FILE;
             if (false === file_exists($filelocation)) {
-                debugging(sprintf("Checker %s has a missing file: %s", $pluginname, $filelocation));
+                debugging(sprintf("Checker %s has a missing file: %s", $filename, $filelocation));
                 continue;
             }
 
-            $classname = sprintf(self::PLUGIN_CLASS, $pluginname);
+            $classname = sprintf(self::PLUGIN_CLASS, $filename);
             if (!class_exists($classname, true)) {
-                debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
+                debugging(sprintf("Checker %s has a missing class: %s", $filename, $classname));
 
                 continue;
             }
-            self::$plugins[$pluginname] = $this->get_checker($pluginname);
+            self::$plugins[$filename] = $this->get_checker($filename);
         }
 
         // Remove empty checkers.
@@ -130,27 +130,27 @@ class plugin_manager implements check_manager_interface {
     /**
      * Get the plugin checker for a specific check.
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @return check_plugin_interface|null
      */
-    public function get_checker(string $pluginname) {
+    public function get_checker(string $checkername) {
         // Use the plugin if it has been instantiated.
         // Otherwise we just instantiate it, without caching for avoiding side effects with get_checkers_plugins.
-        if (!empty(self::$plugins) && array_key_exists($pluginname, self::$plugins)) {
-            return self::$plugins[$pluginname];
+        if (!empty(self::$plugins) && array_key_exists($checkername, self::$plugins)) {
+            return self::$plugins[$checkername];
         }
 
         $pluginroot = $this->get_checkers_folders();
-        $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_FILE;
+        $filelocation = $pluginroot . "/" . $checkername . "/" . self::PLUGIN_FILE;
 
         if (false === file_exists($filelocation)) {
-            debugging(sprintf('File [%s] was not found for [%s] checker', $filelocation, $pluginname));
+            debugging(sprintf('File [%s] was not found for [%s] checker', $filelocation, $checkername));
             return null;
         }
 
-        $classname = sprintf(self::PLUGIN_CLASS, $pluginname);
+        $classname = sprintf(self::PLUGIN_CLASS, $checkername);
         if (!class_exists($classname, true)) {
-            debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
+            debugging(sprintf("Checker %s has a missing class: %s", $checkername, $classname));
             return null;
         }
 
@@ -160,21 +160,21 @@ class plugin_manager implements check_manager_interface {
     /**
      * Get the plugin renderer for a specific check, if it doesn't exist, fallback to the default one.
      *
-     * @param string $pluginname plugin name
+     * @param string $checkername plugin name
      * @return global_plugin_renderer
      */
-    public function get_renderer($pluginname) {
+    public function get_renderer($checkername) {
         global $PAGE;
         $pluginroot = $this->get_checkers_folders();
-        $filelocation = $pluginroot . "/" . $pluginname . "/" . self::PLUGIN_OUTPUT_FILE;
+        $filelocation = $pluginroot . "/" . $checkername . "/" . self::PLUGIN_OUTPUT_FILE;
 
         if (false === file_exists($filelocation)) {
             return $this->default_render();
         }
 
-        $classname = sprintf(self::PLUGIN_OUTPUT_CLASS, $pluginname);
+        $classname = sprintf(self::PLUGIN_OUTPUT_CLASS, $checkername);
         if (!class_exists($classname, true)) {
-            debugging(sprintf("Checker %s has a missing class: %s", $pluginname, $classname));
+            debugging(sprintf("Checker %s has a missing class: %s", $checkername, $classname));
             return $this->default_render();
         }
         return new $classname($PAGE, RENDERER_TARGET_GENERAL);
@@ -183,11 +183,11 @@ class plugin_manager implements check_manager_interface {
     /**
      * Get the checker group.
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @return string
      */
-    public function get_group(string $pluginname): string {
-        $checker = $this->get_checker($pluginname);
+    public function get_group(string $checkername): string {
+        $checker = $this->get_checker($checkername);
         return $checker !== null ? $checker->get_group() : "";
     }
 
@@ -197,14 +197,34 @@ class plugin_manager implements check_manager_interface {
      */
     public function run_checks($course) {
         $results = [];
-        foreach ($this->get_checkers_plugins() as $pluginname => $plugin) {
-            $results[$pluginname] = $plugin->run($course);
+        foreach ($this->get_checkers_plugins() as $checkername => $checker) {
+            $results[$checkername] = $checker->run($course);
         }
 
         // For debug purpose.
         if (self::IMMEDIATE_SAVE_AFTER_RUN) {
-            result_persister::instance()->save_checks($course->id, $results);
+            result_persister::instance()->save_checks($course->id, $results, [
+                    "timestamp" => date("U")
+            ]);
         }
+        return $results;
+    }
+
+    /**
+     * @param $course
+     * @param string $checkname
+     * @return bool success
+     */
+    public function run_single_check($course, string $checkname): array {
+        // Check that the checker exists.
+        $checker = $this->get_checker($checkname);
+        if (!$checker) {
+            return [];
+        }
+
+        // Run the check.
+        $results = [$checkname => $checker->run($course)];
+
         return $results;
     }
 

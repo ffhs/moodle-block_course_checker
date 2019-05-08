@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace block_course_checker;
 
+use core\task\adhoc_task;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -23,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @package block_course_checker
  */
-class run_checker_task extends \core\task\adhoc_task {
+class run_checker_task extends adhoc_task {
 
     /**
      * Do the job.
@@ -40,7 +42,32 @@ class run_checker_task extends \core\task\adhoc_task {
         // See https://docs.moodle.org/dev/Data_manipulation_API#get_course.
         $course = get_course($data->course_id);
 
-        $checksresults = plugin_manager::instance()->run_checks($course);
-        result_persister::instance()->save_checks($course->id, $checksresults);
+        // For a single checker.
+        if (isset($data->checker)) {
+            // We reload all the check from database.
+            $record = result_persister::instance()->load_last_checks($course->id);
+            if ($record) {
+                $checksresults = $record["result"];
+            } else {
+                $checksresults = [];
+            }
+
+            // We run the check.
+            $singleresult = plugin_manager::instance()->run_single_check($course, $data->checker);
+
+            // We merge the check result with the one stored into the database.
+            $checksresults = array_merge($checksresults, $singleresult);
+
+            $data = [];
+        } else {
+            // For all checkers.
+            $checksresults = plugin_manager::instance()->run_checks($course);
+            $data = [
+                "timestamp" => date("U")
+            ];
+        }
+
+        result_persister::instance()->save_checks($course->id, $checksresults, $data);
+        task_helper::instance()->clear_is_scheduled_cache();
     }
 }

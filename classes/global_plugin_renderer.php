@@ -22,6 +22,7 @@
 namespace block_course_checker;
 
 use block_course_checker\model\check_result_interface;
+use core\session\manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -37,18 +38,21 @@ class global_plugin_renderer extends \plugin_renderer_base {
     /**
      * Output a check_result for inside the block
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @param check_result_interface $result
+     * @param int $course_id
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function render_for_block(string $pluginname, check_result_interface $result): string {
-        // Note that the headers are hardcoded in the template too.
+    public function render_for_block(string $checkername, check_result_interface $result): string {
+        global $COURSE;
+
         $output = $this->render_from_template("block_course_checker/check_block", [
                 "successful" => $result->is_successful(),
-                "pluginame" => $pluginname,
-                "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
+                "checkername" => $checkername,
+                "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
+                'rerun_html' => $this->rerun($checkername, $COURSE->id)
         ]);
         $output .= $this->debug($result);
         return $output;
@@ -82,13 +86,13 @@ class global_plugin_renderer extends \plugin_renderer_base {
     /**
      * Output a check_result for inside the page
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @param check_result_interface $result
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function render_for_page(string $pluginname, check_result_interface $result): string {
+    public function render_for_page(string $checkername, check_result_interface $result): string {
 
         // Format result details.
         $resultdetails = $result->get_details();
@@ -126,14 +130,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
         }
 
         $context = [
-                "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
+                "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
                 "successful" => $result->is_successful(),
                 "link" => $result->get_link(),
                 "resultdetails" => $resultdetails,
         ];
 
         $output = "";
-        $output .= $this->debug($pluginname);
+        $output .= $this->debug($checkername);
         $output .= $this->debug($context);
         $output .= $this->render_from_template("block_course_checker/check_result", $context);
         return $output;
@@ -155,5 +159,35 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $result = ob_get_contents();
         ob_end_clean();
         return $result;
+    }
+
+    /**
+     * @param string $checkername
+     * @param int $courseid
+     * @return bool|string
+     * @throws \moodle_exception
+     */
+    protected function rerun(string $checkername, int $courseid) {
+        global $CFG;
+
+        // We can rerun a check if the check is not scheduled and the whole checks are not scheduled.
+        $canrerun = !task_helper::instance()->is_task_scheduled($courseid, $checkername);
+        $canrerun &= !task_helper::instance()->is_task_scheduled($courseid);
+
+        // Use a "CSRF" token.
+        $token = null;
+        if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
+            $token = manager::get_login_token();
+        }
+
+        $action = new \moodle_url("/blocks/course_checker/schedule_checker.php");
+
+        return $this->render_from_template("block_course_checker/check_block_rerun", [
+                "action" => $action,
+                "course_id" => $courseid,
+                "checker" => $checkername,
+                "token" => $token,
+                "canrerun" => $canrerun,
+        ]);
     }
 }

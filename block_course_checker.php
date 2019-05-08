@@ -21,12 +21,12 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
 
-use block_course_checker\result_persister;
-use block_course_checker\run_checker_task;
 use block_course_checker\result_group;
+use block_course_checker\result_persister;
+use block_course_checker\task_helper;
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 class block_course_checker extends block_base {
     /**
@@ -85,7 +85,7 @@ class block_course_checker extends block_base {
         $this->content->text .= $this->render_block($checks);
 
         if ($loadedchecks != [] && (\has_capability('block/course_checker:view_report',
-                context_course::instance($COURSE->id)))) {
+                        context_course::instance($COURSE->id)))) {
             $showdetailsbutton = true;
         } else {
             $showdetailsbutton = false;
@@ -100,7 +100,7 @@ class block_course_checker extends block_base {
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
                 "humancheckbtn" => $this->render_human_check_form($COURSE->id),
-                "runscheduled" => $this->is_task_scheduled($COURSE->id),
+                "runscheduled" => task_helper::instance()->is_task_scheduled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
         ]);
@@ -119,6 +119,7 @@ class block_course_checker extends block_base {
      * Render the checks results
      *
      * @param array $results
+     * @param int $courseid
      * @return mixed
      * @throws coding_exception
      * @throws moodle_exception
@@ -129,16 +130,16 @@ class block_course_checker extends block_base {
         // Render each check result with the dedicated render for this checker.
         $manager = \block_course_checker\plugin_manager::instance();
         $htmlresults = [];
-        foreach ($results as $pluginname => $result) {
+        foreach ($results as $checkername => $result) {
 
             // Ignore missing checker.
-            if ($manager->get_checker($pluginname) == null) {
+            if ($manager->get_checker($checkername) == null) {
                 continue;
             }
             $htmlresults[] = [
-                    "pluginname" => $pluginname,
-                    "name" => get_string($pluginname, "block_course_checker"),
-                    "output" => $manager->get_renderer($pluginname)->render_for_block($pluginname, clone $result)
+                    "checkername" => $checkername,
+                    "name" => get_string($checkername, "block_course_checker"),
+                    "output" => $manager->get_renderer($checkername)->render_for_block($checkername, clone $result)
             ];
         }
 
@@ -146,7 +147,7 @@ class block_course_checker extends block_base {
         $groupedresults = [];
         $grouporder = $manager->get_group_order();
         foreach ($htmlresults as $count => $result) {
-            $group = $manager->get_group($result['pluginname']);
+            $group = $manager->get_group($result['checkername']);
             $groupnr = $grouporder[$group];
             $groupname = get_string($group, "block_course_checker");
             if (!array_key_exists($groupnr, $groupedresults)) {
@@ -160,7 +161,8 @@ class block_course_checker extends block_base {
         /** @var \block_course_checker\output\block_renderer $renderer */
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
-            "groupedresults" => $groupedresults,
+                "groupedresults" => $groupedresults,
+                "hasresults" => ! empty($htmlresults),
         ]);
     }
 
@@ -214,12 +216,12 @@ class block_course_checker extends block_base {
         $content .= html_writer::div('', 'separator') . html_writer::end_div();
         $content .= html_writer::label(get_string('humancheck_title', 'block_course_checker'), null, false);
         $content .= html_writer::start_tag('form',
-            ['method' => 'post', 'action' => new \moodle_url($url, ['courseid' => $courseid ])]
+                ['method' => 'post', 'action' => new \moodle_url($url, ['courseid' => $courseid])]
         );
 
         if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
             $content .= html_writer::tag("input", '',
-                ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
+                    ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
         }
 
         $dateform = new date_picker_input();
@@ -229,40 +231,23 @@ class block_course_checker extends block_base {
         $content .= html_writer::div($properhtml, 'm-a-0');
         $content .= html_writer::start_div('pb-3');
         $content .= html_writer::tag('textarea', '', [
-            'name' => 'human_comment',
-            'placeholder' => get_string('human_comment', 'block_course_checker'),
-            'class' => 'form-control'
+                'name' => 'human_comment',
+                'placeholder' => get_string('human_comment', 'block_course_checker'),
+                'class' => 'form-control'
         ]);
         $content .= html_writer::end_div();
         $content .= html_writer::tag('input', '', [
-            'type' => 'submit',
-            'placeholder' => get_string('update', 'block_course_checker'),
-            'class' => 'btn btn-primary btn-block'
+                'type' => 'submit',
+                'placeholder' => get_string('update', 'block_course_checker'),
+                'class' => 'btn btn-primary btn-block'
         ]);
         $content .= html_writer::end_tag('form');
 
         return $content;
     }
-
-    /**
-     * Tells if a check for the specific course is already scheduled
-     *
-     * @param int $courseid
-     * @return bool
-     * @throws dml_exception
-     */
-    private function is_task_scheduled(int $courseid) {
-        global $DB;
-
-        $params = ["\\" . run_checker_task::class, json_encode(["course_id" => $courseid])];
-        $sql = 'classname = ? AND ' .
-                $DB->sql_compare_text('customdata', \core_text::strlen($params[1]) + 1) . ' = ?';
-        return $DB->record_exists_select('task_adhoc', $sql, $params);
-    }
 }
 
-class date_picker_input extends moodleform
-{
+class date_picker_input extends moodleform {
     protected function definition() {
         $mform = $this->_form;
         $mform->addElement('date_selector', 'human_review', '', ['stopyear' => date('Y')]);

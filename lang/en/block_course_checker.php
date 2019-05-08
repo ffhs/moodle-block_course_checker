@@ -76,6 +76,8 @@ $string['checker_link_display'] = 'Links in Course Summary and Url Activities';
 
 // Check Result Tables.
 $string['result_col_block_header'] = 'Result';
+$string['rerun_col_block_header'] = 'Re-run';
+$string['rerun_disabled_col_block_header'] = 'This check is already scheduled to re-run';
 $string['checker_col_block_header'] = 'Check';
 $string['result_col_page_header'] = 'Result';
 $string['message_col_page_header'] = 'Message';

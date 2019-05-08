@@ -4,12 +4,13 @@ template for rendering the block
 <div class="course_checker course_checker_block">
 
     <h4 class="mb-1 pb-2 text-muted text-capitalize">Course</h4>
-
+    {{#hasresults}}
     <table class="table table-responsive">
         <thead>
             <tr>
                 <th scope="col">{{#str}} checker_col_block_header, block_course_checker {{/str}}</th>
                 <th scope="col">{{#str}} result_col_block_header, block_course_checker {{/str}}</th>
+                <th scope="col">{{#str}} rerun_col_block_header, block_course_checker {{/str}}</th>
             </tr>
         </thead>
         <tbody>
@@ -20,9 +21,11 @@ template for rendering the block
         {{/groupedresults}}
         </tbody>
     </table>
-{{!
-message when no check was yet run
-}}
+    {{/hasresults}}
+
+    {{!
+    message when no check was yet run
+    }}
     {{^groupedresults}}
         {{#str}} noresults, block_course_checker {{/str}}
     {{/groupedresults}}
