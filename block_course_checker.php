@@ -162,6 +162,7 @@ class block_course_checker extends block_base {
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
                 "groupedresults" => $groupedresults,
+                "hasresults" => ! empty($htmlresults),
         ]);
     }
 
