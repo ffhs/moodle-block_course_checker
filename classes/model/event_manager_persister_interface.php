@@ -34,8 +34,9 @@ interface event_manager_persister_interface {
     public function save_event($courseid, $instanceid, array $data = []);
 
     /**
-     * @param int $courseid
+     * @param string $modulename
+     * @param int $instanceid
      * @return mixed record with event_result_interface[] inside result key
      */
-    public function load_last_event(int $courseid): array;
+    public function load_last_event($modulename, $instanceid): array;
 }

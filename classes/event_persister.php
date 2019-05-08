@@ -111,10 +111,18 @@ class event_persister implements event_manager_persister_interface {
     }
 
     /**
-     * @param int $courseid
+     * @param string $modulename
+     * @param $instanceid
      * @return mixed record with event_result_interface[] inside result key
      */
-    public function load_last_event(int $courseid): array {
-        // TODO: Implement load_last_event() method.
+    public function load_last_event($modulename, $instanceid): array {
+        global $DB;
+        $record = $DB->get_record(self::TABLENAME, ['modulename' => $modulename, 'instance_id' => $instanceid]);
+
+        if (!$record) {
+            return [];
+        }
+
+        return $record;
     }
 }

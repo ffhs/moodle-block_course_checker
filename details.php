@@ -79,6 +79,9 @@ foreach ($htmlresults as $count => $result) {
 ksort($groupedresults);
 $groupedresults = array_values($groupedresults);
 
+$groupedevents = [];
+
+
 /** @var \block_course_checker\output\page_renderer $renderer */
 $renderer = $PAGE->get_renderer("block_course_checker", "page");
 
