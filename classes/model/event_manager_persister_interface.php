@@ -25,18 +25,14 @@ defined('MOODLE_INTERNAL') || die();
 
 interface event_manager_persister_interface {
 
-    /**
-     * @param int $courseid
-     * @param int $instanceid
-     * @param array $data
-     * @return void
-     */
-    public function save_event($courseid, $instanceid, array $data = []);
+    public function set_last_activity_event(int $courseid, string $action, int $userid,
+                                            int $instanceid, string $modulename, string $name, int $timestamp
+    );
 
     /**
-     * @param string $modulename
-     * @param int $instanceid
-     * @return mixed record with event_result_interface[] inside result key
+     * @param int $courseid
+     * @param \DateTime $timestamp
+     * @return array
      */
-    public function load_last_event($modulename, $instanceid): array;
+    public function list_events_updated(int $courseid, \DateTime $timestamp): array;
 }

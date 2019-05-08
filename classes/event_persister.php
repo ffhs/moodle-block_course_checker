@@ -65,9 +65,8 @@ class event_persister implements event_manager_persister_interface {
      * @param int $courseid
      * @param int $instanceid
      * @param array $data
-     * @return bool if the save passed.
      */
-    public function save_event($courseid, $instanceid, array $data = []) {
+    protected function save_event($courseid, $instanceid, array $data = []) {
         global $DB;
 
         $record = $DB->get_record(self::TABLENAME,
@@ -87,42 +86,29 @@ class event_persister implements event_manager_persister_interface {
         }
 
         if ($isnew) {
-            try {
-                $DB->insert_record(self::TABLENAME, $record);
-                return true;
-            } catch (\Exception $e) {
-                debugging($e->getMessage());
-            }
+            $DB->insert_record(self::TABLENAME, $record);
         } else {
-            try {
-                $DB->update_record(self::TABLENAME, $record);
-                return true;
-            } catch (\Exception $e) {
-                debugging($e->getMessage());
-            }
+            $DB->update_record(self::TABLENAME, $record);
         }
-
-        return false;
     }
 
-    public function set_last_activity_event(int $courseid, $action, $userid, $instanceid, $modulename, int $timestamp) {
-        $data = ['action' => $action, 'user_id' => $userid, 'modulename' => $modulename, 'timestamp' => $timestamp];
-        return $this->save_event($courseid, $instanceid, $data);
+    public function set_last_activity_event(int $courseid, string $action, int $userid, int $instanceid,
+                                            string $modulename, string $name, int $timestamp) {
+        $this->save_event($courseid, $instanceid, [
+            'action' => $action,
+            'user_id' => $userid,
+            'modulename' => $modulename,
+            'name' => $name,
+            'timestamp' => $timestamp
+        ]);
     }
 
     /**
-     * @param string $modulename
-     * @param $instanceid
-     * @return mixed record with event_result_interface[] inside result key
+     * @param int $courseid
+     * @param \DateTime $timestamp
+     * @return array
      */
-    public function load_last_event($modulename, $instanceid): array {
-        global $DB;
-        $record = $DB->get_record(self::TABLENAME, ['modulename' => $modulename, 'instance_id' => $instanceid]);
-
-        if (!$record) {
-            return [];
-        }
-
-        return $record;
+    public function list_events_updated(int $courseid, \DateTime $timestamp): array {
+        // TODO: Implement list_events_updated() method.
     }
 }

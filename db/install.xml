@@ -29,6 +29,7 @@
         <FIELD NAME="user_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
         <FIELD NAME="instance_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
         <FIELD NAME="modulename" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="name" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
         <FIELD NAME="timestamp" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
       </FIELDS>
       <KEYS>

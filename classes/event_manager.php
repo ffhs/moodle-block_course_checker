@@ -34,6 +34,7 @@ class event_manager {
         $userid = $event->userid;
         $instanceid = $event->other['instanceid'];
         $modulename = $event->other['modulename'];
+        $name = $event->other['name'];
         $timestamp = $event->timecreated;
         event_persister::instance()->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $timestamp);
     }
@@ -44,6 +45,7 @@ class event_manager {
         $userid = $event->userid;
         $instanceid = $event->other['instanceid'];
         $modulename = $event->other['modulename'];
+        $name = $event->other['name'];
         $timestamp = $event->timecreated;
         event_persister::instance()->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $timestamp);
     }

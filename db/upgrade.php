@@ -44,7 +44,7 @@ function xmldb_block_course_checker_upgrade($oldversion) {
     }
 
     // Migration to add the field "last_activity_edition".
-    if (intval($oldversion) === 2019031507) {
+    if (intval($oldversion) === 2019031507) { // TODO: Fix version.
         $xmldbfile = new xmldb_file($file);
         if (!$xmldbfile->fileExists()) {
             throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
@@ -58,7 +58,7 @@ function xmldb_block_course_checker_upgrade($oldversion) {
     }
 
     // Load the new table events.
-    if (intval($oldversion) === 2019050701) {
+    if ($oldversion < 2019050702) {
         $xmldbfile = new xmldb_file($file);
         if (!$xmldbfile->fileExists()) {
             throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
