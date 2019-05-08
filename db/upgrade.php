@@ -56,5 +56,20 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         $field = $table->getField("last_activity_edition");
         $DB->get_manager()->add_field($table, $field);
     }
+
+    // Load the new table events.
+    if (intval($oldversion) === 2019050701) {
+        $xmldbfile = new xmldb_file($file);
+        if (!$xmldbfile->fileExists()) {
+            throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
+        }
+        $tableexists = $DB->get_manager()->table_exists('block_course_checker_events');
+
+        if (!$tableexists) {
+            $xmldbfile->loadXMLStructure();
+            $tablestructure = $xmldbfile->getStructure()->getTable('block_course_checker_events');
+            $DB->get_manager()->create_table($tablestructure);
+        }
+    }
     return true;
 }

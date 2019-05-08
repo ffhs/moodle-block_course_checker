@@ -30,15 +30,21 @@ defined('MOODLE_INTERNAL') || die();
 class event_manager {
     public static function course_module_updated($event) {
         $courseid = $event->courseid;
+        $action = $event->action;
+        $userid = $event->userid;
+        $instanceid = $event->other['instanceid'];
+        $modulename = $event->other['modulename'];
         $timestamp = $event->timecreated;
-        $other = $event->other;
-        event_persister::instance()->set_last_activity_event($courseid, $timestamp, $other);
+        event_persister::instance()->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $timestamp);
     }
 
     public static function course_module_created($event) {
         $courseid = $event->courseid;
+        $action = $event->action;
+        $userid = $event->userid;
+        $instanceid = $event->other['instanceid'];
+        $modulename = $event->other['modulename'];
         $timestamp = $event->timecreated;
-        $other = $event->other;
-        event_persister::instance()->set_last_activity_event($courseid, $timestamp, $other);
+        event_persister::instance()->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $timestamp);
     }
 }
