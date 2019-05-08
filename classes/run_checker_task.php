@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace block_course_checker;
 
+use core\task\adhoc_task;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -23,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @package block_course_checker
  */
-class run_checker_task extends \core\task\adhoc_task {
+class run_checker_task extends adhoc_task {
 
     /**
      * Do the job.
@@ -66,5 +68,6 @@ class run_checker_task extends \core\task\adhoc_task {
         }
 
         result_persister::instance()->save_checks($course->id, $checksresults, $data);
+        task_helper::instance()->clear_is_scheduled_cache();
     }
 }

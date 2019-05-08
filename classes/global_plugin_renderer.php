@@ -170,16 +170,20 @@ class global_plugin_renderer extends \plugin_renderer_base {
     protected function rerun(string $checkername, int $courseid) {
         global $CFG;
 
-        $canrerun = !result_persister::instance()->is_task_scheduled($courseid, $checkername);
+        // We can rerun a check if the check is not scheduled and the whole checks are not scheduled.
+        $canrerun = !task_helper::instance()->is_task_scheduled($courseid, $checkername);
+        $canrerun &= !task_helper::instance()->is_task_scheduled($courseid);
+
+        // Use a "CSRF" token.
         $token = null;
         if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
             $token = manager::get_login_token();
         }
 
-        $url = new \moodle_url("/blocks/course_checker/schedule_checker.php");
+        $action = new \moodle_url("/blocks/course_checker/schedule_checker.php");
 
         return $this->render_from_template("block_course_checker/check_block_rerun", [
-                "action" => $url,
+                "action" => $action,
                 "course_id" => $courseid,
                 "checker" => $checkername,
                 "token" => $token,

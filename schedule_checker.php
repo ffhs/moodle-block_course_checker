@@ -20,6 +20,9 @@
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
+
+use block_course_checker\task_helper;
+
 require_once(__DIR__ . "/../../config.php");
 
 // We must be logged-in, but no permission check is made on this side, as discussed with the client.
@@ -37,24 +40,8 @@ if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
 // Load the course, so we know it exists before scheduling a task.
 get_course($courseid);
 
-// The goal is to run the task asynchronously.
-$domination = new \block_course_checker\run_checker_task();
-// If this is set to 1, no other scheduled task will run at the same time as this task.
-$domination->set_blocking(false);
+task_helper::instance()->add_task($courseid, $checker);
 
-// Pass the course-id to the task.
-$data = [
-        'course_id' => $courseid
-];
-// Allow checks to be run only for a specific checker.
-if (!empty($checker)) {
-    $data["checker"] = $checker;
-}
-
-$domination->set_custom_data($data);
-
-// Queue the task.
-\core\task\manager::queue_adhoc_task($domination);
 
 // Redirect to referer.
 $url = new \moodle_url("/course/view.php", ["id" => $courseid]);

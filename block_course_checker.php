@@ -23,6 +23,7 @@
 
 use block_course_checker\result_group;
 use block_course_checker\result_persister;
+use block_course_checker\task_helper;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
@@ -99,7 +100,7 @@ class block_course_checker extends block_base {
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
                 "humancheckbtn" => $this->render_human_check_form($COURSE->id),
-                "runscheduled" => result_persister::instance()->is_task_scheduled($COURSE->id),
+                "runscheduled" => task_helper::instance()->is_task_scheduled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
         ]);
