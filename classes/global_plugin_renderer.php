@@ -38,21 +38,21 @@ class global_plugin_renderer extends \plugin_renderer_base {
     /**
      * Output a check_result for inside the block
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @param check_result_interface $result
      * @param int $course_id
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function render_for_block(string $pluginname, check_result_interface $result): string {
+    public function render_for_block(string $checkername, check_result_interface $result): string {
         global $COURSE;
 
         $output = $this->render_from_template("block_course_checker/check_block", [
                 "successful" => $result->is_successful(),
-                "pluginame" => $pluginname,
-                "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
-                'rerun_html' => $this->rerun($pluginname, $COURSE->id)
+                "checkername" => $checkername,
+                "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
+                'rerun_html' => $this->rerun($checkername, $COURSE->id)
         ]);
         $output .= $this->debug($result);
         return $output;
@@ -86,13 +86,13 @@ class global_plugin_renderer extends \plugin_renderer_base {
     /**
      * Output a check_result for inside the page
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @param check_result_interface $result
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function render_for_page(string $pluginname, check_result_interface $result): string {
+    public function render_for_page(string $checkername, check_result_interface $result): string {
 
         // Format result details.
         $resultdetails = $result->get_details();
@@ -130,14 +130,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
         }
 
         $context = [
-                "pluginname_display" => get_string($pluginname . '_display', "block_course_checker"),
+                "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
                 "successful" => $result->is_successful(),
                 "link" => $result->get_link(),
                 "resultdetails" => $resultdetails,
         ];
 
         $output = "";
-        $output .= $this->debug($pluginname);
+        $output .= $this->debug($checkername);
         $output .= $this->debug($context);
         $output .= $this->render_from_template("block_course_checker/check_result", $context);
         return $output;

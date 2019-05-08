@@ -51,15 +51,15 @@ if (\block_course_checker\plugin_manager::IMMEDIATE_RUN) {
 $manager = \block_course_checker\plugin_manager::instance();
 $htmlresults = [];
 
-foreach ($results as $pluginname => $result) {
+foreach ($results as $checkername => $result) {
 
     // Ignore missing checker.
-    if ($manager->get_checker($pluginname) == null) {
+    if ($manager->get_checker($checkername) == null) {
         continue;
     }
     $htmlresults[] = [
-            "name" => $pluginname,
-            "output" => $manager->get_renderer($pluginname)->render_for_page($pluginname, clone $result)
+            "name" => $checkername,
+            "output" => $manager->get_renderer($checkername)->render_for_page($checkername, clone $result)
     ];
 }
 

@@ -130,16 +130,16 @@ class block_course_checker extends block_base {
         // Render each check result with the dedicated render for this checker.
         $manager = \block_course_checker\plugin_manager::instance();
         $htmlresults = [];
-        foreach ($results as $pluginname => $result) {
+        foreach ($results as $checkername => $result) {
 
             // Ignore missing checker.
-            if ($manager->get_checker($pluginname) == null) {
+            if ($manager->get_checker($checkername) == null) {
                 continue;
             }
             $htmlresults[] = [
-                    "pluginname" => $pluginname,
-                    "name" => get_string($pluginname, "block_course_checker"),
-                    "output" => $manager->get_renderer($pluginname)->render_for_block($pluginname, clone $result)
+                    "checkername" => $checkername,
+                    "name" => get_string($checkername, "block_course_checker"),
+                    "output" => $manager->get_renderer($checkername)->render_for_block($checkername, clone $result)
             ];
         }
 
@@ -147,7 +147,7 @@ class block_course_checker extends block_base {
         $groupedresults = [];
         $grouporder = $manager->get_group_order();
         foreach ($htmlresults as $count => $result) {
-            $group = $manager->get_group($result['pluginname']);
+            $group = $manager->get_group($result['checkername']);
             $groupnr = $grouporder[$group];
             $groupname = get_string($group, "block_course_checker");
             if (!array_key_exists($groupnr, $groupedresults)) {

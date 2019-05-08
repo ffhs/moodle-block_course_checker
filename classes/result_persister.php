@@ -67,8 +67,8 @@ class result_persister implements check_manager_persister_interface {
     private static function encode($record, $checkresults) {
 
         $payload = [];
-        foreach ($checkresults as $pluginname => $result) {
-            $payload[$pluginname] = [
+        foreach ($checkresults as $checkername => $result) {
+            $payload[$checkername] = [
                     "successful" => $result->is_successful(),
                     "details" => $result->get_details(),
                     "link" => $result->get_link()
@@ -87,10 +87,10 @@ class result_persister implements check_manager_persister_interface {
         $response = [];
         if ($record->result !== null) {
             $result = json_decode($record->result, true);
-            foreach ($result as $pluginname => $payload) {
+            foreach ($result as $checkername => $payload) {
                 $result = new check_result();
                 $result->set_details($payload["details"])->set_link($payload["link"])->set_successful($payload["successful"]);
-                $response[$pluginname] = $result;
+                $response[$checkername] = $result;
             }
         }
         $record->result = $response;
@@ -107,8 +107,8 @@ class result_persister implements check_manager_persister_interface {
     public function save_checks($courseid, $checkresults, array $data = []) {
         global $DB;
         if (is_array($checkresults)) {
-            foreach ($checkresults as $pluginname => $result) {
-                $this->assert_checks($pluginname, $result);
+            foreach ($checkresults as $checkername => $result) {
+                $this->assert_checks($checkername, $result);
             }
         }
 
@@ -173,13 +173,13 @@ class result_persister implements check_manager_persister_interface {
     /**
      * Check that the checkresult is an instance of check_result_interface
      *
-     * @param string $pluginname
+     * @param string $checkername
      * @param mixed $checkresult
      * @throws \RuntimeException
      */
-    private function assert_checks(string $pluginname, $checkresult) {
+    private function assert_checks(string $checkername, $checkresult) {
         if (!$checkresult instanceof check_result_interface) {
-            throw new \RuntimeException(sprintf("Result for %s must be an instance of %s, got %s", $pluginname,
+            throw new \RuntimeException(sprintf("Result for %s must be an instance of %s, got %s", $checkername,
                     check_result_interface::class, get_class($checkresult)));
         }
     }
