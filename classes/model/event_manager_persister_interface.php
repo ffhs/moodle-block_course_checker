@@ -17,28 +17,26 @@
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * Implementation:
- * $other->instanceid : We can build the link to the freshly updated/created activity.
- *
  */
 
-namespace block_course_checker;
+namespace block_course_checker\model;
 
 defined('MOODLE_INTERNAL') || die();
 
-class event_manager {
-    public static function course_module_updated($event) {
-        $courseid = $event->courseid;
-        $timestamp = $event->timecreated;
-        $other = $event->other;
-        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
-    }
+interface event_manager_persister_interface {
 
-    public static function course_module_created($event) {
-        $courseid = $event->courseid;
-        $timestamp = $event->timecreated;
-        $other = $event->other;
-        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
-    }
+    /**
+     * @param int $courseid
+     * @param event_result_interface[] $eventresults
+     *
+     * @param array $data
+     * @return void
+     */
+    public function save_event($courseid, $eventresults, array $data = []);
+
+    /**
+     * @param int $courseid
+     * @return mixed record with event_result_interface[] inside result key
+     */
+    public function load_last_event(int $courseid): array;
 }
