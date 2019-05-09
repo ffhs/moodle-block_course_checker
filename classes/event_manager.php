@@ -28,7 +28,7 @@ namespace block_course_checker;
 defined('MOODLE_INTERNAL') || die();
 
 class event_manager {
-    public static function course_module_updated($event) {
+    public static function course_module_event_trigger($event) {
         $courseid = $event->courseid;
         $action = $event->action;
         $userid = $event->userid;
@@ -36,17 +36,7 @@ class event_manager {
         $modulename = $event->other['modulename'];
         $name = $event->other['name'];
         $timestamp = $event->timecreated;
-        event_persister::instance()->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $timestamp);
-    }
-
-    public static function course_module_created($event) {
-        $courseid = $event->courseid;
-        $action = $event->action;
-        $userid = $event->userid;
-        $instanceid = $event->other['instanceid'];
-        $modulename = $event->other['modulename'];
-        $name = $event->other['name'];
-        $timestamp = $event->timecreated;
-        event_persister::instance()->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $timestamp);
+        event_persister::instance()
+                ->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $name, $timestamp);
     }
 }

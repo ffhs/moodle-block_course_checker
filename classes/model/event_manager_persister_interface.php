@@ -25,6 +25,16 @@ defined('MOODLE_INTERNAL') || die();
 
 interface event_manager_persister_interface {
 
+    /**
+     * @param int $courseid
+     * @param string $action
+     * @param int $userid
+     * @param int $instanceid
+     * @param string $modulename
+     * @param string $name
+     * @param int $timestamp
+     * @return mixed
+     */
     public function set_last_activity_event(int $courseid, string $action, int $userid,
                                             int $instanceid, string $modulename, string $name, int $timestamp
     );
@@ -32,7 +42,7 @@ interface event_manager_persister_interface {
     /**
      * @param int $courseid
      * @param \DateTime $timestamp
-     * @return array
+     * @return event_result_interface[]
      */
     public function list_events_updated(int $courseid, \DateTime $timestamp): array;
 }

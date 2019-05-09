@@ -61,13 +61,16 @@ class event_persister implements event_manager_persister_interface {
         return static::$instance;
     }
 
-    /**
-     * @param int $courseid
-     * @param int $instanceid
-     * @param array $data
-     */
-    protected function save_event($courseid, $instanceid, array $data = []) {
+    public function set_last_activity_event(int $courseid, string $action, int $userid, int $instanceid,
+                                            string $modulename, string $name, int $timestamp = null) {
         global $DB;
+        $data = [
+            'action' => $action,
+            'user_id' => $userid,
+            'modulename' => $modulename,
+            'name' => $name,
+            'timestamp' => $timestamp
+        ];
 
         $record = $DB->get_record(self::TABLENAME,
                 ['course_id' => $courseid, 'instance_id' => $instanceid]
@@ -78,7 +81,7 @@ class event_persister implements event_manager_persister_interface {
             $record->course_id = $courseid;
             $record->instance_id = $instanceid;
         }
-        if (!array_key_exists('timestamp', $data)) {
+        if (empty($timestamp)) {
             $record->timestamp = date('U');
         }
         foreach ($data as $key => $value) {
@@ -90,17 +93,6 @@ class event_persister implements event_manager_persister_interface {
         } else {
             $DB->update_record(self::TABLENAME, $record);
         }
-    }
-
-    public function set_last_activity_event(int $courseid, string $action, int $userid, int $instanceid,
-                                            string $modulename, string $name, int $timestamp) {
-        $this->save_event($courseid, $instanceid, [
-            'action' => $action,
-            'user_id' => $userid,
-            'modulename' => $modulename,
-            'name' => $name,
-            'timestamp' => $timestamp
-        ]);
     }
 
     /**

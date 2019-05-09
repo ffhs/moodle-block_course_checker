@@ -25,6 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 
 interface event_result_interface extends \renderable, \templatable {
     public function get_link();
-
+    public function get_name();
+    public function get_timestamp();
     public function get_details();
 }
