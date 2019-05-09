@@ -7,26 +7,26 @@
 }
 
 .course_checker_block .actions input[type="submit"] {
-    width:100%;
+    width: 100%;
 }
 
-.course_checker_block .checkblock{
+.course_checker_block .checkblock {
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
 
-.course_checker_result{
-    margin-bottom:30px;
+.course_checker_result {
+    margin-bottom: 30px;
 }
 
 /* Table on page */
 .course_checker .table {
-    table-layout:fixed;
+    table-layout: fixed;
 }
 
 .course_checker .table .col.message {
-    width:80%;
+    width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -42,7 +42,7 @@
 }
 
 .separator {
-    border-top: 1px solid rgba(0,0,0,.1) !important;
+    border-top: 1px solid rgba(0, 0, 0, .1) !important;
     padding-bottom: 10px;
 }
 
@@ -50,20 +50,40 @@
     height: 3.2em;
     overflow: hidden;
     overflow-y: auto;
+    background-color: #e9ecef;
+    border: 1px solid #d9d9d9;
+    padding: 5px;
 }
 
-.humanreason-container a {
-    line-height: 1.2em;
+p.humanreason-label {
+    margin-bottom: 0;
+    font-style: italic;
 }
 
-@media (max-width: 1200px){
-    .course_checker_block .actions{
+@media (max-width: 1200px) {
+    .course_checker_block .actions {
         flex-direction: row;
         padding: 15px;
     }
-    .course_checker_block .actions a.btn{margin-right: 5px;}
+
+    .course_checker_block .actions a.btn {
+        margin-right: 5px;
+    }
 }
 
 .fa-input {
     font-family: FontAwesome, ‘Helvetica Neue’, Helvetica, Arial, sans-serif;
+}
+
+.hummancheck_dateinput {
+    display: flex;
+}
+
+.hummancheck_dateinput #fitem_id_human_review{
+    display: block;
+    width:100%;
+}
+
+.hummancheck_dateinput .custom-select {
+    padding-left: 0.55em;
 }

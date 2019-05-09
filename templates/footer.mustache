@@ -2,8 +2,6 @@
 footer of the block
 }}
 
-<hr>
-
 {{!
 buttons to run the checkers and to display the result page
 }}
@@ -25,7 +23,7 @@ buttons to run the checkers and to display the result page
 {{!
 messages about the status of the last run
 }}
-    <hr>
+    <br>
     <b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
     <br>
     {{#automaticcheck}}
@@ -38,6 +36,14 @@ messages about the status of the last run
     <b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
     {{#humancheck}}
       {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+
+        {{#humanreason}}
+            <p class="humanreason-label">{{#str}}humanreason, block_course_checker{{/str}}</p>
+            <div class="humanreason-container">
+                {{humanreason}}
+            </div>
+        {{/humanreason}}
+
     {{/humancheck}}
     {{^humancheck}}
       {{#str}} humancheckempty, block_course_checker {{/str}}
