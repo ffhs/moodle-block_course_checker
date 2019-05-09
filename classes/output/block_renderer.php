@@ -17,7 +17,21 @@ namespace block_course_checker\output;
 defined('MOODLE_INTERNAL') || die();
 
 class block_renderer extends \plugin_renderer_base {
+    /**
+     * @param $context
+     * @return bool|string
+     * @throws \moodle_exception
+     */
     public function renderer($context) {
         return $this->render_from_template("block_course_checker/full_block", $context);
+    }
+
+    /**
+     * @param $context
+     * @return bool|string
+     * @throws \moodle_exception
+     */
+    public function renderer_human_check_form($context) {
+        return $this->render_from_template("block_course_checker/human_check_form", $context);
     }
 }

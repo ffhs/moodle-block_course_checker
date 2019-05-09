@@ -21,6 +21,7 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
 
+use block_course_checker\output\block_renderer;
 use block_course_checker\result_group;
 use block_course_checker\result_persister;
 use block_course_checker\task_helper;
@@ -162,7 +163,7 @@ class block_course_checker extends block_base {
         $renderer = $PAGE->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
                 "groupedresults" => $groupedresults,
-                "hasresults" => ! empty($htmlresults),
+                "hasresults" => !empty($htmlresults),
         ]);
     }
 
@@ -207,46 +208,37 @@ class block_course_checker extends block_base {
      * @return string
      */
     private function render_human_check_form(int $courseid) {
-        global $CFG, $COURSE;
+        global $CFG, $COURSE, $PAGE;
         require_once($CFG->libdir . '/formslib.php');
 
         $url = $CFG->wwwroot . '/blocks/course_checker/update_human_date.php';
         $content = "";
         $check = result_persister::instance()->load_last_checks($COURSE->id);
 
-        $content .= html_writer::div('', 'separator') . html_writer::end_div();
-        $content .= html_writer::label(get_string('humancheck_title', 'block_course_checker'), null, false);
-        $content .= html_writer::start_tag('form',
-                ['method' => 'post', 'action' => new \moodle_url($url, ['courseid' => $courseid])]
-        );
+        $humanplaceholder = get_string('human_comment_placeholder', 'block_course_checker');
+        $humanreasonpresent = !empty($check['manual_reason']);
+        if ($humanreasonpresent) {
+            $humanplaceholder = $check['manual_reason'];
+        }
+        $data = [
+                "action" => new \moodle_url($url, ['courseid' => $courseid]),
+                "humanreasonpresent" => $humanreasonpresent,
+                "humanplaceholder" => $humanplaceholder,
+                "manualreason" => trim($check['manual_reason']),
+        ];
 
         if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
-            $content .= html_writer::tag("input", '',
-                    ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
+            $data['token'] = \core\session\manager::get_login_token();
         }
 
-        $humanreasonpresent = !empty($check['manual_reason']);
         $dateform = new date_picker_input();
         $html = $dateform->tohtmlwriter();
         $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
-        $properhtml = str_replace('col-md-3', '', $html); // Same but with col-md-3.
-        $content .= html_writer::div($properhtml, 'm-a-0');
-        $content .= html_writer::start_div('pb-3');
-        $content .= html_writer::tag('textarea', '', [
-                'name' => 'human_comment',
-                'placeholder' => $humanreasonpresent ? $check['manual_reason'] : get_string('human_comment_placeholder',
-                    'block_course_checker'),
-                'class' => 'form-control'
-        ]);
-        $content .= html_writer::end_div();
-        $content .= html_writer::tag('input', '', [
-                'type' => 'submit',
-                'placeholder' => get_string('update', 'block_course_checker'),
-                'class' => 'btn btn-primary btn-block'
-        ]);
-        $content .= html_writer::end_tag('form');
-
-        return $content;
+        $html = str_replace('col-md-3', '', $html);
+        $data["dateinputhtml"] = $html;
+        /** @var block_renderer $renderer */
+        $renderer = $PAGE->get_renderer('block_course_checker', "block");
+        return $renderer->renderer_human_check_form($data);
     }
 }
 
