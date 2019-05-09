@@ -87,5 +87,5 @@ $string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
 $string['humancheck_title'] = 'Human Review';
 $string['date_picker_placeholder'] = 'Select a date.';
 $string['update'] = 'Update human review';
-$string['human_comment'] = 'Set a comment to give on this update.';
+$string['human_comment_placeholder'] = 'Note';
 $string['humanreason'] = 'Reason:';

@@ -207,11 +207,12 @@ class block_course_checker extends block_base {
      * @return string
      */
     private function render_human_check_form(int $courseid) {
-        global $CFG;
+        global $CFG, $COURSE;
         require_once($CFG->libdir . '/formslib.php');
 
         $url = $CFG->wwwroot . '/blocks/course_checker/update_human_date.php';
         $content = "";
+        $check = result_persister::instance()->load_last_checks($COURSE->id);
 
         $content .= html_writer::div('', 'separator') . html_writer::end_div();
         $content .= html_writer::label(get_string('humancheck_title', 'block_course_checker'), null, false);
@@ -224,6 +225,7 @@ class block_course_checker extends block_base {
                     ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
         }
 
+        $humanreasonpresent = !empty($check['manual_reason']);
         $dateform = new date_picker_input();
         $html = $dateform->tohtmlwriter();
         $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
@@ -232,7 +234,8 @@ class block_course_checker extends block_base {
         $content .= html_writer::start_div('pb-3');
         $content .= html_writer::tag('textarea', '', [
                 'name' => 'human_comment',
-                'placeholder' => get_string('human_comment', 'block_course_checker'),
+                'placeholder' => $humanreasonpresent ? $check['manual_reason'] : get_string('human_comment_placeholder',
+                    'block_course_checker'),
                 'class' => 'form-control'
         ]);
         $content .= html_writer::end_div();
