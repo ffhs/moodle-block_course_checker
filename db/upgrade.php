@@ -57,38 +57,17 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         $DB->get_manager()->add_field($table, $field);
     }
 
-    // Load the new table events.
-    if ($oldversion < 2019050702) {
-        $xmldbfile = new xmldb_file($file);
-        if (!$xmldbfile->fileExists()) {
-            throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
-        }
-        $tableexists = $DB->get_manager()->table_exists('block_course_checker_events');
-
-        if (!$tableexists) {
-            $xmldbfile->loadXMLStructure();
-            $tablestructure = $xmldbfile->getStructure()->getTable('block_course_checker_events');
-            $DB->get_manager()->create_table($tablestructure);
-        }
-    }
-
-    // Recreate block_course_checker_events's indexes.
-    if ($oldversion < 2019050704) {
-        $xmldbfile = new xmldb_file($file);
-        $xmldbfile->loadXMLStructure();
-        $tablestructure = $xmldbfile->getStructure()->getTable('block_course_checker_events');
-
-        $index = new xmldb_index('course_id', XMLDB_INDEX_UNIQUE, array('course_id'));
-        if ($DB->get_manager()->index_exists($tablestructure, $index)) {
-            $DB->get_manager()->drop_index($tablestructure, $index);
+    // Load the new table.
+    if ($oldversion < 2019050800) {
+        // This will drop the table if already there (for developers).
+        $table = new xmldb_table('block_course_checker_events');
+        $tableexists = $DB->get_manager()->table_exists($table);
+        if ($tableexists) {
+            $DB->get_manager()->drop_table($table);
         }
 
-        $tablestructure = $xmldbfile->getStructure()->getTable('block_course_checker_events');
-        foreach ($tablestructure->getIndexes() as $index) {
-            if (! $DB->get_manager()->index_exists($tablestructure, $index)) {
-                $DB->get_manager()->add_index($tablestructure, $index);
-            }
-        }
+        // Install the table.
+        $DB->get_manager()->install_one_table_from_xmldb_file($file, $table->getName());
     }
     return true;
 }
