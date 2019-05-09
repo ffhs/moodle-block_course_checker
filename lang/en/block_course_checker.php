@@ -89,3 +89,4 @@ $string['date_picker_placeholder'] = 'Select a date.';
 $string['update'] = 'Update human review';
 $string['human_comment'] = 'Set a comment to give on this update.';
 $string['humanreason'] = 'Reason:';
+$string['settings_checker_header'] = 'Settings for the {$a} checker';

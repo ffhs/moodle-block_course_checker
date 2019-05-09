@@ -211,6 +211,23 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * Return the path of each settings file indexed with the checkername.
+     *
+     * @return string[]
+     */
+    public function get_checkers_setting_files() {
+        $result = [];
+        $pluginroot = $this->get_checkers_folders();
+        foreach ($this->get_checkers_plugins() as $checkername => $instance) {
+            $filelocation = $pluginroot . "/" . $checkername . "/settings.php";
+            if (file_exists($filelocation)) {
+                $result[$checkername] = $filelocation;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * @param $course
      * @param string $checkname
      * @return bool success
