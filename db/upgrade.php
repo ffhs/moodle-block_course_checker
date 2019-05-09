@@ -71,5 +71,24 @@ function xmldb_block_course_checker_upgrade($oldversion) {
             $DB->get_manager()->create_table($tablestructure);
         }
     }
+
+    // Recreate block_course_checker_events's indexes.
+    if ($oldversion < 2019050704) {
+        $xmldbfile = new xmldb_file($file);
+        $xmldbfile->loadXMLStructure();
+        $tablestructure = $xmldbfile->getStructure()->getTable('block_course_checker_events');
+
+        $index = new xmldb_index('course_id', XMLDB_INDEX_UNIQUE, array('course_id'));
+        if ($DB->get_manager()->index_exists($tablestructure, $index)) {
+            $DB->get_manager()->drop_index($tablestructure, $index);
+        }
+
+        $tablestructure = $xmldbfile->getStructure()->getTable('block_course_checker_events');
+        foreach ($tablestructure->getIndexes() as $index) {
+            if (! $DB->get_manager()->index_exists($tablestructure, $index)) {
+                $DB->get_manager()->add_index($tablestructure, $index);
+            }
+        }
+    }
     return true;
 }

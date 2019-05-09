@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
+ * Manage activities events.
+ *
+ * Goal is to track activities modifications into DB so we can display the last edited activities.
+ *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -23,9 +27,9 @@ namespace block_course_checker;
 
 defined('MOODLE_INTERNAL') || die();
 
-use block_course_checker\model\event_manager_persister_interface;
+use block_course_checker\model\event_persister_interface;
 
-class event_persister implements event_manager_persister_interface {
+class event_persister implements event_persister_interface {
     const TABLENAME = "block_course_checker_events";
 
     /**
@@ -34,6 +38,23 @@ class event_persister implements event_manager_persister_interface {
      * @var \block_course_checker\event_persister
      */
     private static $instance;
+
+    /**
+     * Event wrapper, see db/events.php.
+     *
+     * @param $event
+     */
+    public static function course_module_event_trigger($event) {
+        self::instance()->set_last_activity_event(
+                $event->courseid,
+                $event->action,
+                $event->userid,
+                $event->other['instanceid'],
+                $event->other['modulename'],
+                $event->other['name'],
+                $event->timecreated
+        );
+    }
 
     /**
      * Force singleton
@@ -62,26 +83,27 @@ class event_persister implements event_manager_persister_interface {
     }
 
     public function set_last_activity_event(int $courseid, string $action, int $userid, int $instanceid,
-                                            string $modulename, string $name, int $timestamp = null) {
+            string $modulename, string $name, int $timestamp = null) {
         global $DB;
         $data = [
-            'action' => $action,
-            'user_id' => $userid,
-            'modulename' => $modulename,
-            'name' => $name,
-            'timestamp' => $timestamp
+                'action' => $action,
+                'user_id' => $userid,
+                'modulename' => $modulename,
+                'name' => $name,
+                'timestamp' => $timestamp
         ];
 
-        $record = $DB->get_record(self::TABLENAME,
-                ['course_id' => $courseid, 'instance_id' => $instanceid]
-        );
+        // Get the previous event if any and update it.
+        $sql = "course_id = ? AND instance_id = ? AND " . $DB->sql_compare_text("modulename") . " = ?";
+        $record = $DB->get_record_select(self::TABLENAME, $sql, [$courseid, $instanceid, $modulename]);
         $isnew = !$record;
         if ($isnew) {
             $record = new \stdClass();
             $record->course_id = $courseid;
             $record->instance_id = $instanceid;
+            $record->modulename = $modulename;
         }
-        if (empty($timestamp)) {
+        if ($timestamp === null) {
             $record->timestamp = date('U');
         }
         foreach ($data as $key => $value) {
@@ -96,11 +118,21 @@ class event_persister implements event_manager_persister_interface {
     }
 
     /**
+     * Get the list of all the updated/created event since the specified date.
+     *
      * @param int $courseid
      * @param \DateTime $timestamp
-     * @return array
+     * @return event_result[]
      */
     public function list_events_updated(int $courseid, \DateTime $timestamp): array {
-        // TODO: Implement list_events_updated() method.
+        global $DB;
+        // Get all the event for this course (skip the deleted one).
+        $select = 'course_id = ? AND action != ? AND timestamp >= ?';
+        $params = array($courseid, "deleted", $timestamp->format("U"));
+        $result = [];
+        foreach ($DB->get_records_select(self::TABLENAME, $select, $params, 'timestamp DESC') as $record) {
+            $result[] = new event_result($courseid, $record);
+        }
+        return $result;
     }
 }

@@ -36,7 +36,8 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" />
       </KEYS>
       <INDEXES>
-        <INDEX NAME="course_id" UNIQUE="true" FIELDS="course_id"/>
+        <!-- note that modulename can not be indexed -->
+        <INDEX NAME="events_index" UNIQUE="false" FIELDS="course_id, instance_id"/>
       </INDEXES>
     </TABLE>
   </TABLES>

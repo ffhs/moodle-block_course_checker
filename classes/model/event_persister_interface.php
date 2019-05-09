@@ -17,26 +17,36 @@
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * Implementation:
- * $other->instanceid : We can build the link to the freshly updated/created activity.
- *
  */
 
-namespace block_course_checker;
+namespace block_course_checker\model;
 
 defined('MOODLE_INTERNAL') || die();
 
-class event_manager {
-    public static function course_module_event_trigger($event) {
-        $courseid = $event->courseid;
-        $action = $event->action;
-        $userid = $event->userid;
-        $instanceid = $event->other['instanceid'];
-        $modulename = $event->other['modulename'];
-        $name = $event->other['name'];
-        $timestamp = $event->timecreated;
-        event_persister::instance()
-                ->set_last_activity_event($courseid, $action, $userid, $instanceid, $modulename, $name, $timestamp);
-    }
+interface event_persister_interface {
+
+    /**
+     * Insert a new event inside the database. Used to track activities modifications.
+     *
+     * @param int $courseid
+     * @param string $action
+     * @param int $userid
+     * @param int $instanceid
+     * @param string $modulename
+     * @param string $name
+     * @param int $timestamp
+     * @return mixed
+     */
+    public function set_last_activity_event(int $courseid, string $action, int $userid,
+            int $instanceid, string $modulename, string $name, int $timestamp = null
+    );
+
+    /**
+     * List the events updated since the specified date.
+     *
+     * @param int $courseid
+     * @param \DateTime $timestamp
+     * @return event_result_interface[]
+     */
+    public function list_events_updated(int $courseid, \DateTime $timestamp): array;
 }

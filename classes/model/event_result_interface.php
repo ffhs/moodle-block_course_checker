@@ -24,8 +24,21 @@ namespace block_course_checker\model;
 defined('MOODLE_INTERNAL') || die();
 
 interface event_result_interface extends \renderable, \templatable {
+    /**
+     * Get the link
+     * @return string|null
+     */
     public function get_link();
+
+    /**
+     * Get the activity name
+     * @return string|null
+     */
     public function get_name();
+
+    /**
+     * Get the last edited date as a timestamp.
+     * @return int|null
+     */
     public function get_timestamp();
-    public function get_details();
 }

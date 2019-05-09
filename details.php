@@ -16,6 +16,9 @@
 
 require_once("../../config.php");
 
+use block_course_checker\event_persister;
+use block_course_checker\event_result;
+use block_course_checker\plugin_manager;
 use block_course_checker\result_persister;
 
 $courseid = required_param('id', PARAM_INT);
@@ -38,17 +41,19 @@ if (!has_capability('block/course_checker:view_report', $context)) {
 $record = result_persister::instance()->load_last_checks($COURSE->id);
 if ($record) {
     $results = $record["result"];
+    $manualdate = $record["manual_date"] ? \DateTime::createFromFormat("U", $record["manual_date"]) : null;
 } else {
     $results = [];
+    $manualdate = null;
 }
 
 // Run the test directly.
-if (\block_course_checker\plugin_manager::IMMEDIATE_RUN) {
-    $results = \block_course_checker\plugin_manager::instance()->run_checks($COURSE);
+if (plugin_manager::IMMEDIATE_RUN) {
+    $results = plugin_manager::instance()->run_checks($COURSE);
 }
 
 // Render each check result with the dedicated render for this checker.
-$manager = \block_course_checker\plugin_manager::instance();
+$manager = plugin_manager::instance();
 $htmlresults = [];
 
 foreach ($results as $checkername => $result) {
@@ -81,12 +86,22 @@ $groupedresults = array_values($groupedresults);
 
 $groupedevents = [];
 
-
 /** @var \block_course_checker\output\page_renderer $renderer */
 $renderer = $PAGE->get_renderer("block_course_checker", "page");
 
 echo $OUTPUT->header();
+
+// Get the list of the activities changed since the last human date check.
+$activityevents = !$manualdate ? [] : event_persister::instance()->list_events_updated($courseid, $manualdate);
+// Convert the result for mustache.
+$activityevents = array_map(function(event_result $event) use ($renderer) {
+    return $event->export_for_template($renderer);
+}, $activityevents);
+
 echo $renderer->renderer([
         "groupedresults" => $groupedresults,
+        "manual_date" => $manualdate ? $manualdate->format("U") : null,
+        "has_activity_events" => !empty($activityevents),
+        "activity_events" => $activityevents,
         "back" => new \moodle_url("/course/view.php", ["id" => $courseid])]);
 echo $OUTPUT->footer();

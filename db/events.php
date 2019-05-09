@@ -23,12 +23,12 @@ defined('MOODLE_INTERNAL') || die();
 $observers = [
         [
                 'eventname' => '\core\event\course_module_updated',
-                'callback' => '\block_course_checker\event_manager::course_module_event_trigger',
+                'callback' => '\block_course_checker\event_persister::course_module_event_trigger',
         ], [
                 'eventname' => '\core\event\course_module_created',
-                'callback' => '\block_course_checker\event_manager::course_module_event_trigger',
+                'callback' => '\block_course_checker\event_persister::course_module_event_trigger',
         ], [
                 'eventname' => '\core\event\course_module_deleted',
-                'callback' => '\block_course_checker\event_manager::course_module_event_trigger',
+                'callback' => '\block_course_checker\event_persister::course_module_event_trigger',
         ]
 ];

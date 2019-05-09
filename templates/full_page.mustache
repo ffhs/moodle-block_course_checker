@@ -3,41 +3,75 @@ template for rendering the page
 }}
 <div class="course_checker course_checker_page container-fluid">
 
-    {{#groupedevents}}
+    <div class="activity-events">
+        {{^manual_date}}
+            <h4 class="mb-1 pb-2 text-muted text-capitalize">{{#str}}result_last_activity_header, block_course_checker{{/str}}</h4>
+            <p>{{#str}}humancheckempty, block_course_checker{{/str}}</p>
+        {{/manual_date}}
+        {{#manual_date}}
+            {{^has_activity_events}}
+                <h4 class="mb-1 pb-2 text-muted text-capitalize">{{#str}}result_last_activity_header, block_course_checker{{/str}}</h4>
+                <p>
+                {{#str}}result_last_activity_empty, block_course_checker, {{#userdate}} {{manual_date}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}
+                </p>
+            {{/has_activity_events}}
+            {{#has_activity_events}}
+                <h4 class="mb-1 pb-2 text-muted text-capitalize">{{#str}}result_last_activity_header_date, block_course_checker, {{#userdate}} {{manual_date}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}</h4>
+                <table class="table table-striped table-responsive-sm" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th class="col">{{#str}}activitymodules{{/str}}</th>
+                        <th class="col">{{#str}}lastedited{{/str}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-    {{/groupedevents}}
+                    {{#activity_events}}
+                        <tr>
+                            <td>{{{icon}}}
+                                <a href="{{link}}">{{name}}</a>
+                            </td>
+                            <td>{{#userdate}} {{timestamp}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}</td>
+                        </tr>
+                    {{/activity_events}}
+                    </tbody>
+                </table>
 
-{{!
-when the check was ever run and results exist
-}}
+            {{/has_activity_events}}
+        {{/manual_date}}
+    </div>
+
+    {{!
+    when the check was ever run and results exist
+    }}
     {{#groupedresults}}
-        <h4  class="mb-1 pb-2 text-muted text-capitalize">{{{groupname}}}</h4>
+        <h4 class="mb-1 pb-2 text-muted text-capitalize">{{{groupname}}}</h4>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th class="col result">{{#str}} result_col_page_header, block_course_checker {{/str}}</th>
-                    <th class="col link">{{#str}} link_col_page_header, block_course_checker {{/str}}</th>
-                    <th class="col message">{{#str}} message_col_page_header, block_course_checker {{/str}}</th>
-                </tr>
+            <tr>
+                <th class="col result">{{#str}} result_col_page_header, block_course_checker {{/str}}</th>
+                <th class="col link">{{#str}} link_col_page_header, block_course_checker {{/str}}</th>
+                <th class="col message">{{#str}} message_col_page_header, block_course_checker {{/str}}</th>
+            </tr>
             </thead>
             <tbody>
-                {{#results}}
-                    {{{output}}}
-                {{/results}}
+            {{#results}}
+                {{{output}}}
+            {{/results}}
             </tbody>
         </table>
     {{/groupedresults}}
 
-{{!
-when the check was never run
-}}
+    {{!
+    when the check was never run
+    }}
     {{^groupedresults}}
-        {{#str}} noresults, block_course_checker {{/str}}
+        <p>{{#str}} noresults, block_course_checker {{/str}}</p>
     {{/groupedresults}}
 
-{{!
-button to return to the block
-}}
+    {{!
+    button to return to the block
+    }}
     <a class="btn-primary btn" href="{{back}}">{{#str}} backtocourse, block_course_checker {{/str}}</a>
 
 </div>
