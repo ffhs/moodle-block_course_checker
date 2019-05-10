@@ -20,7 +20,11 @@ use core\task\adhoc_task;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Class run_checker_task
+ * This task will check a single course.
+ *
+ * 1. Run all checkers ($data->checkers) is null.
+ * 2. Run a specific check ($data->checkers) is specified.
+ *
  * See https://docs.moodle.org/dev/Task_API
  *
  * @package block_course_checker
@@ -41,9 +45,9 @@ class run_checker_task extends adhoc_task {
         // Use the get_course function instead of using get_record('course', ...).
         // See https://docs.moodle.org/dev/Data_manipulation_API#get_course.
         $course = get_course($data->course_id);
-
+        $checkername = isset($data->checker) ? $data->checker : null;
         // For a single checker.
-        if (isset($data->checker)) {
+        if ($checkername) {
             // We reload all the check from database.
             $record = result_persister::instance()->load_last_checks($course->id);
             if ($record) {
@@ -63,11 +67,12 @@ class run_checker_task extends adhoc_task {
             // For all checkers.
             $checksresults = plugin_manager::instance()->run_checks($course);
             $data = [
-                "timestamp" => date("U")
+                    "timestamp" => date("U")
             ];
         }
 
         result_persister::instance()->save_checks($course->id, $checksresults, $data);
         task_helper::instance()->clear_is_scheduled_cache();
+        task_helper::instance()->notify_checkfinished($course, $this->get_userid(), $checkername);
     }
 }

@@ -13,14 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Version details
- *
- * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- */
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019031510;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+$messageproviders = [
+        'checker_completed' => [
+                'capability' => 'block/course_checker:view_notification',
+                'defaults' => [
+                        'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN,
+                        'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDOFF,
+                ]
+        ]
+];
+
