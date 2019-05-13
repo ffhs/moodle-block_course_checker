@@ -21,5 +21,24 @@
         <INDEX NAME="course_id" UNIQUE="true" FIELDS="course_id"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="block_course_checker_events" COMMENT="Default comment for block_course_checker, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" SEQUENCE="true" TYPE="int" LENGTH="20" NOTNULL="true"/>
+        <FIELD NAME="action" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="course_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="user_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="instance_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="modulename" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="name" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="timestamp" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+      <INDEXES>
+        <!-- note that modulename can not be indexed -->
+        <INDEX NAME="events_index" UNIQUE="false" FIELDS="course_id, instance_id"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

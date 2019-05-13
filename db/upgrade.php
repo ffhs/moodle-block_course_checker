@@ -44,7 +44,7 @@ function xmldb_block_course_checker_upgrade($oldversion) {
     }
 
     // Migration to add the field "last_activity_edition".
-    if (intval($oldversion) === 2019031507) {
+    if (intval($oldversion) === 2019031507) { // TODO: Fix version.
         $xmldbfile = new xmldb_file($file);
         if (!$xmldbfile->fileExists()) {
             throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
@@ -55,6 +55,19 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         $table = $xmldbfile->getStructure()->getTable("block_course_checker");
         $field = $table->getField("last_activity_edition");
         $DB->get_manager()->add_field($table, $field);
+    }
+
+    // Load the new table.
+    if ($oldversion < 2019050800) {
+        // This will drop the table if already there (for developers).
+        $table = new xmldb_table('block_course_checker_events');
+        $tableexists = $DB->get_manager()->table_exists($table);
+        if ($tableexists) {
+            $DB->get_manager()->drop_table($table);
+        }
+
+        // Install the table.
+        $DB->get_manager()->install_one_table_from_xmldb_file($file, $table->getName());
     }
     return true;
 }

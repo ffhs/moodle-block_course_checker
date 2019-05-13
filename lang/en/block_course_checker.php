@@ -83,6 +83,10 @@ $string['result_col_page_header'] = 'Result';
 $string['message_col_page_header'] = 'Message';
 $string['link_col_page_header'] = 'Link to Resolve';
 $string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
+$string['result_last_activity_header'] = 'Last modified activities';
+$string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
+$string['result_last_activity_empty'] = 'No modified activities since {$a}';
+
 
 $string['humancheck_title'] = 'Set manual check date:';
 $string['update'] = 'Update human review';
