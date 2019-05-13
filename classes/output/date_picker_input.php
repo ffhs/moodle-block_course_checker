@@ -13,14 +13,23 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Version details
- *
- * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- */
+namespace block_course_checker\output;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019050800;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+class date_picker_input extends \moodleform {
+    /**
+     * Get the form definition.
+     */
+    protected function definition() {
+        $mform = $this->_form;
+        $mform->addElement('date_selector', 'human_review', '', ['stopyear' => date('Y')]);
+    }
+
+    /**
+     * @return string
+     */
+    public function tohtmlwriter() {
+        return $this->_form->toHtml();
+    }
+}

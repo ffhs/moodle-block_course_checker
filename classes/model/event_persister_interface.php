@@ -18,17 +18,35 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace block_course_checker\model;
+
 defined('MOODLE_INTERNAL') || die();
-// List of observers.
-$observers = [
-        [
-                'eventname' => '\core\event\course_module_updated',
-                'callback' => '\block_course_checker\event_persister::course_module_event_trigger',
-        ], [
-                'eventname' => '\core\event\course_module_created',
-                'callback' => '\block_course_checker\event_persister::course_module_event_trigger',
-        ], [
-                'eventname' => '\core\event\course_module_deleted',
-                'callback' => '\block_course_checker\event_persister::course_module_event_trigger',
-        ]
-];
+
+interface event_persister_interface {
+
+    /**
+     * Insert a new event inside the database. Used to track activities modifications.
+     *
+     * @param int $courseid
+     * @param string $action
+     * @param int $userid
+     * @param int $instanceid
+     * @param string $modulename
+     * @param string $name
+     * @param int $timestamp
+     * @return mixed
+     */
+    public function set_last_activity_event(int $courseid, string $action, int $userid,
+            int $instanceid, string $modulename, string $name, int $timestamp = null
+    );
+
+    /**
+     * List the events updated since the specified date.
+     *
+     * @param int $courseid
+     * @param \DateTime $timestamp
+     * @return event_result_interface[]
+     */
+    public function list_events_updated(int $courseid, \DateTime $timestamp): array;
+}
