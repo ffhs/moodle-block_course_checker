@@ -21,6 +21,7 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  */
 
+use block_course_checker\plugin_manager;
 use block_course_checker\output\block_renderer;
 use block_course_checker\result_group;
 use block_course_checker\result_persister;
@@ -77,8 +78,8 @@ class block_course_checker extends block_base {
         }
 
         // Run the test directly.
-        if (\block_course_checker\plugin_manager::IMMEDIATE_RUN) {
-            $checks = \block_course_checker\plugin_manager::instance()->run_checks($COURSE);
+        if (plugin_manager::IMMEDIATE_RUN) {
+            $checks = plugin_manager::instance()->run_checks($COURSE);
         }
 
         // Render the checks results.
@@ -113,7 +114,8 @@ class block_course_checker extends block_base {
      * @return bool
      */
     public function has_config() {
-        return false;
+        $settings = plugin_manager::instance()->get_checkers_setting_files();
+        return !empty($settings);
     }
 
     /**
@@ -129,7 +131,7 @@ class block_course_checker extends block_base {
         global $PAGE, $COURSE;
 
         // Render each check result with the dedicated render for this checker.
-        $manager = \block_course_checker\plugin_manager::instance();
+        $manager = plugin_manager::instance();
         $htmlresults = [];
         foreach ($results as $checkername => $result) {
 

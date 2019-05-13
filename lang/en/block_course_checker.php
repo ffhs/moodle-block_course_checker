@@ -90,5 +90,7 @@ $string['result_last_activity_empty'] = 'No modified activities since {$a}';
 
 $string['humancheck_title'] = 'Set manual check date:';
 $string['update'] = 'Update human review';
+$string['human_comment'] = 'Set a comment to give on this update.';
+$string['settings_checker_header'] = 'Settings for the {$a} checker';
 $string['human_comment_placeholder'] = 'Note';
 $string['humanreason'] = 'Reason:';
