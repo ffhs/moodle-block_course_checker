@@ -4,7 +4,11 @@ template for displaying a checker result row in the block result table
 - an icon is displayed if the checker was successful
 }}
 <tr>
-    <td class="col checker">{{checkername_display}}</td>
+    <td class="col checker">
+        <a href="{{url}}">
+            {{checkername_display}}
+        </a>
+    </td>
     <td class="col result">
         {{#successful}}
             <i class="fa fa-check-circle text-success"></i>

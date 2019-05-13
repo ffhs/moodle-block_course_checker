@@ -84,9 +84,9 @@ $string['message_col_page_header'] = 'Message';
 $string['link_col_page_header'] = 'Link to Resolve';
 $string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
 
-$string['humancheck_title'] = 'Human Review';
-$string['date_picker_placeholder'] = 'Select a date.';
+$string['humancheck_title'] = 'Set manual check date:';
 $string['update'] = 'Update human review';
 $string['human_comment'] = 'Set a comment to give on this update.';
-$string['humanreason'] = 'Reason:';
 $string['settings_checker_header'] = 'Settings for the {$a} checker';
+$string['human_comment_placeholder'] = 'Note';
+$string['humanreason'] = 'Reason:';
