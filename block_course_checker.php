@@ -95,13 +95,17 @@ class block_course_checker extends block_base {
 
         /** @var \block_course_checker\output\footer_renderer $footerrenderer */
         $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
+
+        /** @var \block_course_checker\output\block_renderer $blockrenderer */
+        $blockrenderer = $PAGE->get_renderer('block_course_checker', "block");
+
         $this->content->footer = $footerrenderer->renderer([
                 'automaticcheck' => $rundate,
                 'humancheck' => $human,
                 'humanreason' => $humancomment,
                 "details" => new \moodle_url("/blocks/course_checker/details.php", ["id" => $COURSE->id]),
                 "runbtn" => $this->render_run_task_button($COURSE->id),
-                "humancheckbtn" => $this->render_human_check_form($COURSE->id),
+                "humancheckbtn" => $blockrenderer->renderer_human_check_form($COURSE->id, $humancomment),
                 "runscheduled" => task_helper::instance()->is_task_scheduled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
@@ -199,52 +203,6 @@ class block_course_checker extends block_base {
                 "class" => "btn btn-primary btn-block"
         ]);
         $content .= html_writer::end_tag("form");
-
-        return $content;
-    }
-
-    /**
-     * Shows the form to update the human date review.
-     *
-     * @param int $courseid
-     * @return string
-     */
-    private function render_human_check_form(int $courseid) {
-        global $CFG;
-        require_once($CFG->libdir . '/formslib.php');
-
-        $url = $CFG->wwwroot . '/blocks/course_checker/update_human_date.php';
-        $content = "";
-
-        $content .= html_writer::div('', 'separator') . html_writer::end_div();
-        $content .= html_writer::label(get_string('humancheck_title', 'block_course_checker'), null, false);
-        $content .= html_writer::start_tag('form',
-                ['method' => 'post', 'action' => new \moodle_url($url, ['courseid' => $courseid])]
-        );
-
-        if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
-            $content .= html_writer::tag("input", '',
-                    ["type" => "hidden", "name" => "token", "value" => \core\session\manager::get_login_token()]);
-        }
-
-        $dateform = new date_picker_input();
-        $html = $dateform->tohtmlwriter();
-        $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
-        $properhtml = str_replace('col-md-3', '', $html); // Same but with col-md-3.
-        $content .= html_writer::div($properhtml, 'm-a-0');
-        $content .= html_writer::start_div('pb-3');
-        $content .= html_writer::tag('textarea', '', [
-            'name' => 'human_comment',
-            'placeholder' => get_string('human_comment', 'block_course_checker'),
-            'class' => 'form-control'
-        ]);
-        $content .= html_writer::end_div();
-        $content .= html_writer::tag('input', '', [
-            'type' => 'submit',
-            'placeholder' => get_string('update', 'block_course_checker'),
-            'class' => 'btn btn-primary btn-block'
-        ]);
-        $content .= html_writer::end_tag('form');
 
         return $content;
     }
