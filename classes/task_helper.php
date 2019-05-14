@@ -15,7 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace block_course_checker;
 
+use core\message\message;
 use core\task\manager;
+use core_user;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -50,10 +52,13 @@ class task_helper {
 
     /**
      * This will clear the cache of scheduled tasks.
+     * @return $this
      */
     public function clear_is_scheduled_cache() {
         $this->latestresult = null;
         $this->latestcourseid = null;
+
+        return $this;
     }
 
     /**
@@ -97,6 +102,7 @@ class task_helper {
      * @param string|null $checker The checker name, if null run all checks.
      */
     public function add_task(int $courseid, string $checker = null) {
+        global $USER;
         // Generate the custom data.
         $data = ['course_id' => $courseid];
         // Allow checks to be run only for a specific checker.
@@ -108,7 +114,7 @@ class task_helper {
         $task = new run_checker_task();
         $task->set_blocking(false);
         $task->set_custom_data($data);
-
+        $task->set_userid($USER ? $USER->id : null);
         // Queue the task.
         manager::queue_adhoc_task($task);
     }
@@ -138,5 +144,59 @@ class task_helper {
         $this->latestresult = $DB->get_records_select('task_adhoc', $sql, $params);
         $this->latestcourseid = $courseid;
         return $this->latestresult;
+    }
+
+    /**
+     * @param object $course
+     * @param int|null $userid
+     * @param string|null $checkername If the checker is null, it means that we run all the checks, for specific check the name is
+     *         given.
+     * @return null|false False on error, null otherwise.
+     */
+    public function notify_checkfinished($course, int $userid = null, string $checkername = null) {
+        // Old tasks don't have any user id stored.
+        if ($userid === null) {
+            return;
+        }
+
+        $coursename = $course->fullname;
+        $url = new \moodle_url('/blocks/course_checker/details.php', ['id' => $course->id]);
+
+        // Strings for all courses checks.
+        $urlhtmllabel = get_string("messageprovider_result_html_label", 'block_course_checker');
+        $data = [
+                "coursename" => $coursename,
+                "url" => $url,
+                "urlhtml" => sprintf('<a href="%s" style="color:#ec3e3f;">%s</a>', $url, $urlhtmllabel)
+        ];
+        $subject = get_string('messageprovider_allchecks_subject', 'block_course_checker', $data);
+        $completed = get_string('messageprovider_allchecks_completed', 'block_course_checker', $data);
+
+        // Override some strings for a specific check.
+        if ($checkername !== null) {
+            $data += ["checkername" => get_string($checkername, 'block_course_checker')];
+            $subject = get_string('messageprovider_singlechecks_subject', 'block_course_checker', $data);
+            $completed = get_string('messageprovider_singlechecks_completed', 'block_course_checker', $data);
+
+        }
+        $resultplain = get_string('messageprovider_result_plain', 'block_course_checker', $data);
+        $resulthtml = get_string('messageprovider_result_html', 'block_course_checker', $data);
+
+        // Send the message notification. See https://docs.moodle.org/dev/Message_API.
+        $message = new message();
+        $message->component = 'block_course_checker';
+        $message->name = 'checker_completed';
+        $message->courseid = $course->id;
+        $message->userto = $userid;
+        $message->userfrom = core_user::get_noreply_user();
+        $message->contexturl = $url;
+        $message->contexturlname = $resultplain;
+        $message->subject = $subject;
+        $message->fullmessage = $completed . " " . $resultplain;
+        $message->fullmessageformat = FORMAT_PLAIN;
+        $message->fullmessagehtml = \html_writer::tag("h2", s($subject)) . s($completed) . " " . $resulthtml;
+        $message->smallmessage = $completed;
+
+        return message_send($message);
     }
 }

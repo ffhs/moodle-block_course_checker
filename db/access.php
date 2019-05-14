@@ -23,30 +23,42 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-        'block/course_checker:addinstance' => array(
+$capabilities = [
+        'block/course_checker:addinstance' => [
                 'riskbitmask' => RISK_SPAM | RISK_XSS,
 
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_BLOCK,
-                'archetypes' => array(
+                'archetypes' => [
                         'editingteacher' => CAP_ALLOW,
                         'manager' => CAP_ALLOW,
                         'student' => CAP_PROHIBIT
-                ),
+                ],
 
                 'clonepermissionsfrom' => 'moodle/site:manageblocks'
-        ),
-        'block/course_checker:view_report' => array(
+        ],
+        'block/course_checker:view_report' => [
                 'riskbitmask' => RISK_PERSONAL,
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_BLOCK,
-                'archetypes' => array(
+                'archetypes' => [
                         'editingteacher' => CAP_ALLOW,
                         'manager' => CAP_ALLOW,
                         'student' => CAP_PROHIBIT
-                ),
+                ],
 
                 'clonepermissionsfrom' => 'moodle/site:manageblocks'
-        )
-);
+        ],
+        'block/course_checker:view_notification' => [
+                'riskbitmask' => RISK_PERSONAL,
+                'captype' => 'read',
+                'contextlevel' => CONTEXT_SYSTEM,
+                'archetypes' => [
+                        'teacher' => CAP_ALLOW,
+                        'editingteacher' => CAP_ALLOW,
+                        'manager' => CAP_ALLOW,
+                        'coursecreator' => CAP_ALLOW
+                ],
+                'clonepermissionsfrom' => 'moodle/site:viewreports',
+        ]
+];

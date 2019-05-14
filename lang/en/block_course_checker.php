@@ -21,6 +21,9 @@
  */
 $string['course_checker.php:addinstance'] = 'Add a new course checker block';
 $string['course_checker:view_report'] = 'View the check result page';
+$string['course_checker:view_notification'] = 'View the course checker notifications';
+$string['messageprovider:checker_completed'] = 'Course checker is completed';
+
 $string['pluginname'] = 'FFHS Course Checker';
 $string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
 $string['course_checker:addinstance'] = 'Course checker create';
@@ -89,10 +92,17 @@ $string['result_last_activity_header'] = 'Last modified activities';
 $string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
 $string['result_last_activity_empty'] = 'No modified activities since {$a}';
 
-
 $string['humancheck_title'] = 'Set manual check date:';
 $string['update'] = 'Update human review';
 $string['human_comment'] = 'Set a comment to give on this update.';
+
+$string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
+$string['messageprovider_allchecks_completed'] = 'The checks are completed.';
+$string['messageprovider_singlechecks_subject'] = 'Check {$a->checkername} completed on course {$a->coursename}';
+$string['messageprovider_singlechecks_completed'] = 'The check {$a->checkername} is completed.';
+$string['messageprovider_result_plain'] = 'You can see the result at {$a->url}.';
+$string['messageprovider_result_html'] = 'You can see the result on {$a->urlhtml}';
+$string['messageprovider_result_html_label'] = 'the dedicated result page';
 $string['settings_checker_header'] = 'Settings for the {$a} checker';
 $string['human_comment_placeholder'] = 'Note';
 $string['humanreason'] = 'Reason:';
