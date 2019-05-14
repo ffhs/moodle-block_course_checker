@@ -13,14 +13,32 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Version details
- *
- * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- */
+namespace block_course_checker\admin;
+
+use admin_setting_configtext_int_only;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019051415;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+class admin_setting_courseid_selector extends admin_setting_configtext_int_only {
+    /**
+     * @inheritDoc
+     */
+    public function validate($data) {
+        $data = trim($data);
+
+        if (empty($data)) {
+            return true;
+        }
+
+        if (preg_match("/^[0-9]+$/", $data) !== 1) {
+            return get_string("invalidcourseid", 'error');
+        }
+
+        try {
+            get_course($data, false);
+            return true;
+        } catch (\dml_exception $exception) {
+            return get_string("cannotfindcourse", 'error');
+        }
+    }
+}

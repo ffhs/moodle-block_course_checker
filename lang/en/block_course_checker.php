@@ -107,6 +107,7 @@ $string['settings_checker_header'] = 'Settings for the {$a} checker';
 $string['human_comment_placeholder'] = 'Note';
 $string['humanreason'] = 'Reason:';
 $string['settings_checker_header'] = 'Settings for the {$a} checker';
+$string['admin_referencecourseid'] = 'Reference course id';
 
 // Admin component. Please add specific checker settings under the checker section.
 $string['admin_restrictedint_min'] = 'Minimum value is {$a}';
