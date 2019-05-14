@@ -105,10 +105,9 @@ $string['messageprovider_singlechecks_completed'] = 'The check {$a->checkername}
 $string['messageprovider_result_plain'] = 'You can see the result at {$a->url}.';
 $string['messageprovider_result_html'] = 'You can see the result on {$a->urlhtml}';
 $string['messageprovider_result_html_label'] = 'the dedicated result page';
-$string['settings_checker_header'] = 'Settings for the {$a} checker';
 $string['human_comment_placeholder'] = 'Note';
 $string['humanreason'] = 'Reason:';
-$string['settings_checker_header'] = 'Settings for the {$a} checker';
+$string['settings_checker_header'] = 'Settings for the {$a}.';
 $string['admin_referencecourseid'] = 'Reference course id';
 
 // Admin component. Please add specific checker settings under the checker section.

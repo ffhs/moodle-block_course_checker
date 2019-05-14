@@ -16,27 +16,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use block_course_checker\admin\admin_setting_restrictedint;
-use block_course_checker\checkers\checker_link\checker;
+use block_course_checker\checkers\checker_groups\checker;
 
 /** @var admin_settingpage $setting */
 $setting;
 
-$visiblename = get_string('checker_link_status', 'block_course_checker');
+$visiblename = get_string('checker_group_status', 'block_course_checker');
 $status = new admin_setting_configcheckbox(checker::IS_ENABLE_SETTING, $visiblename, null,
     checker::DEFAULT_STATUS);
 $setting->add($status);
-
-// CURL Timeout setting.
-$visiblename = get_string('checker_link_setting_timeout', 'block_course_checker');
-$timeout = new admin_setting_restrictedint(checker::CONNECT_TIMEOUT_SETTING, $visiblename, null,
-        checker::CONNECT_TIMEOUT_DEFAULT);
-$timeout->set_maximum(300)->set_minimum(0);
-$setting->add($timeout);
-
-// CURL Connect timeout setting.
-$visiblename = get_string('checker_link_setting_connect_timeout', 'block_course_checker');
-$timeout = new admin_setting_restrictedint(checker::TIMEOUT_SETTING,
-        $visiblename, null, checker::TIMEOUT_DEFAULT);
-$timeout->set_maximum(300)->set_minimum(0);
-$setting->add($timeout);

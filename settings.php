@@ -19,6 +19,7 @@
  *
  * @package    block_course_list
  * @copyright  2007 Petr Skoda
+ * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -18,19 +18,22 @@ namespace block_course_checker\checkers\checker_groups;
 defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\check_result;
+use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
-
+use block_course_checker\model\checker_config_trait;
 /**
  * Checking the group submission settings on
  * assignments for a course.
  *
- * @package block_course_checker
+ * @package block_course_checker\checkers\checker_group
  */
-class checker implements \block_course_checker\model\check_plugin_interface {
+class checker implements check_plugin_interface {
+    use checker_config_trait;
 
     // Module name for assignments in Moodle.
     const MOD_TYPE_ASSIGN = 'assign';
-
+    const IS_ENABLE_SETTING = 'block_course_checker/check_group_status';
+    const DEFAULT_STATUS = true;
     /**
      * Runs the check on group assignment submissions for all assignments
      * of a course
@@ -139,6 +142,11 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
         // Return the check results.
         return $checkresult;
+    }
+
+    public function is_enabled()
+    {
+        return $this->get_config(self::IS_ENABLE_SETTING, self::DEFAULT_STATUS);
     }
 
     /**

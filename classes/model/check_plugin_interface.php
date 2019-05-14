@@ -40,4 +40,10 @@ interface check_plugin_interface{
      */
     public static function get_group();
 
+    /**
+     * Used to get config without get an instance of the checker.
+     * @return mixed
+     */
+    public function is_enabled();
+
 }

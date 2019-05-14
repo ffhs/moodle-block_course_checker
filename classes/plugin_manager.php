@@ -198,7 +198,11 @@ class plugin_manager implements check_manager_interface {
     public function run_checks($course) {
         $results = [];
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            $results[$checkername] = $checker->run($course);
+            if ($checker->is_enabled()) {
+                $results[$checkername] = $checker->run($course);
+            } else {
+                debugging('Checker ['. $checkername. '] is deactivated.');
+            }
         }
 
         // For debug purpose.
@@ -272,5 +276,19 @@ class plugin_manager implements check_manager_interface {
      */
     public function get_group_order() {
         return array('group_course_settings' => 1, 'group_links' => 2);
+    }
+
+    /**
+     * @param string $checkername
+     * @return bool
+     */
+    public function get_activation(string $checkername) : bool {
+        $checker = $this->get_checker($checkername);
+
+        return $checker->is_enabled();
+    }
+
+    public function set_enable(string $checkername, bool $enabled = true) {
+
     }
 }

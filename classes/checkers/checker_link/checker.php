@@ -39,6 +39,8 @@ class checker implements check_plugin_interface {
 
     const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
     const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
+    const IS_ENABLE_SETTING = 'block_course_checker/check_link_status';
+    const DEFAULT_STATUS = true;
     const TIMEOUT_DEFAULT = 13;
     const CONNECT_TIMEOUT_DEFAULT = 5;
 
@@ -191,6 +193,11 @@ class checker implements check_plugin_interface {
      */
     public static function get_group() {
         return 'group_links';
+    }
+
+    public function is_enabled()
+    {
+        return $this->get_config(self::IS_ENABLE_SETTING, self::DEFAULT_STATUS);
     }
 
     /**
