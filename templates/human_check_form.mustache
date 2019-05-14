@@ -1,0 +1,16 @@
+<label>{{#str}}humancheck_title, block_course_checker{{/str}}</label>
+
+<form method="post" action="{{action}}">
+    {{#token}}
+        <input type="hidden" name="token" value="{{token}}"/>
+    {{/token}}
+    <div class="m-a-0">
+        <div class="hummancheck_dateinput">
+            {{{dateinputhtml}}}
+        </div>
+        <div class="pb-3">
+            <textarea class="form-control" name="human_comment" placeholder="{{humanplaceholder}}">{{manualreason}}</textarea>
+        </div>
+        <input class="btn btn-secondary btn-block" type="submit" placeholder="{{#str}}update,block_course_checker{{/str}}"/>
+    </div>
+</form>

@@ -13,14 +13,28 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Version details
- *
- * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- */
+
+namespace block_course_checker\model;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019050900;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+/**
+ * Trait checker_config_trait. Used to simplify the reading of config values.
+ */
+trait checker_config_trait {
+    /**
+     * Read a setting based on plugin name.
+     *
+     * @param string $name Plugin name + / + setting name
+     * @param mixed|null $defaultvalue
+     * @return mixed|null
+     */
+    protected function get_config($name, $defaultvalue = null) {
+        list($plugin, $name) = explode("/", $name);
+        $value = get_config($plugin, $name);
+        if ($value) {
+            return $value;
+        }
+        return $defaultvalue;
+    }
+}

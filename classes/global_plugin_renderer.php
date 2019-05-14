@@ -40,7 +40,6 @@ class global_plugin_renderer extends \plugin_renderer_base {
      *
      * @param string $checkername
      * @param check_result_interface $result
-     * @param int $course_id
      * @return string
      * @throws \coding_exception
      * @throws \moodle_exception
@@ -48,10 +47,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
     public function render_for_block(string $checkername, check_result_interface $result): string {
         global $COURSE;
 
+        $url = new \moodle_url('/blocks/course_checker/details.php', ['id' => $COURSE->id]);
+        $url .= "#result-" . $checkername;
+
         $output = $this->render_from_template("block_course_checker/check_block", [
-                "successful" => $result->is_successful(),
-                "checkername" => $checkername,
-                "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
+                'url' => $url,
+                'successful' => $result->is_successful(),
+                'checkername' => $checkername,
+                'checkername_display' => get_string($checkername . '_display', 'block_course_checker'),
                 'rerun_html' => $this->rerun($checkername, $COURSE->id)
         ]);
         $output .= $this->debug($result);
@@ -130,6 +133,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
         }
 
         $context = [
+                "checkername" => $checkername,
                 "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
                 "successful" => $result->is_successful(),
                 "link" => $result->get_link(),

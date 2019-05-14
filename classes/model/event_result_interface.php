@@ -19,22 +19,26 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_course_checker;
+namespace block_course_checker\model;
 
 defined('MOODLE_INTERNAL') || die();
 
-class event_manager {
-    public static function course_module_updated($event) {
-        $courseid = $event->courseid;
-        $timestamp = $event->timecreated;
-        $other = $event->other;
-        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
-    }
+interface event_result_interface extends \renderable, \templatable {
+    /**
+     * Get the link
+     * @return string|null
+     */
+    public function get_link();
 
-    public static function course_module_created($event) {
-        $courseid = $event->courseid;
-        $timestamp = $event->timecreated;
-        $other = $event->other;
-        result_persister::instance()->set_last_activity_edition($courseid, $timestamp, $other);
-    }
+    /**
+     * Get the activity name
+     * @return string|null
+     */
+    public function get_name();
+
+    /**
+     * Get the last edited date as a timestamp.
+     * @return int|null
+     */
+    public function get_timestamp();
 }

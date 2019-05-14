@@ -18,14 +18,17 @@ namespace block_course_checker\checkers\checker_link;
 defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\check_result;
+use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
+use block_course_checker\model\checker_config_trait;
 
 /**
  * Check link inside the course
  *
  * @package block_course_checker\checkers\checker_link
  */
-class checker implements \block_course_checker\model\check_plugin_interface {
+class checker implements check_plugin_interface {
+    use checker_config_trait;
     /**
      * @var string|null Last CURL error after a call to check_url.
      */
@@ -33,6 +36,11 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
     /** @var check_result */
     protected $result = null;
+
+    const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
+    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
+    const TIMEOUT_DEFAULT = 13;
+    const CONNECT_TIMEOUT_DEFAULT = 5;
 
     /**
      * @param \stdClass $course The course itself.
@@ -127,10 +135,15 @@ class checker implements \block_course_checker\model\check_plugin_interface {
             return true;
         }
 
+        // Load settings.
+        $connecttimeout = (int) $this->get_config(self::CONNECT_TIMEOUT_SETTING, self::CONNECT_TIMEOUT_DEFAULT);
+        $timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
+
+        // Use curl to checks the urls.
         $curl = new \curl();
         $curl->head($url, [], [
-                "CURLOPT_CONNECTTIMEOUT" => 5,
-                "CURLOPT_TIMEOUT" => 13,
+                "CURLOPT_CONNECTTIMEOUT" => $connecttimeout,
+                "CURLOPT_TIMEOUT" => $timeout,
                 'CURLOPT_FOLLOWLOCATION' => 0
         ]);
 
@@ -182,6 +195,7 @@ class checker implements \block_course_checker\model\check_plugin_interface {
 
     /**
      * Tells if an url should be skipped.
+     *
      * @param string $host
      * @return boolean
      */

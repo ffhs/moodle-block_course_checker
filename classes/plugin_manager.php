@@ -29,7 +29,7 @@ use block_course_checker\model\check_result_interface;
 
 class plugin_manager implements check_manager_interface {
     // Enable this if you want to run the checks directly. This is helpful for debugging.
-    const IMMEDIATE_RUN = false;
+    const IMMEDIATE_RUN = true;
     // Enable this if you want to save the checks results after a run directly. This is helpful for debugging.
     const IMMEDIATE_SAVE_AFTER_RUN = false;
 
@@ -208,6 +208,23 @@ class plugin_manager implements check_manager_interface {
             ]);
         }
         return $results;
+    }
+
+    /**
+     * Return the path of each settings file indexed with the checkername.
+     *
+     * @return string[]
+     */
+    public function get_checkers_setting_files() {
+        $result = [];
+        $pluginroot = $this->get_checkers_folders();
+        foreach ($this->get_checkers_plugins() as $checkername => $instance) {
+            $filelocation = $pluginroot . "/" . $checkername . "/settings.php";
+            if (file_exists($filelocation)) {
+                $result[$checkername] = $filelocation;
+            }
+        }
+        return $result;
     }
 
     /**
