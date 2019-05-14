@@ -22,7 +22,6 @@
  */
 
 use block_course_checker\plugin_manager;
-use block_course_checker\output\block_renderer;
 use block_course_checker\result_group;
 use block_course_checker\result_persister;
 use block_course_checker\task_helper;

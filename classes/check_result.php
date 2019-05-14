@@ -27,6 +27,11 @@ class check_result implements check_result_interface {
     protected $successful = true;
 
     /**
+     * @var string
+     */
+    protected $timestamp = null;
+
+    /**
      * @var array
      */
     protected $details = [];
@@ -37,7 +42,7 @@ class check_result implements check_result_interface {
     protected $link = null;
 
     /**
-     * Tels if the check pass successfully or not
+     * Tells if the check pass successfully or not
      *
      * @return bool
      */
@@ -56,6 +61,15 @@ class check_result implements check_result_interface {
      */
     public function get_details(): array {
         return $this->details;
+    }
+
+    /**
+     * The timestamp for the checker.
+     *
+     * @return int|null
+     */
+    public function get_timestamp() {
+        return $this->timestamp;
     }
 
     /**
@@ -108,13 +122,32 @@ class check_result implements check_result_interface {
     }
 
     /**
+     * @param string $value
+     * @return check_result
+     */
+    public function set_timestamp($value) {
+        $this->timestamp = $value;
+
+        return $this;
+    }
+
+    /**
+     * Adds a timestamp to the check result
+     */
+    public function add_timestamp() {
+        $this->timestamp = date("U");
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function export_for_template(\renderer_base $output) {
         return [
                 "successful" => $this->successful,
                 "details" => $this->details,
-                "link" => $this->link
+                "link" => $this->link,
+                "timestamp" => $this->timestamp
         ];
     }
 }

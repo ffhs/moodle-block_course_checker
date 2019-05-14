@@ -71,7 +71,8 @@ class result_persister implements check_manager_persister_interface {
             $payload[$checkername] = [
                     "successful" => $result->is_successful(),
                     "details" => $result->get_details(),
-                    "link" => $result->get_link()
+                    "link" => $result->get_link(),
+                    "timestamp" => $result->get_timestamp()
             ];
         }
         $record->result = json_encode($payload);
@@ -89,7 +90,10 @@ class result_persister implements check_manager_persister_interface {
             $result = json_decode($record->result, true);
             foreach ($result as $checkername => $payload) {
                 $result = new check_result();
-                $result->set_details($payload["details"])->set_link($payload["link"])->set_successful($payload["successful"]);
+                $result->set_details($payload["details"])
+                    ->set_link($payload["link"])
+                    ->set_successful($payload["successful"])
+                    ->set_timestamp($payload["timestamp"] ?? null);
                 $response[$checkername] = $result;
             }
         }

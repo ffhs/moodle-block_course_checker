@@ -87,3 +87,7 @@ p.humanreason-label {
 .hummancheck_dateinput .custom-select {
     padding-left: 0.55em;
 }
+
+.single-checker-timestamp {
+    font-weight: normal;
+}
