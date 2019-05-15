@@ -15,6 +15,9 @@ row for the checker displaying its name and whether it had success
             <i class="fa fa-times-circle text-danger"></i>
         {{/successful}}
         {{checkername_display}}
+        <span class="single-checker-timestamp ml-2">
+             {{#str}}checker_last_run, block_course_checker, {{#userdate}} {{checkertimestamp}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}
+        </span>
      </th>
 </tr>
 

@@ -29,7 +29,7 @@ use block_course_checker\model\check_result_interface;
 
 class plugin_manager implements check_manager_interface {
     // Enable this if you want to run the checks directly. This is helpful for debugging.
-    const IMMEDIATE_RUN = true;
+    const IMMEDIATE_RUN = false;
     // Enable this if you want to save the checks results after a run directly. This is helpful for debugging.
     const IMMEDIATE_SAVE_AFTER_RUN = false;
 
@@ -240,7 +240,9 @@ class plugin_manager implements check_manager_interface {
         }
 
         // Run the check.
-        $results = [$checkname => $checker->run($course)];
+        $result = $checker->run($course);
+        $result->add_timestamp();
+        $results = [$checkname => $result];
 
         return $results;
     }

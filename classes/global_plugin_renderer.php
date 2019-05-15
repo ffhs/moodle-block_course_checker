@@ -95,7 +95,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public function render_for_page(string $checkername, check_result_interface $result): string {
+    public function render_for_page(string $checkername, string $lastrundate, check_result_interface $result): string {
 
         // Format result details.
         $resultdetails = $result->get_details();
@@ -132,11 +132,19 @@ class global_plugin_renderer extends \plugin_renderer_base {
             ];
         }
 
+        // Set timestsmp for the checker as either the last run date of the block.
+        // Or the last run date of a checker.
+        $checkertimestamp = $result->get_timestamp();
+        if (!$checkertimestamp) {
+            $checkertimestamp = $lastrundate;
+        }
+
         $context = [
                 "checkername" => $checkername,
                 "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
                 "successful" => $result->is_successful(),
                 "link" => $result->get_link(),
+                "checkertimestamp" => $checkertimestamp,
                 "resultdetails" => $resultdetails,
         ];
 

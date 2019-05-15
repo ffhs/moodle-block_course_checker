@@ -78,6 +78,8 @@ $string['checker_link'] = 'Links Check';
 // Display title of each checker.
 $string['checker_groups_display'] = 'Group Submission for Assignments';
 $string['checker_link_display'] = 'Links in Course Summary and Url Activities';
+// Checker last run.
+$string['checker_last_run'] = 'Last run {$a}';
 
 // Check Result Tables.
 $string['result_col_block_header'] = 'Result';

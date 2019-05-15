@@ -57,6 +57,18 @@ interface check_result_interface extends \renderable, \templatable {
     public function get_link();
 
     /**
+     * Add a timestamp to the check
+     */
+    public function add_timestamp();
+
+    /**
+     * The timestamp of the check
+     *
+     * @return string|null
+     */
+    public function get_timestamp();
+
+    /**
      * Set the details !
      *
      * @param array $details
