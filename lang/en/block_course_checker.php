@@ -94,6 +94,7 @@ $string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
 $string['result_last_activity_header'] = 'Last modified activities';
 $string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
 $string['result_last_activity_empty'] = 'No modified activities since {$a}';
+$string['result_checker_disabled'] = 'This checker is disabled by the administrator.';
 
 $string['humancheck_title'] = 'Set manual check date:';
 $string['update'] = 'Update human review';

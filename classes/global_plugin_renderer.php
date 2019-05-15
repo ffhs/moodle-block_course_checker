@@ -146,6 +146,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 "link" => $result->get_link(),
                 "checkertimestamp" => $checkertimestamp,
                 "resultdetails" => $resultdetails,
+                "enabled" => plugin_manager::instance()->get_checker_status($checkername)
         ];
 
         $output = "";
