@@ -29,7 +29,7 @@ row for a check result displaying message, link to fix and result
 }}
 
 {{#resultdetails}}
-<tr>
+<tr {{#isignored}}class="ignored"{{/isignored}}>
     <td class="col result{{^enabled}} text-muted{{/enabled}}">
         {{{icon}}}
     </td>

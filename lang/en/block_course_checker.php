@@ -69,6 +69,8 @@ $string['groups_activity'] = 'Activity "{$a->name}"';
 $string['checker_link_setting_timeout'] = 'CURL Timeout';
 $string['checker_link_setting_connect_timeout'] = 'CURL Connection Timeout';
 $string['checker_setting_toggle'] = 'Enable / Disable {$a}';
+$string['checker_link_setting_whitelist'] = 'Link Checker Whitelist';
+$string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com"';
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
@@ -115,3 +117,6 @@ $string['admin_referencecourseid'] = 'Reference course id';
 // Admin component. Please add specific checker settings under the checker section.
 $string['admin_restrictedint_min'] = 'Minimum value is {$a}';
 $string['admin_restrictedint_max'] = 'Maximum value is {$a}';
+$string['admin_domain_name_notvalid'] = 'Domainname not valid: {$a}. Please add only one domain name per line';
+$string['admin_domain_name_default_missing'] = 'Domainname missing: {$a}';
+$string['admin_domain_list_notvalid'] = 'The list is not a valid list of domains';
