@@ -22,11 +22,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_course_checker\admin\admin_setting_courseid_selector;
 use block_course_checker\plugin_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
+    $name = get_string("admin_referencecourseid", "block_course_checker");
+    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', null));
+
     foreach (plugin_manager::instance()->get_checkers_setting_files() as $checkername => $settingfile) {
         $checkernamedisplay = get_string($checkername, 'block_course_checker');
         $checkernamedisplay = get_string('settings_checker_header', 'block_course_checker', $checkernamedisplay);
