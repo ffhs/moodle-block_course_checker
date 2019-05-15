@@ -39,7 +39,7 @@ if (!has_capability('block/course_checker:view_report', $context)) {
 
 // Load previous check results.
 $record = result_persister::instance()->load_last_checks($COURSE->id);
-$lastrundate = isset($record['timestamp']) ?  $record['timestamp'] : null;
+$lastrundate = isset($record['timestamp']) ? $record['timestamp'] : null;
 if ($record) {
     $results = $record["result"];
     $manualdate = $record["manual_date"] ? \DateTime::createFromFormat("U", $record["manual_date"]) : null;
@@ -65,8 +65,7 @@ foreach ($results as $checkername => $result) {
     }
     $htmlresults[] = [
             "name" => $checkername,
-            "output" => $manager->get_renderer($checkername)
-                ->render_for_page($checkername, $lastrundate, clone $result)
+            "output" => $manager->get_renderer($checkername)->render_for_page($checkername, $lastrundate, clone $result)
     ];
 }
 
