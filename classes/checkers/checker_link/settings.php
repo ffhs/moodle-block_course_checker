@@ -22,11 +22,6 @@ use block_course_checker\checkers\checker_link\checker;
 /** @var admin_settingpage $setting */
 $setting;
 
-$visiblename = get_string('checker_link_status', 'block_course_checker');
-$status = new admin_setting_configcheckbox(checker::IS_ENABLE_SETTING, $visiblename, null,
-    checker::DEFAULT_STATUS);
-$setting->add($status);
-
 // CURL Timeout setting.
 $visiblename = get_string('checker_link_setting_timeout', 'block_course_checker');
 $timeout = new admin_setting_restrictedint(checker::CONNECT_TIMEOUT_SETTING, $visiblename, null,

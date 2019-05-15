@@ -32,6 +32,8 @@ class plugin_manager implements check_manager_interface {
     const IMMEDIATE_RUN = false;
     // Enable this if you want to save the checks results after a run directly. This is helpful for debugging.
     const IMMEDIATE_SAVE_AFTER_RUN = false;
+    // Enable this if you want to display the check result if this last one is deactivated.
+    const DISPLAY_LAST_CHECK_RESULT_IF_DISABLED = true;
 
     // The checker filename.
     const PLUGIN_FILE = 'checker.php';
@@ -85,7 +87,7 @@ class plugin_manager implements check_manager_interface {
      *
      * @return check_plugin_interface[]
      */
-    protected function get_checkers_plugins() {
+    public function get_checkers_plugins() {
         // Use cache if set.
         if (!empty(self::$plugins)) {
             return self::$plugins;
@@ -193,15 +195,19 @@ class plugin_manager implements check_manager_interface {
 
     /**
      * @param \stdClass $course
+     * @param array $lastchecksresults
      * @return check_result_interface|array An array of result, indexed with the plugin/check name
      */
-    public function run_checks($course) {
+    public function run_checks($course, $lastchecksrecord) {
         $results = [];
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            if ($checker->is_enabled()) {
+            if ($this->get_checker_status($checkername)) {
                 $results[$checkername] = $checker->run($course);
             } else {
-                debugging('Checker ['. $checkername. '] is deactivated.');
+                if ($lastchecksrecord != [] && self::DISPLAY_LAST_CHECK_RESULT_IF_DISABLED &&
+                        array_key_exists($checkername, $lastchecksrecord['result'])) {
+                    $results[$checkername] = $lastchecksrecord['result'][$checkername];
+                }
             }
         }
 
@@ -234,7 +240,7 @@ class plugin_manager implements check_manager_interface {
     /**
      * @param $course
      * @param string $checkname
-     * @return bool success
+     * @return check_result_interface[]
      */
     public function run_single_check($course, string $checkname): array {
         // Check that the checker exists.
@@ -243,12 +249,19 @@ class plugin_manager implements check_manager_interface {
             return [];
         }
 
+        if (!$this->get_checker_status($checkname)) {
+            return [];
+        }
+
         // Run the check.
         $result = $checker->run($course);
         $result->add_timestamp();
         $results = [$checkname => $result];
-
         return $results;
+    }
+
+    public function get_checker_status(string $checkername): bool {
+        return get_config('block_course_checker', $checkername . '_status');
     }
 
     /**
@@ -282,13 +295,7 @@ class plugin_manager implements check_manager_interface {
      * @param string $checkername
      * @return bool
      */
-    public function get_activation(string $checkername) : bool {
-        $checker = $this->get_checker($checkername);
-
-        return $checker->is_enabled();
-    }
-
-    public function set_enable(string $checkername, bool $enabled = true) {
-
+    public function get_activation(string $checkername): bool {
+        return get_config("block_course_checker", $checkername . '_status');
     }
 }

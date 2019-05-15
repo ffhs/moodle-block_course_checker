@@ -32,8 +32,6 @@ class checker implements check_plugin_interface {
 
     // Module name for assignments in Moodle.
     const MOD_TYPE_ASSIGN = 'assign';
-    const IS_ENABLE_SETTING = 'block_course_checker/check_group_status';
-    const DEFAULT_STATUS = true;
     /**
      * Runs the check on group assignment submissions for all assignments
      * of a course
@@ -142,11 +140,6 @@ class checker implements check_plugin_interface {
 
         // Return the check results.
         return $checkresult;
-    }
-
-    public function is_enabled()
-    {
-        return $this->get_config(self::IS_ENABLE_SETTING, self::DEFAULT_STATUS);
     }
 
     /**

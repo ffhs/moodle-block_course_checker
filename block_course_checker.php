@@ -78,7 +78,7 @@ class block_course_checker extends block_base {
 
         // Run the test directly.
         if (plugin_manager::IMMEDIATE_RUN) {
-            $checks = plugin_manager::instance()->run_checks($COURSE);
+            $checks = plugin_manager::instance()->run_checks($COURSE, $loadedchecks);
         }
 
         // Render the checks results.

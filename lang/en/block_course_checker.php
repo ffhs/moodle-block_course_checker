@@ -68,6 +68,7 @@ $string['groups_success'] = 'Group submission setting is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
 $string['checker_link_setting_timeout'] = 'CURL Timeout';
 $string['checker_link_setting_connect_timeout'] = 'CURL Connection Timeout';
+$string['checker_setting_toggle'] = 'Enable / Disable {$a}';
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
