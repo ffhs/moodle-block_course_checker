@@ -43,9 +43,9 @@ if ($ADMIN->fulltree) {
 
         // Include the checker's setting file so it can only alter "$setting".
         $setting = call_user_func(function() use ($setting, $plugin, $checkername, $manager) {
-            $settingfile = $manager->get_checkers_setting_files();
-            if (array_key_exists($checkername, $settingfile) && file_exists($settingfile[$checkername])) {
-                require($settingfile[$checkername]);
+            $settingfile = $manager->get_checker_setting_file($checkername);
+            if (null != $settingfile) {
+                require($settingfile);
                 return $setting;
             }
         });

@@ -117,8 +117,7 @@ class block_course_checker extends block_base {
      * @return bool
      */
     public function has_config() {
-        $settings = plugin_manager::instance()->get_checkers_setting_files();
-        return !empty($settings);
+        return true;
     }
 
     /**
