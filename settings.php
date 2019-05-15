@@ -56,7 +56,7 @@ if ($ADMIN->fulltree) {
 
         $visiblename = get_string('checker_setting_toggle', 'block_course_checker', $truecheckername);
         $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
-            true));
+                true));
 
         // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle beaviour).
         if ($setting === null) {
