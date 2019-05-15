@@ -187,7 +187,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $canrerun = !task_helper::instance()->is_task_scheduled($courseid, $checkername);
         $canrerun &= !task_helper::instance()->is_task_scheduled($courseid);
         $isenabled = true;
-        if (plugin_manager::instance()->get_activation($checkername) == false) {
+        if (plugin_manager::instance()->get_checker_status($checkername) == false) {
             $canrerun = 0;
             $isenabled = false;
         }

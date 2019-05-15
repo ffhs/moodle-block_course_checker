@@ -255,6 +255,10 @@ class plugin_manager implements check_manager_interface {
         return $results;
     }
 
+    /**
+     * @param string $checkername
+     * @return bool
+     */
     public function get_checker_status(string $checkername): bool {
         return get_config('block_course_checker', $checkername . '_status');
     }
@@ -284,13 +288,5 @@ class plugin_manager implements check_manager_interface {
      */
     public function get_group_order() {
         return array('group_course_settings' => 1, 'group_links' => 2);
-    }
-
-    /**
-     * @param string $checkername
-     * @return bool
-     */
-    public function get_activation(string $checkername): bool {
-        return get_config("block_course_checker", $checkername . '_status');
     }
 }
