@@ -52,6 +52,7 @@ class task_helper {
 
     /**
      * This will clear the cache of scheduled tasks.
+     *
      * @return $this
      */
     public function clear_is_scheduled_cache() {
@@ -190,7 +191,7 @@ class task_helper {
         $message->userto = $userid;
         $message->userfrom = core_user::get_noreply_user();
         $message->contexturl = $url;
-        $message->contexturlname = $resultplain;
+        $message->contexturlname = get_string('messageprovider_result_html_label', 'block_course_checker');
         $message->subject = $subject;
         $message->fullmessage = $completed . " " . $resultplain;
         $message->fullmessageformat = FORMAT_PLAIN;
