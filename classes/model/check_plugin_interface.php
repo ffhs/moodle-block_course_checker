@@ -39,5 +39,4 @@ interface check_plugin_interface{
      * @return string
      */
     public static function get_group();
-
 }

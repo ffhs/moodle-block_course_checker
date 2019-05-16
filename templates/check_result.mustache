@@ -7,7 +7,10 @@ row for the checker displaying its name and whether it had success
 }}
 
 <tr id="result-{{checkername}}">
-     <th scope="col" colspan="3" class="col message">
+     <th scope="col" colspan="3" class="col message {{^enabled}} text-muted{{/enabled}}">
+         {{^enabled}}
+             <i class="fa fa-exclamation-triangle text-warning" title="{{#str}}result_checker_disabled, block_course_checker{{/str}}"></i>
+         {{/enabled}}
         {{#successful}}
             <i class="fa fa-check-circle text-success"></i>
         {{/successful}}
@@ -27,13 +30,13 @@ row for a check result displaying message, link to fix and result
 
 {{#resultdetails}}
 <tr>
-    <td class="col result">
+    <td class="col result{{^enabled}} text-muted{{/enabled}}">
         {{{icon}}}
     </td>
-    <td class="col link">
+    <td class="col link{{^enabled}} text-muted{{/enabled}}">
         {{{link}}}
     </td>
-    <td class="col message">
+    <td class="col message{{^enabled}} text-muted{{/enabled}}">
         {{{message}}}
     </td>
 </tr>

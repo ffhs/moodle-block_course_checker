@@ -50,7 +50,7 @@ if ($record) {
 
 // Run the test directly.
 if (plugin_manager::IMMEDIATE_RUN) {
-    $results = plugin_manager::instance()->run_checks($COURSE);
+    $results = plugin_manager::instance()->run_checks($COURSE, $record);
 }
 
 // Render each check result with the dedicated render for this checker.

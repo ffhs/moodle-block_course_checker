@@ -9,7 +9,14 @@
 {{/canrerun}}
 
 {{^canrerun}}
-    <div class="btn btn-secondary disabled">
-        <i class="fa fa-redo" title="{{#str}}rerun_disabled_col_block_header, block_course_checker{{/str}}"></i>
-    </div>
+    {{#isenabled}}
+        <div class="btn btn-secondary disabled" title="{{#str}}rerun_disabled_col_block_header, block_course_checker{{/str}}">
+            <i class="fa fa-redo"></i>
+        </div>
+    {{/isenabled}}
+    {{^isenabled}}
+        <div class="btn btn-secondary disabled" title="{{#str}}result_checker_disabled, block_course_checker{{/str}}">
+            <i class="fa fa-redo"></i>
+        </div>
+    {{/isenabled}}
 {{/canrerun}}

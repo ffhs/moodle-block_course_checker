@@ -146,6 +146,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 "link" => $result->get_link(),
                 "checkertimestamp" => $checkertimestamp,
                 "resultdetails" => $resultdetails,
+                "enabled" => plugin_manager::instance()->get_checker_status($checkername)
         ];
 
         $output = "";
@@ -182,9 +183,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
     protected function rerun(string $checkername, int $courseid) {
         global $CFG;
 
-        // We can rerun a check if the check is not scheduled and the whole checks are not scheduled.
+        // We can rerun a check if the check is not scheduled and the whole checks are not scheduled and is not deactivated.
         $canrerun = !task_helper::instance()->is_task_scheduled($courseid, $checkername);
         $canrerun &= !task_helper::instance()->is_task_scheduled($courseid);
+        $isenabled = true;
+        if (plugin_manager::instance()->get_checker_status($checkername) == false) {
+            $canrerun = 0;
+            $isenabled = false;
+        }
 
         // Use a "CSRF" token.
         $token = null;
@@ -200,6 +206,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 "checker" => $checkername,
                 "token" => $token,
                 "canrerun" => $canrerun,
+                "isenabled" => $isenabled,
         ]);
     }
 }

@@ -32,6 +32,8 @@ class plugin_manager implements check_manager_interface {
     const IMMEDIATE_RUN = false;
     // Enable this if you want to save the checks results after a run directly. This is helpful for debugging.
     const IMMEDIATE_SAVE_AFTER_RUN = false;
+    // Enable this if you want to display the check result if this last one is deactivated.
+    const DISPLAY_LAST_CHECK_RESULT_IF_DISABLED = true;
 
     // The checker filename.
     const PLUGIN_FILE = 'checker.php';
@@ -85,7 +87,7 @@ class plugin_manager implements check_manager_interface {
      *
      * @return check_plugin_interface[]
      */
-    protected function get_checkers_plugins() {
+    public function get_checkers_plugins() {
         // Use cache if set.
         if (!empty(self::$plugins)) {
             return self::$plugins;
@@ -193,12 +195,20 @@ class plugin_manager implements check_manager_interface {
 
     /**
      * @param \stdClass $course
+     * @param array $lastchecksresults
      * @return check_result_interface|array An array of result, indexed with the plugin/check name
      */
-    public function run_checks($course) {
+    public function run_checks($course, $lastchecksrecord) {
         $results = [];
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            $results[$checkername] = $checker->run($course);
+            if ($this->get_checker_status($checkername)) {
+                $results[$checkername] = $checker->run($course);
+            } else {
+                if ($lastchecksrecord != [] && self::DISPLAY_LAST_CHECK_RESULT_IF_DISABLED &&
+                        array_key_exists($checkername, $lastchecksrecord['result'])) {
+                    $results[$checkername] = $lastchecksrecord['result'][$checkername];
+                }
+            }
         }
 
         // For debug purpose.
@@ -211,26 +221,21 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
-     * Return the path of each settings file indexed with the checkername.
+     * Return the path of the settings file for the specified checkername.
      *
-     * @return string[]
+     * @param string $checkername
+     * @return string|null
      */
-    public function get_checkers_setting_files() {
-        $result = [];
+    public function get_checker_setting_file(string $checkername) {
         $pluginroot = $this->get_checkers_folders();
-        foreach ($this->get_checkers_plugins() as $checkername => $instance) {
-            $filelocation = $pluginroot . "/" . $checkername . "/settings.php";
-            if (file_exists($filelocation)) {
-                $result[$checkername] = $filelocation;
-            }
-        }
-        return $result;
+        $filelocation = $pluginroot . "/" . $checkername . "/settings.php";
+        return file_exists($filelocation) ? $filelocation : null;
     }
 
     /**
      * @param $course
      * @param string $checkname
-     * @return bool success
+     * @return check_result_interface[]
      */
     public function run_single_check($course, string $checkname): array {
         // Check that the checker exists.
@@ -239,12 +244,23 @@ class plugin_manager implements check_manager_interface {
             return [];
         }
 
+        if (!$this->get_checker_status($checkname)) {
+            return [];
+        }
+
         // Run the check.
         $result = $checker->run($course);
         $result->add_timestamp();
         $results = [$checkname => $result];
-
         return $results;
+    }
+
+    /**
+     * @param string $checkername
+     * @return bool
+     */
+    public function get_checker_status(string $checkername): bool {
+        return get_config('block_course_checker', $checkername . '_status');
     }
 
     /**

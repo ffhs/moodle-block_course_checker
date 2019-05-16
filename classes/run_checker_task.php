@@ -46,10 +46,10 @@ class run_checker_task extends adhoc_task {
         // See https://docs.moodle.org/dev/Data_manipulation_API#get_course.
         $course = get_course($data->course_id);
         $checkername = isset($data->checker) ? $data->checker : null;
+        $record = result_persister::instance()->load_last_checks($course->id);
         // For a single checker.
         if ($checkername) {
             // We reload all the check from database.
-            $record = result_persister::instance()->load_last_checks($course->id);
             if ($record) {
                 $checksresults = $record["result"];
             } else {
@@ -65,7 +65,7 @@ class run_checker_task extends adhoc_task {
             $data = [];
         } else {
             // For all checkers.
-            $checksresults = plugin_manager::instance()->run_checks($course);
+            $checksresults = plugin_manager::instance()->run_checks($course, $record);
             $data = [
                     "timestamp" => date("U")
             ];

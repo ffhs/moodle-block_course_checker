@@ -68,6 +68,7 @@ $string['groups_success'] = 'Group submission setting is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
 $string['checker_link_setting_timeout'] = 'CURL Timeout';
 $string['checker_link_setting_connect_timeout'] = 'CURL Connection Timeout';
+$string['checker_setting_toggle'] = 'Enable / Disable {$a}';
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
@@ -93,6 +94,7 @@ $string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
 $string['result_last_activity_header'] = 'Last modified activities';
 $string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
 $string['result_last_activity_empty'] = 'No modified activities since {$a}';
+$string['result_checker_disabled'] = 'This checker is disabled by the administrator.';
 
 $string['humancheck_title'] = 'Set manual check date:';
 $string['update'] = 'Update human review';
@@ -105,10 +107,9 @@ $string['messageprovider_singlechecks_completed'] = 'The check {$a->checkername}
 $string['messageprovider_result_plain'] = 'You can see the result at {$a->url}.';
 $string['messageprovider_result_html'] = 'You can see the result on {$a->urlhtml}';
 $string['messageprovider_result_html_label'] = 'the dedicated result page';
-$string['settings_checker_header'] = 'Settings for the {$a} checker';
 $string['human_comment_placeholder'] = 'Note';
 $string['humanreason'] = 'Reason:';
-$string['settings_checker_header'] = 'Settings for the {$a} checker';
+$string['settings_checker_header'] = 'Settings for the {$a}.';
 $string['admin_referencecourseid'] = 'Reference course id';
 
 // Admin component. Please add specific checker settings under the checker section.

@@ -18,7 +18,7 @@
  * Course list block settings
  *
  * @package    block_course_list
- * @copyright  2007 Petr Skoda
+ * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,10 +28,13 @@ use block_course_checker\plugin_manager;
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
+
     $name = get_string("admin_referencecourseid", "block_course_checker");
     $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', null));
 
-    foreach (plugin_manager::instance()->get_checkers_setting_files() as $checkername => $settingfile) {
+    $manager = plugin_manager::instance();
+    foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
+        $truecheckername = get_string($checkername, 'block_course_checker');
         $checkernamedisplay = get_string($checkername, 'block_course_checker');
         $checkernamedisplay = get_string('settings_checker_header', 'block_course_checker', $checkernamedisplay);
 
@@ -39,21 +42,28 @@ if ($ADMIN->fulltree) {
         $setting = new admin_settingpage("block_course_checker/" . $checkername . "_page", $checkernamedisplay);
 
         // Include the checker's setting file so it can only alter "$setting".
-        $setting = call_user_func(function() use ($setting, $settingfile, $checkername) {
-            require($settingfile);
-            return $setting;
+        $setting = call_user_func(function() use ($setting, $plugin, $checkername, $manager) {
+            $settingfile = $manager->get_checker_setting_file($checkername);
+            if (null != $settingfile) {
+                require($settingfile);
+                return $setting;
+            }
         });
+
+        // Add a friendly header.
+        $heading = new admin_setting_heading("block_course_checker/" . $checkername . "_heading", $checkernamedisplay, '');
+        $settings->add($heading);
+
+        $visiblename = get_string('checker_setting_toggle', 'block_course_checker', $truecheckername);
+        $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
+                true));
 
         // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle beaviour).
         if ($setting === null) {
             continue;
         }
-
         // Loop trough each setting that the plugin added and move them to the global settings.
         foreach ($setting->settings as $checkersetting) {
-            // Add a friendly header.
-            $heading = new admin_setting_heading("block_course_checker/" . $checkername . "_heading", $checkernamedisplay, '');
-            $settings->add($heading);
             $settings->add($checkersetting);
         }
     }

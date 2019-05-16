@@ -30,7 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 interface check_manager_interface{
     /**
      * @param \stdClass $course
+     * @param array $lastchecksresults An array of last result, used for skip deactivated checks and still display the same check.
      * @return check_result_interface|array An array of result, indexed with the plugin/check name
      */
-    public function run_checks($course);
+    public function run_checks($course, $lastchecksrecord);
 }
