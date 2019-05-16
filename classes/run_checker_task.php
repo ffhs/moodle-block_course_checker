@@ -49,6 +49,13 @@ class run_checker_task extends adhoc_task {
         $record = result_persister::instance()->load_last_checks($course->id);
         // For a single checker.
         if ($checkername) {
+
+            // The check is disabled. Noting to do.
+            if (!plugin_manager::instance()->get_checker_status($checkername)) {
+                task_helper::instance()->clear_is_scheduled_cache();
+                return;
+            }
+
             // We reload all the check from database.
             if ($record) {
                 $checksresults = $record["result"];
