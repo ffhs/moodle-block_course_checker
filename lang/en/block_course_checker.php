@@ -40,7 +40,8 @@ $string['humancheck'] = 'Last manual check:';
 $string['humancheckempty'] = 'This course has never been manually checked';
 $string['invalidtoken'] = 'Your token is invalid';
 $string['runcheckbtn'] = 'Check this course';
-$string['runcheckbtn_already'] = 'This course is already scheduled to be checked automatically';
+$string['runcheckbtn_already'] = 'This course is already scheduled to be checked automatically.';
+$string['runcheckbtn_nocheckers'] = 'There is no checkers enabled.';
 $string['result'] = 'Result';
 $string['resultpermissiondenied'] = 'You are not allowed to access this page';
 $string['message'] = 'Message';
@@ -83,6 +84,7 @@ $string['checker_groups_display'] = 'Group Submission for Assignments';
 $string['checker_link_display'] = 'Links in Course Summary and Url Activities';
 // Checker last run.
 $string['checker_last_run'] = 'Last run {$a}';
+$string['checker_last_run_global'] = 'Unknown date for this checker. The global course check was on {$a}';
 
 // Check Result Tables.
 $string['result_col_block_header'] = 'Result';

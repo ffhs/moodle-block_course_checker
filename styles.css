@@ -10,6 +10,11 @@
     width: 100%;
 }
 
+/** Boost set the anchrow link more visible if we use an anchor, we don't want that. */
+.course_checker_page tr[id^="result-"]::before{
+    display: none;
+}
+
 .course_checker_block .checkblock {
     display: flex;
     justify-content: flex-start;

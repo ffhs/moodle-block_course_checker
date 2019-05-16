@@ -202,7 +202,9 @@ class plugin_manager implements check_manager_interface {
         $results = [];
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
             if ($this->get_checker_status($checkername)) {
-                $results[$checkername] = $checker->run($course);
+                $singleresult = $checker->run($course);
+                $singleresult->add_timestamp();
+                $results[$checkername] = $singleresult;
             } else {
                 if ($lastchecksrecord != [] && self::DISPLAY_LAST_CHECK_RESULT_IF_DISABLED &&
                         array_key_exists($checkername, $lastchecksrecord['result'])) {
@@ -261,6 +263,18 @@ class plugin_manager implements check_manager_interface {
      */
     public function get_checker_status(string $checkername): bool {
         return get_config('block_course_checker', $checkername . '_status');
+    }
+
+    /**
+     * @return bool returns true if a least one check is enabled.
+     */
+    public function are_checkers_enabled(): bool {
+        foreach ($this->get_checkers_plugins() as $checkername => $checker) {
+            if ($this->get_checker_status($checkername)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
