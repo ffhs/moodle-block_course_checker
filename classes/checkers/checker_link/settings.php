@@ -17,6 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\admin\admin_setting_restrictedint;
+use block_course_checker\admin\admin_setting_domainwhitelist;
 use block_course_checker\checkers\checker_link\checker;
 
 /** @var admin_settingpage $setting */
@@ -35,3 +36,10 @@ $timeout = new admin_setting_restrictedint(checker::TIMEOUT_SETTING,
         $visiblename, null, checker::TIMEOUT_DEFAULT);
 $timeout->set_maximum(300)->set_minimum(0);
 $setting->add($timeout);
+
+// Link Checker Whitelist setting.
+$visiblename = get_string('checker_link_setting_whitelist', 'block_course_checker');
+$description = new lang_string('checker_link_setting_whitelist_help', 'block_course_checker');
+$domainwhitelist = new admin_setting_domainwhitelist(checker::WHITELIST_SETTING,
+    $visiblename, $description, checker::WHITELIST_DEFAULT, PARAM_RAW, 600);
+$setting->add($domainwhitelist);

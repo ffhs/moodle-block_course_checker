@@ -41,12 +41,12 @@
     max-width: 50px;
 }
 
-.separator {
+.course_checker .separator {
     border-top: 1px solid rgba(0, 0, 0, .1) !important;
     padding-bottom: 10px;
 }
 
-.humanreason-container {
+.course_checker .humanreason-container {
     height: 3.2em;
     overflow: hidden;
     overflow-y: auto;
@@ -55,7 +55,7 @@
     padding: 5px;
 }
 
-p.humanreason-label {
+.course_checker p.humanreason-label {
     margin-bottom: 0;
     font-style: italic;
 }
@@ -71,20 +71,20 @@ p.humanreason-label {
     }
 }
 
-.fa-input {
+.course_checker .fa-input {
     font-family: FontAwesome, ‘Helvetica Neue’, Helvetica, Arial, sans-serif;
 }
 
-.hummancheck_dateinput {
+.course_checker .hummancheck_dateinput {
     display: flex;
 }
 
-.hummancheck_dateinput #fitem_id_human_review{
+.course_checker .hummancheck_dateinput #fitem_id_human_review{
     display: block;
     width:100%;
 }
 
-.hummancheck_dateinput .custom-select {
+.course_checker .hummancheck_dateinput .custom-select {
     padding-left: 0.55em;
 }
 

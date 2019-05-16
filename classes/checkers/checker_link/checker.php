@@ -29,10 +29,6 @@ use block_course_checker\model\checker_config_trait;
  */
 class checker implements check_plugin_interface {
     use checker_config_trait;
-    /**
-     * @var string|null Last CURL error after a call to check_url.
-     */
-    protected $lastmessage = "";
 
     /** @var check_result */
     protected $result = null;
@@ -41,12 +37,36 @@ class checker implements check_plugin_interface {
     const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
     const TIMEOUT_DEFAULT = 13;
     const CONNECT_TIMEOUT_DEFAULT = 5;
+    const WHITELIST_SETTING = 'block_course_checker/checker_link_whitelist';
+    const WHITELIST_HEADING = 'block_course_checker/checker_link_whitelist_heading';
+    const WHITELIST_DEFAULT = 'www.w3.org';
+
+    /** @var int $connecttimeout from checker settings */
+    protected $connecttimeout;
+
+    /** @var int $connecttimeout from checker settings */
+    protected $timeout;
+
+    /** @var array list of ignored domain build from checker settings domainwhitelist */
+    protected $ignoredomains;
+
+    /**
+     * Initialize checker by setting it up with the configuration
+     */
+    public function init() {
+        // Load settings.
+        $this->connecttimeout = (int) $this->get_config(self::CONNECT_TIMEOUT_SETTING, self::CONNECT_TIMEOUT_DEFAULT);
+        $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
+        $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
+        $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
+    }
 
     /**
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
      */
     public function run($course) {
+        $this->init();
         $this->result = new check_result();
         $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
         $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
@@ -105,17 +125,19 @@ class checker implements check_plugin_interface {
      * @param string[] $urls
      * @param string|null $resolutionlink
      * @param string|null $target
+     * @throws \moodle_exception
      */
     protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
         foreach ($urls as $i => $url) {
-            $successful = $this->check_url($url);
-            $this->result->set_successful($this->result->is_successful() & $successful);
+            $urlcheckresult = $this->check_url($url);
+            $this->result->set_successful($this->result->is_successful() & $urlcheckresult['successful']);
             $this->result->add_detail([
-                    "successful" => $successful,
+                    "successful" => $urlcheckresult['successful'],
                     "target" => $target,
                     "link" => $resolutionlink,
-                    "message" => $this->lastmessage,
+                    "message" => $urlcheckresult['message'],
                     "resource" => $url, // The custom-renderer will display the resource correctly.
+                    "ignored" => $urlcheckresult['ignoreddomain']
             ]);
         }
     }
@@ -124,26 +146,28 @@ class checker implements check_plugin_interface {
      * Fetch an url and return true if the code is between 200 and 400.
      *
      * @param string $url
-     * @return bool if the url is valid or not.
+     * @return array of the url checkresult
+     * @throws \moodle_exception
      */
     protected function check_url($url) {
         $parseurl = parse_url($url);
+        $urlcheckresult = [];
         // Skip whitelisted domains.
         if ($this->is_ignored_host($parseurl["host"])) {
             $context = $parseurl + ["url" => $url];
-            $this->lastmessage = get_string("checker_link_error_skipped", "block_course_checker", $context);
-            return true;
+            $urlcheckresult['message'] = get_string("checker_link_error_skipped", "block_course_checker", $context);
+            $urlcheckresult['ignoreddomain'] = true;
+            $urlcheckresult['successful'] = true;
+            return $urlcheckresult;
         }
 
-        // Load settings.
-        $connecttimeout = (int) $this->get_config(self::CONNECT_TIMEOUT_SETTING, self::CONNECT_TIMEOUT_DEFAULT);
-        $timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
+        $urlcheckresult['ignoreddomain'] = false;
 
         // Use curl to checks the urls.
         $curl = new \curl();
         $curl->head($url, [], [
-                "CURLOPT_CONNECTTIMEOUT" => $connecttimeout,
-                "CURLOPT_TIMEOUT" => $timeout,
+                "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
+                "CURLOPT_TIMEOUT" => $this->timeout,
                 'CURLOPT_FOLLOWLOCATION' => 0
         ]);
 
@@ -152,18 +176,21 @@ class checker implements check_plugin_interface {
         if ($code === 0) {
             // Code 0: timeout or other curl error.
             $context = $parseurl + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
-            $this->lastmessage = get_string("checker_link_error_curl", "block_course_checker", $context);
-            return false;
+            $urlcheckresult['message'] = get_string("checker_link_error_curl", "block_course_checker", $context);
+            $urlcheckresult['successful'] = false;
+            return $urlcheckresult;
         }
 
         $context = $parseurl + ["url" => $url, "http_code" => $code];
         if ($code >= 200 && $code < 400) {
-            $this->lastmessage = get_string("checker_link_ok", "block_course_checker", $context);
-            return true;
+            $urlcheckresult['message'] = get_string("checker_link_ok", "block_course_checker", $context);
+            $urlcheckresult['successful'] = true;
+            return $urlcheckresult;
         }
         // Code != 0 means it's a http error.
-        $this->lastmessage = get_string("checker_link_error_code", "block_course_checker", $context);
-        return false;
+        $urlcheckresult['message'] = get_string("checker_link_error_code", "block_course_checker", $context);
+        $urlcheckresult['successful'] = false;
+        return $urlcheckresult;
     }
 
     /**
@@ -200,6 +227,6 @@ class checker implements check_plugin_interface {
      * @return boolean
      */
     protected function is_ignored_host(string $host) {
-        return "www.w3.org" == $host;
+        return in_array($host, $this->ignoredomains);
     }
 }

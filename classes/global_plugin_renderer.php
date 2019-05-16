@@ -78,6 +78,13 @@ class global_plugin_renderer extends \plugin_renderer_base {
     /**
      * @return string
      */
+    private function get_ignored_icon() {
+        return \html_writer::tag('i', null, ['class' => 'fa fa-minus text-warning']);
+    }
+
+    /**
+     * @return string
+     */
     private function get_link_icon() {
         return \html_writer::tag('i', null, ['class' => 'fa fa-link text-muted']);
     }
@@ -100,7 +107,16 @@ class global_plugin_renderer extends \plugin_renderer_base {
         // Format result details.
         $resultdetails = $result->get_details();
         foreach ($resultdetails as $index => $detail) {
-            $resulticon = $detail['successful'] ? $this->get_success_icon() : $this->get_failed_icon();
+            // Is this check ignored.
+            $ignored = isset($detail['ignored']) && $detail['ignored'] ? $detail['ignored'] : false;
+
+            // Set icon.
+            if ($detail['successful']) {
+                $resulticon = $ignored ? $this->get_ignored_icon() : $this->get_success_icon();
+            } else {
+                $resulticon = $this->get_failed_icon();
+            }
+
             if (!array_key_exists("message_safe", $detail) || !$detail["message_safe"]) {
                 $message = s($detail['message']);
             } else {
@@ -110,7 +126,11 @@ class global_plugin_renderer extends \plugin_renderer_base {
             // Wrap the message with a target block.
             if (isset($detail['target'])) {
                 $target = $detail['target'] ? \html_writer::div(s($detail['target'])) : '';
-                $classname = $detail['successful'] ? "text-success" : "text-danger";
+                if ($detail['successful']) {
+                    $classname = $ignored ? "text-warning" : "text-success";
+                } else {
+                    $classname = "text-danger";
+                }
                 $message = \html_writer::tag('span', $message, ["class" => $classname]);
                 $message = \html_writer::tag('span', $target . $message);
             }
@@ -128,7 +148,8 @@ class global_plugin_renderer extends \plugin_renderer_base {
                     "classname" => trim("row " . ($index % 2 == 0 ? "odd" : "")),
                     "icon" => $resulticon,
                     "message" => $message,
-                    "link" => $link
+                    "link" => $link,
+                    "isignored" => $ignored
             ];
         }
 
