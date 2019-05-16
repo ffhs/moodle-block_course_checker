@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die;
 if ($ADMIN->fulltree) {
 
     $name = get_string("admin_referencecourseid", "block_course_checker");
-    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', null));
+    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', SITEID));
 
     $manager = plugin_manager::instance();
     foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
