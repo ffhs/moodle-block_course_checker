@@ -264,6 +264,18 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * @return bool returns true if a least one check is enabled.
+     */
+    public function are_checkers_enabled(): bool {
+        foreach ($this->get_checkers_plugins() as $checkername => $checker) {
+            if ($this->get_checker_status($checkername)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get the folder where checkers must be located.
      *
      * @return string

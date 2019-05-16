@@ -11,13 +11,20 @@ buttons to run the checkers and to display the result page
         {{#showdetailsbutton}}
             <a href="{{details}}" class="btn btn-secondary">{{#str}} resultpagegoto, block_course_checker {{/str}}</a>
         {{/showdetailsbutton}}
-        {{^runscheduled}}
-            {{{runbtn}}}
-        {{/runscheduled}}
-        {{#runscheduled}}
-            <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
-        {{/runscheduled}}
+        {{#arecheckersenabled}}
+            {{^runscheduled}}
+                {{{runbtn}}}
+            {{/runscheduled}}
+            {{#runscheduled}}
+                <p>{{#str}} runcheckbtn_already, block_course_checker {{/str}}</p>
+            {{/runscheduled}}
+        {{/arecheckersenabled}}
+        {{^arecheckersenabled}}
+            <p>{{#str}} runcheckbtn_nocheckers, block_course_checker {{/str}}</p>
+        {{/arecheckersenabled}}
+
         {{{humancheckbtn}}}
+
     </div>
 
 {{!
