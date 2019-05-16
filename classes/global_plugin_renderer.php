@@ -153,22 +153,14 @@ class global_plugin_renderer extends \plugin_renderer_base {
             ];
         }
 
-        // Set timestsmp for the checker as either the last run date of the block.
-        // Or the last run date of a checker.
-        $checkertimestamp = $result->get_timestamp();
-        if (!$checkertimestamp) {
-            $checkertimestamp = $lastrundate;
-        }
-
-        $context = [
+        $context = $result->export_for_template($this);
+        $context = array_merge($context, [
                 "checkername" => $checkername,
                 "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
-                "successful" => $result->is_successful(),
-                "link" => $result->get_link(),
-                "checkertimestamp" => $checkertimestamp,
                 "resultdetails" => $resultdetails,
+                "lastrundate" => $lastrundate,
                 "enabled" => plugin_manager::instance()->get_checker_status($checkername)
-        ];
+        ]);
 
         $output = "";
         $output .= $this->debug($checkername);
