@@ -17,7 +17,7 @@ namespace block_course_checker\admin;
 
 defined('MOODLE_INTERNAL') || die();
 
-class admin_setting_restrictedint extends \admin_setting_configtext_int_only {
+class admin_setting_restrictedint extends \admin_setting_configtext {
     /**
      * @var int|null
      */
@@ -28,9 +28,52 @@ class admin_setting_restrictedint extends \admin_setting_configtext_int_only {
     protected $minimum = null;
 
     /**
+     * @var bool Tells if the field can be empty.
+     */
+    protected $required = true;
+
+    /**
+     * @param bool $required
+     */
+    public function set_required(bool $required) {
+        $this->required = $required;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_required(): bool {
+        return $this->required;
+    }
+
+    /**
      * @inheritDoc
      */
     public function validate($data) {
+        global $PAGE;
+
+        $data = trim($data);
+
+        // Don't force the plugin to be fully set up when installing. This is a Moodle behaviour.
+        if ($PAGE->pagelayout === 'maintenance' && strlen($data) === 0) {
+            return true;
+        }
+
+        // Allow empty value.
+        if (!$this->required && empty($data)) {
+            return true;
+        }
+
+        // Disallow empty value.
+        if ($this->required && empty($data)) {
+            return get_string('fieldrequired', 'error', $this->visiblename);
+        }
+
+        // Check that the value is an int.
+        if (preg_match("/^[0-9]+$/", $data) !== 1) {
+            return get_string("invalidadminsettingname", 'error', $this->visiblename);
+        }
+
         if ($this->maximum !== null) {
             if ($data > $this->maximum) {
                 return get_string('admin_restrictedint_max', 'block_course_checker', $this->maximum);
