@@ -2,8 +2,6 @@
 template for rendering the block
 }}
 <div class="course_checker course_checker_block">
-
-    <h4 class="mb-1 pb-2 text-muted text-capitalize">Course</h4>
     {{#hasresults}}
     <table class="table table-responsive">
         <thead>
@@ -13,6 +11,9 @@ template for rendering the block
                 <th scope="col">{{#str}} rerun_col_block_header, block_course_checker {{/str}}</th>
             </tr>
         </thead>
+        {{!
+        when the check was ever run and results exist
+        }}
         <tbody>
         {{#groupedresults}}
             {{#results}}
