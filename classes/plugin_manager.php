@@ -301,6 +301,6 @@ class plugin_manager implements check_manager_interface {
      * @return array
      */
     public function get_group_order() {
-        return array('group_course_settings' => 1, 'group_links' => 2);
+        return array('group_course_settings' => 1, 'group_activities' => 2, 'group_links' => 3);
     }
 }

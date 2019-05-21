@@ -125,7 +125,7 @@ class checker implements check_plugin_interface {
      * @return string
      */
     public static function get_group() {
-        return 'group_course_settings';
+        return 'group_activities';
     }
 
     protected function get_attendance_sessions(\stdClass $course) {

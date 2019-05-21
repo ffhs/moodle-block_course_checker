@@ -54,7 +54,7 @@ $string['resolutionlink'] = 'Resolution: ';
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
 $string['checker_link_summary'] = 'Course summary';
 $string['checker_link_error_curl'] =
-        'CURL Error {$a->curl_errno} {$a->curl_error} on {$a->url}'; // You can get any curl info or pare_url field in $a.
+        'cURL Error {$a->curl_errno} {$a->curl_error} on {$a->url}'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_error_code'] =
         'HTTP Error {$a->http_code} on {$a->url}'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_ok'] =
@@ -68,8 +68,8 @@ $string['groups_missing'] = 'Grouping has not been set up correctly';
 $string['groups_lessthantwogroups'] = 'Less than 2 groups have been set up for the active grouping';
 $string['groups_success'] = 'Group submission setting is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
-$string['checker_link_setting_timeout'] = 'CURL Timeout';
-$string['checker_link_setting_connect_timeout'] = 'CURL Connection Timeout';
+$string['checker_link_setting_timeout'] = 'cURL Timeout';
+$string['checker_link_setting_connect_timeout'] = 'cURL Connection Timeout';
 $string['checker_setting_toggle'] = 'Enable / Disable {$a}';
 $string['checker_link_setting_whitelist'] = 'Link Checker Whitelist';
 $string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
@@ -96,7 +96,8 @@ $string['checker_referencesettings_checklist_help'] = 'Please select one or mult
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course Settings';
-$string['group_links'] = 'Links';
+$string['group_links'] = 'Link Validator';
+$string['group_activities'] = 'Activity Settings';
 
 // Name of each checker.
 $string['checker_groups'] = 'Group Submission Check';
@@ -107,7 +108,7 @@ $string['checker_referencesettings'] = 'Reference Settings Check';
 
 // Display title of each checker.
 $string['checker_groups_display'] = 'Group Submission for Assignments';
-$string['checker_link_display'] = 'Links in Course Summary and Url Activities';
+$string['checker_link_display'] = 'Links in Course Summary and URL Activities';
 $string['checker_attendance_display'] = 'Attendance Sessions';
 $string['checker_subheadings_display'] = 'Label Subheadings';
 $string['checker_referencesettings_display'] = 'Settings Compared To Reference Course';
