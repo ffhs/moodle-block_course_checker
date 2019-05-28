@@ -28,13 +28,10 @@ use block_course_checker\model\check_result_interface;
  * @package block_course_checker
  */
 class checker implements check_plugin_interface {
-
     /** @var check_result */
     protected $result = null;
-
     // Module name for attendance in Moodle.
     const MOD_TYPE_ATTENDANCE = 'attendance';
-
     /**
      * Runs the check
      *
@@ -45,10 +42,8 @@ class checker implements check_plugin_interface {
     public function run($course) {
         // Initialize check result array.
         $this->result = new check_result();
-
         // List of all attendance activities in the course.
         $attendances = [];
-
         // Get all attendance activities for the course.
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
@@ -57,12 +52,13 @@ class checker implements check_plugin_interface {
                 continue;
             }
             // Skip activities that are not visible.
-            if (!$cm->uservisible or !$cm->has_view()) {
+            // @todo investigate if uservisible is necessary.
+            // if (!$cm->uservisible or !$cm->has_view()) {
+            if (!$cm->has_view()) {
                 continue;
             }
             $attendances[] = $cm;
         }
-
         // If there is no attendance activity in the course.
         if (empty($attendances)) {
             $message = get_string('attendance_missingattendanceactivity', 'block_course_checker');
@@ -74,7 +70,6 @@ class checker implements check_plugin_interface {
             ])->set_successful(false);
             return $this->result;
         }
-
         // If there is more then one attendance activity.
         if (count($attendances) > 1) {
             $message = get_string('attendance_onlyoneattendenceactivityallowed', 'block_course_checker');
@@ -86,13 +81,11 @@ class checker implements check_plugin_interface {
             ])->set_successful(false);
             return $this->result;
         }
-
         // Link to activity.
         $cm = $attendances[0];
         $link = $cm->url ? $cm->url->out_as_local_url() : null;
         $targetcontext = (object) ["name" => strip_tags($cm->name)];
         $target = get_string("groups_activity", "block_course_checker", $targetcontext);
-
         // If there are sessions in the attendance activity.
         if (count($this->get_attendance_sessions($course)) > 0) {
             $message = get_string('attendance_sessionsnotemty', 'block_course_checker');
@@ -104,7 +97,6 @@ class checker implements check_plugin_interface {
             ])->set_successful(false);
             return $this->result;
         }
-
         // When there are no problems.
         $message = get_string('attendance_success', 'block_course_checker');
         $this->result->add_detail([
@@ -113,11 +105,9 @@ class checker implements check_plugin_interface {
                 "target" => $target,
                 "link" => $link
         ]);
-
         // Return the check results.
         return $this->result;
     }
-
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -127,7 +117,6 @@ class checker implements check_plugin_interface {
     public static function get_group() {
         return 'group_activities';
     }
-
     protected function get_attendance_sessions(\stdClass $course) {
         global $DB;
         // Get all attendancesessions in a course.

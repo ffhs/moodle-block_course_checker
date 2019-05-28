@@ -27,14 +27,11 @@ use block_course_checker\model\check_result_interface;
  * @package block_course_checker
  */
 class checker implements check_plugin_interface {
-
     /** @var check_result */
     protected $result = null;
-
     // Module name for labels in Moodle.
     const MOD_TYPE_LABEL = 'label';
     const FIRST_ITEM_HTML_TAG = 'h4';
-
     /**
      * Runs the check
      *
@@ -45,39 +42,31 @@ class checker implements check_plugin_interface {
     public function run($course) {
         // Initialize check result array.
         $this->result = new check_result();
-
         // Get all labels activities for the course.
         $modinfo = get_fast_modinfo($course);
-
         // Get a dom document for html operations.
         $dom = new \DOMDocument;
-
         foreach ($modinfo->cms as $cm) {
             // Skip activities that are not labels.
             if ($cm->modname != self::MOD_TYPE_LABEL) {
                 continue;
             }
-
             // Skip activities that are not visible.
             if (!$cm->uservisible) {
                 continue;
             }
-
             // Link to activity.
             $target = $this->get_target($cm);
             $link = $this->get_link_to_modedit_page($cm);
-
             // Load the html content
             // - DOMDocument is not loading correctly if there are line breaks.
             $cmcontentwithoutnewlines = preg_replace("/[\r\n]/", '', $cm->content);
             $dom->loadHTML($cmcontentwithoutnewlines);
-
             $body = $dom->getElementsByTagName('body');
             if (!is_object($body)) {
                 $this->add_general_error($target, $link);
                 continue;
             }
-
             try {
                 $elements = $body
                     ->item(0)->childNodes
@@ -87,7 +76,6 @@ class checker implements check_plugin_interface {
                 $this->add_general_error($target, $link);
                 continue;
             }
-
             // Check if the first html element is set and has a correct header.
             if (!isset($firstitem->tagName) or $firstitem->tagName != self::FIRST_ITEM_HTML_TAG) {
                 $message = get_string("subheadings_wrongfirsthtmltag", "block_course_checker",
@@ -100,7 +88,6 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-
             // Check if there is an icon in the first heading.
             $search = "(\[((?:icon\s)?fa-[a-z0-9 -]+)\])is";
             preg_match($search, $firstitem->textContent, $matches);
@@ -114,7 +101,6 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-
             // When there are no problems.
             $message = get_string('subheadings_success', 'block_course_checker');
             $this->result->add_detail([
@@ -124,11 +110,9 @@ class checker implements check_plugin_interface {
                     "link" => $link
             ]);
         }
-
         // Return the check results.
         return $this->result;
     }
-
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -138,7 +122,6 @@ class checker implements check_plugin_interface {
     public static function get_group() {
         return 'group_activities';
     }
-
     /**
      * @param \cm_info $cm
      * @return string
@@ -155,7 +138,6 @@ class checker implements check_plugin_interface {
         $link = $url->out_as_local_url(false);
         return $link;
     }
-
     /**
      * @param \cm_info $cm
      * @return string
@@ -166,7 +148,6 @@ class checker implements check_plugin_interface {
         $target = get_string("groups_activity", "block_course_checker", $targetcontext);
         return $target;
     }
-
     /**
      * @param $target
      * @param $link

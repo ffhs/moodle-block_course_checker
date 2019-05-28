@@ -29,7 +29,6 @@ use block_course_checker\model\checker_config_trait;
  */
 class checker implements check_plugin_interface {
     use checker_config_trait;
-
     // Module name for assignments in Moodle.
     const MOD_TYPE_ASSIGN = 'assign';
     /**
@@ -41,40 +40,32 @@ class checker implements check_plugin_interface {
      */
     public function run($course) {
         global $DB;
-
         // Initialize check result array.
         $checkresult = new check_result();
         // Get all assignment activities for the course.
         $modinfo = get_fast_modinfo($course);
-
         foreach ($modinfo->cms as $cm) {
-
             // Skip activities that are not assignments.
             if ($cm->modname != self::MOD_TYPE_ASSIGN) {
                 continue;
             }
-
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
-
             // FIXME Sometime links are not serialized ?
             $link = $cm->url ? $cm->url->out_as_local_url() : null;
             // Get the assignment record from the assignment table.
             // The instance of the course_modules table is used as a foreign key to the assign table.
             $assign = $DB->get_record('assign',
                     ['course' => $course->id, 'id' => $cm->instance]);
-
             // Get the settings from the assign table: these are the settings used for group submission.
             $groupmode = $assign->teamsubmission;
             $groupingid = $assign->teamsubmissiongroupingid;
-
             $targetcontext = (object) ["name" => strip_tags($cm->name)];
             $target = get_string("groups_activity", "block_course_checker", $targetcontext);
             // Now the groups settings can be checked.
             // These are the settings of assignment group submission in the corresponding activity.
-
             // Case 1: the group mode is deactivated -> check okay.
             if ($groupmode == 0) {
                 $message = get_string('groups_deactivated', 'block_course_checker');
@@ -88,11 +79,9 @@ class checker implements check_plugin_interface {
             }
 
             // Case 2: the group mode is activated.
-
             // If the groupingid is not set -> check fails.
             if ($groupingid == 0) {
                 $message = get_string('groups_idmissing', 'block_course_checker');
-
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
@@ -101,7 +90,6 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-
             // If the grouping does not exist -> check fails.
             $groupingexists = $DB->record_exists('groupings', array('id' => $groupingid));
             if (!$groupingexists) {
@@ -114,7 +102,6 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-
             // If the grouping has less then 2 groups -> check fails.
             $groupcount = $DB->count_records('groupings_groups', array('groupingid' => $groupingid));
             if ($groupcount < 2) {
@@ -127,7 +114,6 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-
             // The group submission is activated and all checks have passed -> check okay.
             $message = get_string('groups_success', 'block_course_checker');
             $checkresult->add_detail([
@@ -137,11 +123,9 @@ class checker implements check_plugin_interface {
                     "link" => $link
             ]);
         }
-
         // Return the check results.
         return $checkresult;
     }
-
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
