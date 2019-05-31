@@ -28,6 +28,7 @@
 /* Table on page */
 .course_checker .table {
     table-layout: fixed;
+    overflow-x: initial;
 }
 
 .course_checker .table .col.message {
