@@ -85,6 +85,10 @@ $string['subheadings_wrongfirsthtmltag'] = 'The first html-tag is not a {$a->htm
 $string['subheadings_iconmissing'] = 'The icon is missing in the first html-tag';
 $string['subheadings_generalerror'] = 'There was a problem executing this check';
 $string['subheadings_success'] = 'This label has a nice subheading and icon';
+$string['subheadings_labelignored'] = 'This label is ignored due to whitelist in plugin configuration.';
+
+$string['checker_subheadings_setting_whitelist'] = 'Subheading Checker Strings Whitelist';
+$string['checker_subheadings_setting_whitelist_help'] = 'Please add one string per line. Example: "Liebe(r) Modulentwickler".';
 
 // String specific for the referencesettings checker.
 $string['referencesettings_comparison'] = ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';

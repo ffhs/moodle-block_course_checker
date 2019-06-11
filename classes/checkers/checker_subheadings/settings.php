@@ -13,14 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Version details
- *
- * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- */
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019061100;
-$plugin->requires = 2018051700; // Moodle 3.5.0.
-$plugin->component = 'block_course_checker';
+use block_course_checker\checkers\checker_subheadings\checker;
+
+/** @var admin_settingpage $setting */
+$setting;
+
+// Subheadings Checker Whitelist setting.
+$visiblename = get_string('checker_subheadings_setting_whitelist', 'block_course_checker');
+$description = new lang_string('checker_subheadings_setting_whitelist_help', 'block_course_checker');
+$domainwhitelist = new admin_setting_configtextarea(checker::WHITELIST_SETTING,
+    $visiblename, $description, checker::WHITELIST_DEFAULT, PARAM_RAW, 600);
+$setting->add($domainwhitelist);

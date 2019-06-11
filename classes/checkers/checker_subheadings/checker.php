@@ -20,6 +20,7 @@ defined('MOODLE_INTERNAL') || die();
 use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
+use block_course_checker\model\checker_config_trait;
 
 /**
  * Checking the labels subheadings and the leading icons
@@ -27,11 +28,25 @@ use block_course_checker\model\check_result_interface;
  * @package block_course_checker
  */
 class checker implements check_plugin_interface {
+    use checker_config_trait;
     /** @var check_result */
     protected $result = null;
+    /** @var array list of ignored strings build from checker settings */
+    protected $ignoredstrings;
     // Module name for labels in Moodle.
     const MOD_TYPE_LABEL = 'label';
     const FIRST_ITEM_HTML_TAG = 'h4';
+    const WHITELIST_SETTING = 'block_course_checker/checker_subheadings_whitelist';
+    const WHITELIST_HEADING = 'block_course_checker/checker_subheadings_whitelist_heading';
+    const WHITELIST_DEFAULT = '';
+    /**
+     * Initialize checker by setting it up with the configuration
+     */
+    public function init() {
+        // Load settings.
+        $whitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
+        $this->ignoredstrings = array_filter(array_map('trim', explode("\n", $whitelist)));
+    }
     /**
      * Runs the check
      *
@@ -40,6 +55,7 @@ class checker implements check_plugin_interface {
      * @throws \moodle_exception
      */
     public function run($course) {
+        $this->init();
         // Initialize check result array.
         $this->result = new check_result();
         // Get all labels activities for the course.
@@ -69,12 +85,27 @@ class checker implements check_plugin_interface {
             }
             try {
                 $elements = $body
-                    ->item(0)->childNodes
-                    ->item(0)->childNodes;
+                        ->item(0)->childNodes
+                        ->item(0)->childNodes;
                 $firstitem = $elements->item(0);
             } catch (\Exception $exception) {
                 $this->add_general_error($target, $link);
                 continue;
+            }
+            // Check if the text contains strings which are whitelisted.
+            foreach ($this->ignoredstrings as $ignoredstring) {
+                $pos = strpos($cmcontentwithoutnewlines, $ignoredstring);
+                if ($pos !== false) {
+                    $this->result->set_successful(true);
+                    $this->result->add_detail([
+                            "successful" => true,
+                            "target" => $target,
+                            "link" => $link,
+                            "message" => get_string("subheadings_labelignored", "block_course_checker"),
+                            "ignored" => true
+                    ]);
+                    continue 2;
+                }
             }
             // Check if the first html element is set and has a correct header.
             if (!isset($firstitem->tagName) or $firstitem->tagName != self::FIRST_ITEM_HTML_TAG) {
