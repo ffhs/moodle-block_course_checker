@@ -113,6 +113,9 @@ class checker implements check_plugin_interface {
                 if (property_exists($mod, "intro")) { // Into is the description.
                     $this->check_urls_with_resolution_url($this->get_urls_from_text($mod->intro), $url, $target);
                 }
+                if (property_exists($mod, "content")) {
+                    $this->check_urls_with_resolution_url($this->get_urls_from_text($mod->content), $url, $target);
+                }
             }
         }
 
