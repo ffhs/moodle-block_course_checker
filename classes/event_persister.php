@@ -45,13 +45,20 @@ class event_persister implements event_persister_interface {
      * @param $event
      */
     public static function course_module_event_trigger($event) {
+        // START BUGFIX: Deleted has no name. @see course/lib.php #1208
+        if(isset($event->other['name']) and $event->other['name'] !== null){
+            $name = $event->other['name'];
+        }else{
+            $name = $event->other['instanceid']; // @todo load instance name from db.
+        }
+        // END BUGFIX.
         self::instance()->set_last_activity_event(
                 $event->courseid,
                 $event->action,
                 $event->userid,
                 $event->other['instanceid'],
                 $event->other['modulename'],
-                $event->other['name'],
+                $name,
                 $event->timecreated
         );
     }
