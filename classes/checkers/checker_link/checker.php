@@ -155,6 +155,14 @@ class checker implements check_plugin_interface {
     protected function check_url($url) {
         $parseurl = parse_url($url);
         $urlcheckresult = [];
+        // START BUGFIX: Some parse_url calls may end with "host" = null
+        if($parseurl["host"] == null){
+            $context = $parseurl + ["url" => $url];
+            $urlcheckresult['message'] = get_string("checker_link_error_undefined", "block_course_checker", $context);
+            $urlcheckresult['successful'] = false;
+            return $urlcheckresult;
+        }
+        // END BUGFIX
         // Skip whitelisted domains.
         if ($this->is_ignored_host($parseurl["host"])) {
             $context = $parseurl + ["url" => $url];

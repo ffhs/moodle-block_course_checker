@@ -60,6 +60,7 @@ $string['checker_link_error_code'] =
 $string['checker_link_ok'] =
         '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
+$string['checker_link_error_undefined'] = 'A undefined error with the link occurred';
 
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';
