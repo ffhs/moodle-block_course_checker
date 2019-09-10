@@ -158,6 +158,7 @@ class checker implements check_plugin_interface {
         // START BUGFIX: Some parse_url calls may end with "host" = null
         if($parseurl["host"] == null){
             $urlcheckresult['message'] = get_string("checker_link_error_undefined", "block_course_checker");
+            $urlcheckresult['ignoreddomain'] = false;
             $urlcheckresult['successful'] = false;
             return $urlcheckresult;
         }
