@@ -19,6 +19,7 @@
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = [
         'block/course_checker:addinstance' => [
                 'riskbitmask' => RISK_SPAM | RISK_XSS,
-
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_BLOCK,
                 'archetypes' => [
@@ -34,8 +34,15 @@ $capabilities = [
                         'manager' => CAP_ALLOW,
                         'student' => CAP_PROHIBIT
                 ],
-
                 'clonepermissionsfrom' => 'moodle/site:manageblocks'
+        ],
+        'block/course_checker:view' => [
+                'captype' => 'read',
+                'contextlevel' => CONTEXT_BLOCK,
+                'archetypes' => [
+                        'editingteacher' => CAP_ALLOW,
+                        'manager' => CAP_ALLOW,
+                ],
         ],
         'block/course_checker:view_report' => [
                 'riskbitmask' => RISK_PERSONAL,
@@ -46,7 +53,6 @@ $capabilities = [
                         'manager' => CAP_ALLOW,
                         'student' => CAP_PROHIBIT
                 ],
-
                 'clonepermissionsfrom' => 'moodle/site:manageblocks'
         ],
         'block/course_checker:view_notification' => [

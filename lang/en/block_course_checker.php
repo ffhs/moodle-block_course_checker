@@ -13,13 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Strings for component 'block_course_checker'.
  *
  * @package   block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  */
+
 $string['course_checker.php:addinstance'] = 'Add a new course checker block';
+$string['course_checker:view'] = 'View the Course Checker block';
 $string['course_checker:view_report'] = 'View the check result page';
 $string['course_checker:view_notification'] = 'View the course checker notifications';
 $string['messageprovider:checker_completed'] = 'Course checker is completed';

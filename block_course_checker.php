@@ -19,6 +19,7 @@
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  */
 
 use block_course_checker\plugin_manager;
@@ -112,6 +113,22 @@ class block_course_checker extends block_base {
         ]);
 
         return $this->content;
+    }
+
+    /**
+     * Returns true or false, depending on whether this block has any content to display
+     * and whether the user has permission to view the block
+     *
+     * @return boolean
+     * @throws coding_exception
+     */
+    public function is_empty() {
+        if (!has_capability('block/course_checker:view', $this->context)) {
+            return true;
+        }
+
+        $this->get_content();
+        return(empty($this->content->text) && empty($this->content->footer));
     }
 
     /**

@@ -13,16 +13,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Version details
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  */
+
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_course_checker';
-$plugin->version = 2019071000;
+$plugin->version = 2019071001;
 $plugin->requires = 2018120300;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = 'v3.6-r1';
