@@ -13,6 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Checking the group submission settings on
+ * assignments for a course.
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_course_checker\checkers\checker_groups;
 
 defined('MOODLE_INTERNAL') || die();
@@ -21,12 +31,7 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
-/**
- * Checking the group submission settings on
- * assignments for a course.
- *
- * @package block_course_checker\checkers\checker_group
- */
+
 class checker implements check_plugin_interface {
     use checker_config_trait;
     // Module name for assignments in Moodle.

@@ -1,9 +1,38 @@
 {{!
-template for displaying the checker result rows in the page result table
-}}
+    This file is part of Moodle - http://moodle.org/
 
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
 {{!
-row for the checker displaying its name and whether it had success
+    @template block_course_checker/check_result
+
+    This template renders a checker result row in the page result table
+
+    Example context (json):
+    {
+        "checkername": "checker_link",
+        "enabled": true,
+        "successful": true,
+        "checkername_display": "Links in Course Summary and URL Activities",
+        "timestamp": 1570805592,
+        "lastrundate": "",
+        "resultdetails": true,
+        "isignored": false,
+        "icon": "<i class=\"fa fa-times text-danger\"></i>",
+        "link": "<a href=\"/course/modedit.php?return=0&amp;update=1&amp;sr=0&amp;sesskey=abc1234\"><i class=\"fa fa-link text-muted\"></i></a>",
+        "message": "<span><div>Activity: This is a example (URL)</div><span class=\"text-danger\">cURL Error 0 The URL is blocked. on https://moodlesite/course/view.php?id=1</span></span> - <a target=\"_blank\" href=\"https://moodlesite/course/view.php?id=1\"><i class=\"text-muted fa fa-external-link\"></i></a>"
+    }
 }}
 
 <tr id="result-{{checkername}}">

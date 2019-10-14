@@ -14,13 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ *
+ * Used to simplify the reading of config values
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_course_checker\model;
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Trait checker_config_trait. Used to simplify the reading of config values.
- */
 trait checker_config_trait {
     /**
      * Read a setting based on plugin name.

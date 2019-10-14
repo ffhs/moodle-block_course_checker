@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * This file handles the rendering of the results page
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once("../../config.php");
 
 use block_course_checker\event_persister;

@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
+ * This class is an helper to convert "event" to a format suitable for Mustache.
+ * It will load the course modinfo and try to match it with the event to retrieve data from it.
+ *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,12 +30,6 @@ use renderer_base;
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * This class is an helper to convert "event" to a format suitable for Mustache.
- * It will load the course modinfo and try to match it with the event to retrieve data from it.
- *
- * @package block_course_checker\model
- */
 class event_result implements event_result_interface {
     /**
      * Record from the database.

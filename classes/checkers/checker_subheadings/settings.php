@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Settings for checking the labels subheadings and the leading icons inside the course
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\checkers\checker_subheadings\checker;

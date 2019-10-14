@@ -1,8 +1,35 @@
 {{!
-template for displaying a checker result row in the block result table
-- the checkername_display is a short description of the checker
-- an icon is displayed if the checker was successful
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
+{{!
+    @template block_course_checker/check_block
+
+    This template renders a checker result row in the block result table
+    - the checkername_display is a short description of the checker
+    - an icon is displayed if the checker was successful
+
+    Example context (json):
+    {
+        "url": "https://moodlesite/blocks/course_checker/details.php?id=1#result-checker_link",
+        "checkername_display": "Links in Course Summary and URL Activities",
+        "successful": false,
+        "rerun_html": "<div class=\"btn btn-secondary disabled\" title=\"This checker is disabled by the administrator.\"><i class=\"fa fa-redo\"></i></div>"
+    }
+}}
+
 <tr>
     <td class="col checker">
         <a href="{{url}}">

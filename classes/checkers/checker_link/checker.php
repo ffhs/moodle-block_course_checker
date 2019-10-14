@@ -13,6 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Checking links inside the course
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_course_checker\checkers\checker_link;
 
 defined('MOODLE_INTERNAL') || die();
@@ -22,11 +31,6 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
 
-/**
- * Check link inside the course
- *
- * @package block_course_checker\checkers\checker_link
- */
 class checker implements check_plugin_interface {
     use checker_config_trait;
 

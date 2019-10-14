@@ -13,6 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Checking the course settings compared to a reference course
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_course_checker\checkers\checker_referencesettings;
 
 defined('MOODLE_INTERNAL') || die();
@@ -22,11 +32,6 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
 
-/**
- * Checking the course settings compared to a reference course
- *
- * @package block_course_checker
- */
 class checker implements check_plugin_interface {
     use checker_config_trait;
 

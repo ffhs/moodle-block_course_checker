@@ -15,11 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file only schedule a task and redirect back to course.
+ * This file saves the manual human date timestamp and note.
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once(__DIR__ . "/../../config.php");
 
 // We must be logged-in, but no permission check is made on this side, as discussed with the client.

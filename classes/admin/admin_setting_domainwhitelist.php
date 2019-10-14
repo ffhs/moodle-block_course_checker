@@ -13,6 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This type of field should be used for config settings which contains domains.
+ *
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_course_checker\admin;
 
 use admin_setting_configtextarea;
@@ -50,5 +59,4 @@ class admin_setting_domainwhitelist extends admin_setting_configtextarea {
         }
         return true;
     }
-
 }

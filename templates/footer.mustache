@@ -1,5 +1,37 @@
 {{!
-footer of the block
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_course_checker/footer
+
+    This template renders the footer of the block
+
+    Example context (json):
+    {
+        "showdetailsbutton": true,
+        "details": "https://moodlesite/blocks/course_checker/details.php?id=1",
+        "arecheckersenabled": true,
+        "runscheduled": false,
+        "runbtn": "<input type=\"submit\" value=\"Check this course\" class=\"btn btn-primary btn-block\">",
+        "humancheckbtn": "<input class=\"btn btn-secondary btn-block\" type=\"submit\" placeholder=\"Update human review\">",
+        "automaticcheck": 1570805592,
+        "humancheck": 1570805592,
+        "humanreason": "Test check",
+        "lastactivityedition": 1570805592
+    }
 }}
 
 {{!

@@ -17,9 +17,10 @@
 /**
  * Strings for component 'block_course_checker'.
  *
- * @package   block_course_checker
+ * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['course_checker.php:addinstance'] = 'Add a new course checker block';

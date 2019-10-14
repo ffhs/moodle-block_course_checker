@@ -13,11 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-namespace block_course_checker;
-
-use core\task\adhoc_task;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * This task will check a single course.
@@ -27,8 +22,17 @@ defined('MOODLE_INTERNAL') || die();
  *
  * See https://docs.moodle.org/dev/Task_API
  *
- * @package block_course_checker
+ * @package    block_course_checker
+ * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace block_course_checker;
+
+use core\task\adhoc_task;
+
+defined('MOODLE_INTERNAL') || die();
+
 class run_checker_task extends adhoc_task {
 
     /**
