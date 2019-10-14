@@ -90,8 +90,8 @@ class checker implements check_plugin_interface {
             }
             try {
                 $elements = $body
-                        ->item(0)->childNodes
-                        ->item(0)->childNodes;
+                    ->item(0)->childNodes
+                    ->item(0)->childNodes;
                 $firstitem = $elements->item(0);
             } catch (\Exception $exception) {
                 $this->add_general_error($target, $link);

@@ -136,7 +136,7 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
                         'teamsubmissiongroupingid' => $grouping->id
                 ]
         );
-        
+
         $this->run_groupschecker(
                 function($detail) {
                     $this->assertTrue($detail['successful']);
@@ -189,8 +189,12 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
         }
         return $groups;
     }
+
     /**
      * @param $assertion
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     protected function run_groupschecker($assertion): void {
         /** @var check_result_interface $result */

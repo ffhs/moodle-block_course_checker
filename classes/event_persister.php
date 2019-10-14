@@ -42,16 +42,19 @@ class event_persister implements event_persister_interface {
     /**
      * Event wrapper, see db/events.php.
      *
+     * @todo load instance name from db for instanceid
+     *
+     * Deleted has no name
+     * @see course/lib.php #1208
+     *
      * @param $event
      */
     public static function course_module_event_trigger($event) {
-        // START BUGFIX: Deleted has no name. @see course/lib.php #1208
-        if(isset($event->other['name']) and $event->other['name'] !== null){
+        if (isset($event->other['name']) and $event->other['name'] !== null) {
             $name = $event->other['name'];
-        }else{
-            $name = $event->other['instanceid']; // @todo load instance name from db.
+        } else {
+            $name = $event->other['instanceid'];
         }
-        // END BUGFIX.
         self::instance()->set_last_activity_event(
                 $event->courseid,
                 $event->action,
@@ -130,6 +133,7 @@ class event_persister implements event_persister_interface {
      * @param int $courseid
      * @param \DateTime $timestamp
      * @return event_result[]
+     * @throws \dml_exception
      */
     public function list_events_updated(int $courseid, \DateTime $timestamp): array {
         global $DB;

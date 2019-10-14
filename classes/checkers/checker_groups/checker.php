@@ -36,12 +36,17 @@ class checker implements check_plugin_interface {
     use checker_config_trait;
     // Module name for assignments in Moodle.
     const MOD_TYPE_ASSIGN = 'assign';
+
     /**
-     * Runs the check on group assignment submissions for all assignments
-     * of a course
+     * Runs the check on group assignment submissions for all assignments of a course
+     *
+     * @todo sometime links are not serialized?
      *
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     public function run($course) {
         global $DB;
@@ -58,7 +63,6 @@ class checker implements check_plugin_interface {
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
-            // FIXME Sometime links are not serialized ?
             $link = $cm->url ? $cm->url->out_as_local_url() : null;
             // Get the assignment record from the assignment table.
             // The instance of the course_modules table is used as a foreign key to the assign table.

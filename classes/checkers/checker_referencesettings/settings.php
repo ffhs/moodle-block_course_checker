@@ -30,7 +30,7 @@ use block_course_checker\checkers\checker_referencesettings\checker;
 /** @var admin_settingpage $setting */
 $setting;
 
-/** @array coursesettings_fields to check */
+/** @var array of coursesettings_fields to check $choices */
 $choices = [
     // General.
     'category' => get_string('category'),

@@ -37,12 +37,16 @@ class checker implements check_plugin_interface {
     protected $result = null;
     // Module name for attendance in Moodle.
     const MOD_TYPE_ATTENDANCE = 'attendance';
+
     /**
-     * Runs the check
+     * Runs the check on attendance activities of a course
+     *
+     * @todo investigate if we skip activities that are not visible and if we should add uservisible
      *
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
      * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function run($course) {
         // Initialize check result array.
@@ -57,8 +61,6 @@ class checker implements check_plugin_interface {
                 continue;
             }
             // Skip activities that are not visible.
-            // @todo investigate if uservisible is necessary.
-            // if (!$cm->uservisible or !$cm->has_view()) {
             if (!$cm->has_view()) {
                 continue;
             }

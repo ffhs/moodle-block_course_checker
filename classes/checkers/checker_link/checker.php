@@ -66,8 +66,12 @@ class checker implements check_plugin_interface {
     }
 
     /**
+     * Runs the check for all links of a course
+     *
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function run($course) {
         $this->init();
@@ -159,14 +163,12 @@ class checker implements check_plugin_interface {
     protected function check_url($url) {
         $parseurl = parse_url($url);
         $urlcheckresult = [];
-        // START BUGFIX: Some parse_url calls may end with "host" = null
-        if($parseurl["host"] == null){
+        if ($parseurl["host"] == null) {
             $urlcheckresult['message'] = get_string("checker_link_error_undefined", "block_course_checker");
             $urlcheckresult['ignoreddomain'] = false;
             $urlcheckresult['successful'] = false;
             return $urlcheckresult;
         }
-        // END BUGFIX
         // Skip whitelisted domains.
         if ($this->is_ignored_host($parseurl["host"])) {
             $context = $parseurl + ["url" => $url];
@@ -180,10 +182,10 @@ class checker implements check_plugin_interface {
 
         // Use curl to checks the urls.
         $curl = new \curl();
-        $curl->head($url, [], [
-                "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
-                "CURLOPT_TIMEOUT" => $this->timeout,
-                'CURLOPT_FOLLOWLOCATION' => 0
+        $curl->head($url, [
+            "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
+            "CURLOPT_TIMEOUT" => $this->timeout,
+            'CURLOPT_FOLLOWLOCATION' => 0
         ]);
 
         $infos = $curl->get_info();
@@ -209,7 +211,7 @@ class checker implements check_plugin_interface {
     }
 
     /**
-     * Extarct url from a string
+     * Extract url from a string
      *
      * @param string $text
      * @return string[] urls
