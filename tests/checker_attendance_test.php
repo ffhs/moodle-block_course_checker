@@ -52,8 +52,17 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
         // Create a new course.
         $this->course = $this->generator->create_course();
     }
+    public function test_if_mod_attendance_is_installed() {
+        $details = core_plugin_manager::instance()->get_plugin_info('mod_attendance');
+        if ($details) {
+            $this->assertEquals('attendance', $details->name);
+        } else {
+            $this->markTestSkipped(get_string('attendance_missingplugin', 'block_course_checker'));
+        }
+    }
     /**
      * @test
+     * @depends test_if_mod_attendance_is_installed
      */
     public function test_if_there_is_no_attendance_activity_in_the_course() {
         $this->init();
@@ -68,6 +77,7 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
     }
     /**
      * @test
+     * @depends test_if_mod_attendance_is_installed
      */
     public function test_if_there_is_more_then_one_attendance_activity() {
         $this->init();
@@ -88,6 +98,7 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
     }
     /**
      * @test
+     * @depends test_if_mod_attendance_is_installed
      */
     public function test_if_there_are_sessions_in_the_attendance_activity() {
         $this->init();
@@ -105,6 +116,7 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
     }
     /**
      * @test
+     * @depends test_if_mod_attendance_is_installed
      */
     public function test_if_there_is_a_attendance_activity_but_no_sessions() {
         $this->init();
@@ -131,6 +143,9 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
         }
         /** @var mod_attendance_generator $plugingenerator */
         $plugingenerator = $this->generator->get_plugin_generator('mod_attendance');
+        if (!$plugingenerator) {
+            $this->markTestSkipped('Skip...');
+        }
         return $plugingenerator->create_instance($record, $options);
     }
     /**

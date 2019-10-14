@@ -1,5 +1,5 @@
 .course_checker hr {
-    border-top: 1px solid rgba(0, 0, 0, .1) !important;
+    border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
 .course_checker .actions {
@@ -11,7 +11,7 @@
 }
 
 /** Boost set the anchrow link more visible if we use an anchor, we don't want that. */
-.course_checker_page tr[id^="result-"]::before{
+.course_checker_page tr[id^="result-"]::before {
     display: none;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .course_checker .separator {
-    border-top: 1px solid rgba(0, 0, 0, .1) !important;
+    border-top: 1px solid rgba(0, 0, 0, .1);
     padding-bottom: 10px;
 }
 
@@ -85,9 +85,9 @@
     display: flex;
 }
 
-.course_checker .hummancheck_dateinput #fitem_id_human_review{
+.course_checker .hummancheck_dateinput #fitem_id_human_review {
     display: block;
-    width:100%;
+    width: 100%;
 }
 
 .course_checker .hummancheck_dateinput .custom-select {

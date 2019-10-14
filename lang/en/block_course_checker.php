@@ -78,6 +78,7 @@ $string['checker_link_setting_whitelist'] = 'Link Checker Whitelist';
 $string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
 
 // String specific for the attendance checker.
+$string['attendance_missingplugin'] = 'Skip this testcase because mod_attendance is not installed';
 $string['attendance_missingattendanceactivity'] = 'Check Attendance Failed - no attendance activity in this course';
 $string['attendance_onlyoneattendenceactivityallowed'] = 'Check Attendance Failed - only one attendance activity is allowed';
 $string['attendance_sessionsnotemty'] = 'Check Attendance Failed - it\'s not allowed to have any attendance sessions';
