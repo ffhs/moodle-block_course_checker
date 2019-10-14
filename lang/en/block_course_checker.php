@@ -22,20 +22,17 @@
  * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['course_checker.php:addinstance'] = 'Add a new course checker block';
+$string['pluginname'] = 'Course Checker';
+$string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
+$string['course_checker:addinstance'] = 'Add a new Course Checker block';
 $string['course_checker:view'] = 'View the Course Checker block';
 $string['course_checker:view_report'] = 'View the check result page';
-$string['course_checker:view_notification'] = 'View the course checker notifications';
-$string['messageprovider:checker_completed'] = 'Course checker is completed';
+$string['course_checker:view_notification'] = 'View the Course Checker notifications';
+$string['messageprovider:checker_completed'] = 'Course Checker is completed';
 
-$string['pluginname'] = 'FFHS Course Checker';
-$string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
-$string['course_checker:addinstance'] = 'Course checker create';
 $string['noresults'] = 'This course has never been checked automatically';
 $string['backtocourse'] = 'Back to course';
 $string['resultpagegoto'] = 'View detailed results';
-$string['resultpagetitle'] = 'detailed resutls';
 $string['resultpageheader'] = 'View detailed results';
 $string['resultpagetitle'] = 'View detailed results for course {$a->name}';
 $string['automaticcheck'] = 'Last automatic check';
@@ -46,7 +43,7 @@ $string['humancheckempty'] = 'This course has never been manually checked';
 $string['invalidtoken'] = 'Your token is invalid';
 $string['runcheckbtn'] = 'Check this course';
 $string['runcheckbtn_already'] = 'This course is already scheduled to be checked automatically.';
-$string['runcheckbtn_nocheckers'] = 'There is no checkers enabled.';
+$string['runcheckbtn_nocheckers'] = 'There are no checkers enabled.';
 $string['result'] = 'Result';
 $string['resultpermissiondenied'] = 'You are not allowed to access this page';
 $string['message'] = 'Message';
