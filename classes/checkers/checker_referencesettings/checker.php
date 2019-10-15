@@ -86,7 +86,7 @@ class checker implements check_plugin_interface {
             // Does the attribute exist on both courses?
             if (!property_exists($referencecourse, $setting) or !property_exists($currentcourse, $setting)) {
                 $message = get_string(
-                        'referencesettings_settingismissing',
+                        'checker_referencesettings_settingismissing',
                         'block_course_checker',
                         ['setting' => $setting]);
                 $this->result->add_detail([
@@ -107,7 +107,7 @@ class checker implements check_plugin_interface {
             // When the settings are not equal.
             if ($referencecourse->$setting != $currentcourse->$setting) {
                 $message = get_string(
-                        'referencesettings_failing',
+                        'checker_referencesettings_failing',
                         'block_course_checker',
                         ['setting' => $setting]);
                 $this->result->add_detail([
@@ -121,7 +121,7 @@ class checker implements check_plugin_interface {
 
             // When everything is okay.
             $message = get_string(
-                    'referencesettings_success',
+                    'checker_referencesettings_success',
                     'block_course_checker',
                     ['setting' => $setting]);
             $this->result->add_detail([
@@ -155,7 +155,7 @@ class checker implements check_plugin_interface {
      */
     private function get_comparison_string($setting, \stdClass $referencecourse, \stdClass $currentcourse): string {
         return get_string(
-                'referencesettings_comparison',
+                'checker_referencesettings_comparison',
                 'block_course_checker',
                 ['settingvaluereference' => $referencecourse->$setting, 'settingvaluecurrent' => $currentcourse->$setting]);
     }

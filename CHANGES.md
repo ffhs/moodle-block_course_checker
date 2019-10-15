@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add capability `block/course_checker:view`
 
+### Changed
+- Language strings according [MoodleDocs](https://docs.moodle.org/dev/Plugin_contribution_checklist#Strings) ([issue #3](https://github.com/ffhs/moodle-block_course_checker/issues/3))
+
 ### Fixed
 - Add `name` attribute to coursemodule delete event
 - Fix `check_url` if host is `null`

@@ -22,15 +22,22 @@
  * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'Course Checker';
-$string['privacy:metadata'] = 'The Course Checker block only contains anonymous data.';
-$string['course_checker:addinstance'] = 'Add a new Course Checker block';
-$string['course_checker:view'] = 'View the Course Checker block';
+$string['pluginname'] = 'Course checker';
+$string['privacy:metadata'] = 'The course checker block only contains anonymous data.';
+$string['course_checker:addinstance'] = 'Add a new course checker block';
+$string['course_checker:view'] = 'View the course checker block';
 $string['course_checker:view_report'] = 'View the check result page';
-$string['course_checker:view_notification'] = 'View the Course Checker notifications';
-$string['messageprovider:checker_completed'] = 'Course Checker is completed';
+$string['course_checker:view_notification'] = 'View the course checker notifications';
+$string['messageprovider:checker_completed'] = 'Course check is completed';
 
+// String specific for the checker settings.
+$string['settings_referencecourseid'] = 'Reference course id';
+$string['settings_checker_header'] = '{$a} settings';
+$string['settings_checker_toggle'] = '{$a} enabled';
+
+// String for checker block and results page.
 $string['noresults'] = 'This course has never been checked automatically';
+$string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
 $string['backtocourse'] = 'Back to course';
 $string['resultpagegoto'] = 'View detailed results';
 $string['resultpageheader'] = 'View detailed results';
@@ -38,8 +45,12 @@ $string['resultpagetitle'] = 'View detailed results for course {$a->name}';
 $string['automaticcheck'] = 'Last automatic check';
 $string['lastactivityedition'] = 'Last activity change';
 $string['automaticcheckempty'] = 'The checks have never been launched for this course';
-$string['humancheck'] = 'Last manual check:';
 $string['humancheckempty'] = 'This course has never been manually checked';
+$string['humancheck'] = 'Last manual check:';
+$string['humancheck_comment_placeholder'] = 'Note';
+$string['humancheck_reason'] = 'Reason:';
+$string['humancheck_title'] = 'Set manual check date:';
+$string['humancheck_update'] = 'Update human review';
 $string['invalidtoken'] = 'Your token is invalid';
 $string['runcheckbtn'] = 'Check this course';
 $string['runcheckbtn_already'] = 'This course is already scheduled to be checked automatically.';
@@ -51,6 +62,36 @@ $string['link'] = 'Link';
 $string['check_successful'] = 'Success';
 $string['check_failed'] = 'Failure';
 $string['resolutionlink'] = 'Resolution: ';
+$string['checker_col_block_header'] = 'Check';
+$string['result_col_block_header'] = 'Result';
+$string['rerun_col_block_header'] = 'Re-run';
+$string['rerun_disabled_col_block_header'] = 'This check is already scheduled to re-run';
+$string['result_col_page_header'] = 'Result';
+$string['link_col_page_header'] = 'Link to resolve';
+$string['message_col_page_header'] = 'Message';
+$string['checker_last_run'] = 'Last run {$a}';
+$string['checker_last_run_global'] = 'Unknown date for this checker. The global course check was on {$a}';
+$string['result_last_activity_header'] = 'Last modified activities';
+$string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
+$string['result_last_activity_empty'] = 'No modified activities since {$a}';
+$string['result_checker_disabled'] = 'This checker is disabled by the administrator.';
+
+// Name of each group that can be assigned to checkers.
+$string['group_course_settings'] = 'Course settings';
+$string['group_links'] = 'Link validator';
+$string['group_activities'] = 'Activity settings';
+
+// Name and title of each checker.
+$string['checker_groups'] = 'Group submission check';
+$string['checker_groups_display'] = 'Group submission for assignments';
+$string['checker_link'] = 'Links check';
+$string['checker_link_display'] = 'Links in course summary and URL activities';
+$string['checker_attendance'] = 'Attendance sessions check';
+$string['checker_attendance_display'] = 'Attendance sessions';
+$string['checker_subheadings'] = 'Label subheadings check';
+$string['checker_subheadings_display'] = 'Label subheadings';
+$string['checker_referencesettings'] = 'Reference settings check';
+$string['checker_referencesettings_display'] = 'Settings compared to reference course';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
@@ -63,6 +104,10 @@ $string['checker_link_ok'] =
         '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
 $string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
 $string['checker_link_error_undefined'] = 'A undefined error with the link occurred';
+$string['checker_link_setting_timeout'] = 'cURL timeout';
+$string['checker_link_setting_connect_timeout'] = 'cURL connection timeout';
+$string['checker_link_setting_whitelist'] = 'Link checker whitelist';
+$string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
 
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';
@@ -71,17 +116,12 @@ $string['groups_missing'] = 'Grouping has not been set up correctly';
 $string['groups_lessthantwogroups'] = 'Less than 2 groups have been set up for the active grouping';
 $string['groups_success'] = 'Group submission setting is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
-$string['checker_link_setting_timeout'] = 'cURL Timeout';
-$string['checker_link_setting_connect_timeout'] = 'cURL Connection Timeout';
-$string['checker_setting_toggle'] = 'Enable / Disable {$a}';
-$string['checker_link_setting_whitelist'] = 'Link Checker Whitelist';
-$string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
 
 // String specific for the attendance checker.
 $string['attendance_missingplugin'] = 'Skip this testcase because mod_attendance is not installed';
-$string['attendance_missingattendanceactivity'] = 'Check Attendance Failed - no attendance activity in this course';
-$string['attendance_onlyoneattendenceactivityallowed'] = 'Check Attendance Failed - only one attendance activity is allowed';
-$string['attendance_sessionsnotemty'] = 'Check Attendance Failed - it\'s not allowed to have any attendance sessions';
+$string['attendance_missingattendanceactivity'] = 'Check attendance failed - no attendance activity in this course';
+$string['attendance_onlyoneattendenceactivityallowed'] = 'Check attendance failed - only one attendance activity is allowed';
+$string['attendance_sessionsnotemty'] = 'Check attendance failed - it\'s not allowed to have any attendance sessions';
 $string['attendance_success'] = 'The attendance activity is configured correctly';
 
 // String specific for the subheadings checker.
@@ -91,58 +131,18 @@ $string['subheadings_generalerror'] = 'There was a problem executing this check'
 $string['subheadings_success'] = 'This label has a nice subheading and icon';
 $string['subheadings_labelignored'] = 'This label is ignored due to whitelist in plugin configuration.';
 
-$string['checker_subheadings_setting_whitelist'] = 'Subheading Checker Strings Whitelist';
+$string['checker_subheadings_setting_whitelist'] = 'Subheading checker strings whitelist';
 $string['checker_subheadings_setting_whitelist_help'] = 'Please add one string per line. Example: "Liebe(r) Modulentwickler".';
 
-// String specific for the referencesettings checker.
-$string['referencesettings_comparison'] = ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
-$string['referencesettings_settingismissing'] = 'The "{$a->setting}" is not a coursesetting';
-$string['referencesettings_failing'] = 'The setting "{$a->setting}" is not correct';
-$string['referencesettings_success'] = 'The setting "{$a->setting}" is correct';
-$string['checker_referencesettings_checklist'] = 'Course Settings Checklist';
+// String specific for the reference course settings checker.
+$string['checker_referencesettings_comparison'] = ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
+$string['checker_referencesettings_settingismissing'] = 'The "{$a->setting}" is not a coursesetting';
+$string['checker_referencesettings_failing'] = 'The setting "{$a->setting}" is not correct';
+$string['checker_referencesettings_success'] = 'The setting "{$a->setting}" is correct';
+$string['checker_referencesettings_checklist'] = 'Reference course checker settings checklist';
 $string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
 
-// Name of each group that can be assigned to checkers.
-$string['group_course_settings'] = 'Course Settings';
-$string['group_links'] = 'Link Validator';
-$string['group_activities'] = 'Activity Settings';
-
-// Name of each checker.
-$string['checker_groups'] = 'Group Submission Check';
-$string['checker_link'] = 'Links Check';
-$string['checker_attendance'] = 'Attendance Sessions Check';
-$string['checker_subheadings'] = 'Label Subheadings Check';
-$string['checker_referencesettings'] = 'Reference Settings Check';
-
-// Display title of each checker.
-$string['checker_groups_display'] = 'Group Submission for Assignments';
-$string['checker_link_display'] = 'Links in Course Summary and URL Activities';
-$string['checker_attendance_display'] = 'Attendance Sessions';
-$string['checker_subheadings_display'] = 'Label Subheadings';
-$string['checker_referencesettings_display'] = 'Settings Compared To Reference Course';
-
-// Checker last run.
-$string['checker_last_run'] = 'Last run {$a}';
-$string['checker_last_run_global'] = 'Unknown date for this checker. The global course check was on {$a}';
-
-// Check Result Tables.
-$string['result_col_block_header'] = 'Result';
-$string['rerun_col_block_header'] = 'Re-run';
-$string['rerun_disabled_col_block_header'] = 'This check is already scheduled to re-run';
-$string['checker_col_block_header'] = 'Check';
-$string['result_col_page_header'] = 'Result';
-$string['message_col_page_header'] = 'Message';
-$string['link_col_page_header'] = 'Link to Resolve';
-$string['nogroupresults'] = 'Nothing found to check on. Everything is fine!';
-$string['result_last_activity_header'] = 'Last modified activities';
-$string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
-$string['result_last_activity_empty'] = 'No modified activities since {$a}';
-$string['result_checker_disabled'] = 'This checker is disabled by the administrator.';
-
-$string['humancheck_title'] = 'Set manual check date:';
-$string['update'] = 'Update human review';
-$string['human_comment'] = 'Set a comment to give on this update.';
-
+// String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
 $string['messageprovider_allchecks_completed'] = 'The checks are completed.';
 $string['messageprovider_singlechecks_subject'] = 'Check {$a->checkername} completed on course {$a->coursename}';
@@ -150,10 +150,6 @@ $string['messageprovider_singlechecks_completed'] = 'The check {$a->checkername}
 $string['messageprovider_result_plain'] = 'You can see the result at {$a->url}.';
 $string['messageprovider_result_html'] = 'You can see the result on {$a->urlhtml}';
 $string['messageprovider_result_html_label'] = 'the dedicated result page';
-$string['human_comment_placeholder'] = 'Note';
-$string['humanreason'] = 'Reason:';
-$string['settings_checker_header'] = 'Settings for the {$a}.';
-$string['admin_referencecourseid'] = 'Reference course id';
 
 // Admin component. Please add specific checker settings under the checker section.
 $string['admin_restrictedint_min'] = 'Minimum value is {$a}';

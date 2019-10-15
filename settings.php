@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
-    $name = get_string("admin_referencecourseid", "block_course_checker");
+    $name = get_string("settings_referencecourseid", "block_course_checker");
     $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', SITEID));
 
     $manager = plugin_manager::instance();
@@ -54,7 +54,7 @@ if ($ADMIN->fulltree) {
         $heading = new admin_setting_heading("block_course_checker/" . $checkername . "_heading", $checkernamedisplay, '');
         $settings->add($heading);
 
-        $visiblename = get_string('checker_setting_toggle', 'block_course_checker', $truecheckername);
+        $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
         $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
                 true));
 

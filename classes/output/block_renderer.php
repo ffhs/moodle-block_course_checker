@@ -46,7 +46,7 @@ class block_renderer extends \plugin_renderer_base {
     public function renderer_human_check_form(int $courseid, string $manualreason = null) {
         global $CFG;
 
-        $humanplaceholder = get_string('human_comment_placeholder', 'block_course_checker');
+        $humanplaceholder = get_string('humancheck_comment_placeholder', 'block_course_checker');
         $humanreasonpresent = !empty($manualreason);
         $data = [
                 "action" => new \moodle_url('/blocks/course_checker/update_human_date.php', ['courseid' => $courseid]),
