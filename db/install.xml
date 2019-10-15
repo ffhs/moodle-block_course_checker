@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/course_checker/db" VERSION="20190318" COMMENT="XMLDB file for Moodle blocks/course_checker"
+<XMLDB PATH="blocks/course_checker/db" VERSION="20191015" COMMENT="XMLDB file for Moodle blocks/course_checker. Note that modulename can not be indexed."
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -23,20 +23,19 @@
     </TABLE>
     <TABLE NAME="block_course_checker_events" COMMENT="Default comment for block_course_checker, please edit me">
       <FIELDS>
-        <FIELD NAME="id" SEQUENCE="true" TYPE="int" LENGTH="20" NOTNULL="true"/>
-        <FIELD NAME="action" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
-        <FIELD NAME="course_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
-        <FIELD NAME="user_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
-        <FIELD NAME="instance_id" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
-        <FIELD NAME="modulename" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
-        <FIELD NAME="name" SEQUENCE="false" TYPE="text" LENGTH="20" NOTNULL="false"/>
-        <FIELD NAME="timestamp" SEQUENCE="false" TYPE="int" LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="instance_id" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="modulename" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <!-- note that modulename can not be indexed -->
         <INDEX NAME="events_index" UNIQUE="false" FIELDS="course_id, instance_id"/>
       </INDEXES>
     </TABLE>

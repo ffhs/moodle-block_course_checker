@@ -46,8 +46,23 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         }
     }
 
+    // Migration to change type of fields.
+    if ($oldversion < 2019071002) {
+        $dbman = $DB->get_manager();
+
+        $table = new xmldb_table('block_course_checker_events');
+        $fields = [
+                new xmldb_field('action', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null),
+                new xmldb_field('modulename', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null),
+                new xmldb_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null)
+        ];
+        foreach ($fields as $field) {
+            $dbman->change_field_type($table, $field);
+        }
+    }
+
     // Migration to add the field "last_activity_edition".
-    if (intval($oldversion) === 2019031507) { // TODO: Fix version.
+    if (intval($oldversion) === 2019031507) {
         $xmldbfile = new xmldb_file($file);
         if (!$xmldbfile->fileExists()) {
             throw new ddl_exception('ddlxmlfileerror', null, 'File does not exist');
