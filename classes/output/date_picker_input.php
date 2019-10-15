@@ -26,6 +26,8 @@ namespace block_course_checker\output;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->libdir . '/formslib.php');
+
 class date_picker_input extends \moodleform {
     /**
      * Get the form definition.

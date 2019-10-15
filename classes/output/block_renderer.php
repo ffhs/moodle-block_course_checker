@@ -24,8 +24,6 @@
 
 namespace block_course_checker\output;
 
-use date_picker_input;
-
 defined('MOODLE_INTERNAL') || die();
 
 class block_renderer extends \plugin_renderer_base {

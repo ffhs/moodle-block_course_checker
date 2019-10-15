@@ -29,7 +29,6 @@ use block_course_checker\result_persister;
 use block_course_checker\task_helper;
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->libdir . '/formslib.php');
 
 class block_course_checker extends block_base {
     /**
@@ -222,19 +221,5 @@ class block_course_checker extends block_base {
         $content .= html_writer::end_tag("form");
 
         return $content;
-    }
-}
-
-class date_picker_input extends moodleform {
-    protected function definition() {
-        $mform = $this->_form;
-        $mform->addElement('date_selector', 'human_review', '', ['stopyear' => date('Y')]);
-    }
-
-    /**
-     * @return string
-     */
-    public function tohtmlwriter() {
-        return $this->_form->toHtml();
     }
 }
