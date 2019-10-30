@@ -16,6 +16,7 @@
 /**
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 use block_course_checker\model\check_manager_interface;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
+
+require_once(__DIR__ . '/../locallib.php');
 
 class plugin_manager implements check_manager_interface {
     // Enable this if you want to run the checks directly. This is helpful for debugging.
@@ -39,6 +42,8 @@ class plugin_manager implements check_manager_interface {
     const PLUGIN_FILE = 'checker.php';
     // The renderer filename (this is an optional file).
     const PLUGIN_OUTPUT_FILE = 'renderer.php';
+    // The dependency filename.
+    const DEPENDENCY_FILE = 'dependency.php';
     // The interface tha the checker must implement (This is not verified yet).
     const PLUGIN_INTERFACE = 'block_course_checker\\model\\check_plugin_interface';
     // The plugin expected class, The token represent the folder_name.
@@ -57,6 +62,11 @@ class plugin_manager implements check_manager_interface {
      * @var array Cache of the instantiated checkers.
      */
     private static $plugins = [];
+
+    /**
+     * @var array Dependency informations of the instantiated checkers.
+     */
+    private static $dependency = [];
 
     /**
      * Force singleton
@@ -156,6 +166,11 @@ class plugin_manager implements check_manager_interface {
             return null;
         }
 
+        $dependency = self::get_checker_dependency_info($checkername);
+        if (!$dependency['status']) {
+            return null;
+        }
+
         return new $classname;
     }
 
@@ -232,6 +247,31 @@ class plugin_manager implements check_manager_interface {
         $pluginroot = $this->get_checkers_folders();
         $filelocation = $pluginroot . "/" . $checkername . "/settings.php";
         return file_exists($filelocation) ? $filelocation : null;
+    }
+
+    /**
+     * Return the dependency information for the specified checkername.
+     *
+     * @param string $checkername
+     * @return array
+     */
+    public function get_checker_dependency_info(string $checkername) {
+        // Use cache if set.
+        if (!empty(self::$dependency[$checkername])) {
+            return self::$dependency[$checkername];
+        }
+
+        $pluginroot = $this->get_checkers_folders();
+        $filelocation = $pluginroot . "/" . $checkername . "/" . self::DEPENDENCY_FILE;
+
+        if (file_exists($filelocation)) {
+            $dependencyfile = require($filelocation);
+            self::$dependency = block_course_checker_get_dependency_info($checkername, $dependencyfile);
+        } else {
+            self::$dependency[$checkername]['status'] = true;
+        }
+
+        return self::$dependency[$checkername];
     }
 
     /**
