@@ -167,7 +167,7 @@ class plugin_manager implements check_manager_interface {
         }
 
         $dependency = self::get_checker_dependency_info($checkername);
-        if (!$dependency['status']) {
+        if ((!self::get_checker_status($checkername) && self::get_checker_hidden($checkername)) || !$dependency['status']) {
             return null;
         }
 
@@ -303,6 +303,14 @@ class plugin_manager implements check_manager_interface {
      */
     public function get_checker_status(string $checkername): bool {
         return get_config('block_course_checker', $checkername . '_status');
+    }
+
+    /**
+     * @param string $checkername
+     * @return bool
+     */
+    public function get_checker_hidden(string $checkername): bool {
+        return get_config('block_course_checker', $checkername . '_hidden');
     }
 
     /**
