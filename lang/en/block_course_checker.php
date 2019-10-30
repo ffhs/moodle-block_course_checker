@@ -34,6 +34,7 @@ $string['messageprovider:checker_completed'] = 'Course check is completed';
 $string['settings_referencecourseid'] = 'Reference course id';
 $string['settings_checker_header'] = '{$a} settings';
 $string['settings_checker_toggle'] = '{$a} enabled';
+$string['settings_checker_dependency'] = '<div class="alert alert-warning">Checker dependency failed, check if plugin <a href="/admin/modules.php" target="_blank">{$a}</a> installed and enabled.</div>';
 
 // String for checker block and results page.
 $string['noresults'] = 'This course has never been checked automatically';

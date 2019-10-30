@@ -19,9 +19,11 @@
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_course_checker\checkers\checker_attendance\checker;
 use block_course_checker\admin\admin_setting_courseid_selector;
 use block_course_checker\plugin_manager;
 
@@ -54,9 +56,22 @@ if ($ADMIN->fulltree) {
         $heading = new admin_setting_heading("block_course_checker/" . $checkername . "_heading", $checkernamedisplay, '');
         $settings->add($heading);
 
-        $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
-        $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
-                true));
+        // Check if checker has a dependency to another plugin.
+        $dependency = $manager->get_checker_dependency_info($checkername);
+        if (!$dependency['status']) {
+            $param = checker::get_modulename_constant($dependency['name']);
+            if (!$param) {
+                $param = 'requirements';
+            } else {
+                $param = $dependency['type'] . '_' . $dependency['name'];
+            }
+            $settings->add(new admin_setting_description('block_course_checker/' . $checkername . '_info', '',
+                    get_string('settings_checker_dependency', 'block_course_checker', $param)));
+        } else {
+            $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
+            $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
+                    true));
+        }
 
         // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle beaviour).
         if ($setting === null) {

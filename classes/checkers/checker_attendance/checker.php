@@ -21,6 +21,7 @@
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @author     2019 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
+ * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -134,5 +135,12 @@ class checker implements check_plugin_interface {
                 GROUP BY a.id,cm.course
                 HAVING a.course = ? AND cm.course = ?",
                 array($course->id, $course->id));
+    }
+
+    /*
+     * Get constant of checker to use as parameter.
+     */
+    public static function get_modulename_constant($pluginname) {
+        return constant('self::MOD_TYPE_'. strtoupper($pluginname));
     }
 }
