@@ -31,9 +31,11 @@ $string['course_checker:view_notification'] = 'View the course checker notificat
 $string['messageprovider:checker_completed'] = 'Course check is completed';
 
 // String specific for the checker settings.
+$string['settings_general'] = '<p>If the checker is disabled (after save changes) there will be shown below a new setting to hide and show each checker results.</p>';
 $string['settings_referencecourseid'] = 'Reference course id';
 $string['settings_checker_header'] = '{$a} settings';
 $string['settings_checker_toggle'] = '{$a} enabled';
+$string['settings_checker_hide'] = '{$a} hidden';
 $string['settings_checker_dependency'] = '<div class="alert alert-warning">Checker dependency failed, check if plugin <a href="/admin/modules.php" target="_blank">{$a}</a> installed and enabled.</div>';
 
 // String for checker block and results page.

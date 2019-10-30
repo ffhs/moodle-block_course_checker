@@ -30,6 +30,8 @@ use block_course_checker\plugin_manager;
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
+    $settings->add(new admin_setting_heading('block_course_checker/description', null,
+            get_string('settings_general', 'block_course_checker')));
 
     $name = get_string("settings_referencecourseid", "block_course_checker");
     $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', SITEID));
@@ -71,6 +73,11 @@ if ($ADMIN->fulltree) {
             $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
             $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
                     true));
+            if (!$manager->get_checker_status($checkername)) {
+                $visiblename = get_string('settings_checker_hide', 'block_course_checker', $truecheckername);
+                $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_hidden', $visiblename,
+                        null, false));
+            }
         }
 
         // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle beaviour).
