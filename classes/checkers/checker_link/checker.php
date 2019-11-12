@@ -185,7 +185,8 @@ class checker implements check_plugin_interface {
         $curl->head($url, [
             "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
             "CURLOPT_TIMEOUT" => $this->timeout,
-            'CURLOPT_FOLLOWLOCATION' => 0
+            "CURLOPT_FOLLOWLOCATION" => 1,
+            "CURLOPT_MAXREDIRS" => 3
         ]);
 
         $infos = $curl->get_info();
@@ -219,7 +220,7 @@ class checker implements check_plugin_interface {
     protected function get_urls_from_text($text) {
         // Be aware that XMLNS can be used.
         // Specially «math xmlns=¨http://www.w3.org/1998/Math/MathML¨».
-        if (false !== preg_match_all('#\bhttps?:\/\/[^,\s()<>»¨]+(?:\([\w\-]+\)|([^,[:punct:],¨»\s]|\/))#', $text, $match)) {
+        if (false !== preg_match_all('#\bhttps?:\/\/[^,\s()<>»¨]+(?:([\w\-]+)|([^,[:punct:],¨»\s]|\/))#', $text, $match)) {
             $match = $match[0];
             // If we have <a href="$url">$url</a> $url is not counted twice.
             return array_unique($match);
