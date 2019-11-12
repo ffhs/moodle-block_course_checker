@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.6-r5 (Build: 2019071003)] - UNRELEASED
+### Fixed
+- Regex for `get_urls_from_text()` - allow dash at the end ([issue #10](https://github.com/ffhs/moodle-block_course_checker/issues/10))
+
 ## [v3.6-r4 (Build: 2019071003)] - 2019-10-30
 ### Added
 - 3rd party plugin dependency handling ([issue #1](https://github.com/ffhs/moodle-block_course_checker/issues/1))
