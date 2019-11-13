@@ -95,6 +95,8 @@ $string['checker_subheadings'] = 'Label subheadings check';
 $string['checker_subheadings_display'] = 'Label subheadings';
 $string['checker_referencesettings'] = 'Reference settings check';
 $string['checker_referencesettings_display'] = 'Settings compared to reference course';
+$string['checker_completionprogress'] = 'Completion progress check';
+$string['checker_completionprogress_display'] = 'Completion progress';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
@@ -144,6 +146,10 @@ $string['checker_referencesettings_failing'] = 'The setting "{$a->setting}" is n
 $string['checker_referencesettings_success'] = 'The setting "{$a->setting}" is correct';
 $string['checker_referencesettings_checklist'] = 'Reference course checker settings checklist';
 $string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
+
+// String specific for the completion progress checker.
+$string['checker_completionprogress_success'] = 'The block instance is present';
+$string['checker_completionprogress_blockmissing'] = 'The block instance is missing';
 
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
