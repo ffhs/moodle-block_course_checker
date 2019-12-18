@@ -125,6 +125,9 @@ class event_persister implements event_persister_interface {
         } else {
             $DB->update_record(self::TABLENAME, $record);
         }
+
+        // Set the human check date for the last activity change.
+        result_persister::instance()->set_last_activity_edition($record->course_id, $record->timestamp);
     }
 
     /**
