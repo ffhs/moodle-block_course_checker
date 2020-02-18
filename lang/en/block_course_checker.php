@@ -91,6 +91,8 @@ $string['checker_link'] = 'Links check';
 $string['checker_link_display'] = 'Links in course summary and URL activities';
 $string['checker_attendance'] = 'Attendance sessions check';
 $string['checker_attendance_display'] = 'Attendance sessions';
+$string['checker_data'] = 'Data activity check';
+$string['checker_data_display'] = 'Data activity';
 $string['checker_subheadings'] = 'Label subheadings check';
 $string['checker_subheadings_display'] = 'Label subheadings';
 $string['checker_referencesettings'] = 'Reference settings check';
@@ -126,6 +128,10 @@ $string['attendance_missingattendanceactivity'] = 'Check attendance failed - no 
 $string['attendance_onlyoneattendenceactivityallowed'] = 'Check attendance failed - only one attendance activity is allowed';
 $string['attendance_sessionsnotemty'] = 'Check attendance failed - it\'s not allowed to have any attendance sessions';
 $string['attendance_success'] = 'The attendance activity is configured correctly';
+
+// String specific for the data checker.
+$string['data_nofieldsdefined'] = 'No fields are defined for this database activity';
+$string['data_fieldsdefined'] = 'Fields are defined for this database activity';
 
 // String specific for the subheadings checker.
 $string['subheadings_wrongfirsthtmltag'] = 'The first html-tag is not a {$a->htmltag}';
