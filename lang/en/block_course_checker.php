@@ -151,6 +151,14 @@ $string['checker_referencesettings_success'] = 'The setting "{$a->setting}" is c
 $string['checker_referencesettings_checklist'] = 'Reference course checker settings checklist';
 $string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
 
+// String specific for the reference course settings checker filters.
+$string['checker_referencefilter_comparison'] = ' (Reference course: "{$a->filtervaluereference}" | Current course: "{$a->filtervaluecurrent}")';
+$string['checker_referencefilter_failing'] = 'The filter "{$a->filterkey}" is not correct';
+$string['checker_referencefilter_success'] = 'All filters are correctly set in current course';
+$string['checker_referencefilter_enabled'] = 'Reference settings filter check enabled';
+$string['checker_referencefilter_enabled_help'] = 'Please enable this to compare all course filter with the reference course.';
+$string['checker_referencefilter_filternotsetincurrentcourse'] = 'The filter "{$a->filterkey}" is missing in the current course.';
+
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
 $string['messageprovider_allchecks_completed'] = 'The checks are completed.';

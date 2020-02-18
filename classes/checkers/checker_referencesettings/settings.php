@@ -55,6 +55,19 @@ $choices = [
 // Referencesettings Checker Checklist settings.
 $visiblename = get_string('checker_referencesettings_checklist', 'block_course_checker');
 $description = new lang_string('checker_referencesettings_checklist_help', 'block_course_checker');
-$checklist = new admin_setting_configmulticheckbox(checker::REFERENCE_COURSE_SETTINGS,
-    $visiblename, $description, checker::REFERENCE_COURSE_SETTINGS_DEFAULT, $choices);
+$checklist = new admin_setting_configmulticheckbox(
+        checker::REFERENCE_COURSE_SETTINGS,
+        $visiblename,
+        $description,
+        checker::REFERENCE_COURSE_SETTINGS_DEFAULT,
+        $choices);
 $setting->add($checklist);
+
+// Referencesettings Checker Filter settings
+$visiblename = get_string('checker_referencefilter_enabled', 'block_course_checker');
+$description = new lang_string('checker_referencefilter_enabled_help', 'block_course_checker');
+$setting->add(new admin_setting_configcheckbox(
+        checker::REFERENCE_COURSE_FILTER_ENABLED,
+        $visiblename,
+        $description,
+        checker::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT));

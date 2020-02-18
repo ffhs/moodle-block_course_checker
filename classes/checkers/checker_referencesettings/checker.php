@@ -31,6 +31,7 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
+use context_course;
 
 class checker implements check_plugin_interface {
     use checker_config_trait;
@@ -42,12 +43,17 @@ class checker implements check_plugin_interface {
     const REFERENCE_COURSE_DEFAULT = 1;
     const REFERENCE_COURSE_SETTINGS = 'block_course_checker/checker_referencesettings_checklist';
     const REFERENCE_COURSE_SETTINGS_DEFAULT = ['format' => 1];
+    const REFERENCE_COURSE_FILTER_ENABLED = 'block_course_checker/checker_referencesettings_filter';
+    const REFERENCE_COURSE_FILTER_ENABLED_DEFAULT = false;
 
     /** @var int $referencecourseid from checker settings */
     protected $referencecourseid;
 
-    /** @var int $referencecourseid from checker settings */
-    protected $referencesettings;
+    /** @var array $referencecourseid from checker settings */
+    protected $referencesettings = [];
+    
+    /** @var array $referencefilterenabled from checker settings */
+    protected $referencefilterenabled = false;
 
     /**
      * Initialize checker by setting it up with the configuration
@@ -60,6 +66,10 @@ class checker implements check_plugin_interface {
                 self::REFERENCE_COURSE_SETTINGS,
                 self::REFERENCE_COURSE_SETTINGS_DEFAULT
         ));
+        $this->referencefilterenabled = $this->get_config(
+                self::REFERENCE_COURSE_FILTER_ENABLED,
+                self::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT
+        );
     }
 
     /**
@@ -80,58 +90,13 @@ class checker implements check_plugin_interface {
         // Get current and referencecourse configuration.
         $currentcourse = $course;
         $referencecourse = get_course($this->referencecourseid);
-
-        // Run comparison for every attribute.
-        foreach ($this->referencesettings as $setting) {
-            // Does the attribute exist on both courses?
-            if (!property_exists($referencecourse, $setting) or !property_exists($currentcourse, $setting)) {
-                $message = get_string(
-                        'checker_referencesettings_settingismissing',
-                        'block_course_checker',
-                        ['setting' => $setting]);
-                $this->result->add_detail([
-                        "successful" => false,
-                        "message" => $message,
-                        "target" => '',
-                        "link" => ''
-                ])->set_successful(false);
-                continue;
-            }
-
-            // Get link to course edit page.
-            $link = $this->get_link_to_course_edit_page($course);
-
-            // What are the differences? (if any).
-            $comparison = $this->get_comparison_string($setting, $referencecourse, $currentcourse);
-
-            // When the settings are not equal.
-            if ($referencecourse->$setting != $currentcourse->$setting) {
-                $message = get_string(
-                        'checker_referencesettings_failing',
-                        'block_course_checker',
-                        ['setting' => $setting]);
-                $this->result->add_detail([
-                        "successful" => false,
-                        "message" => $message . $comparison,
-                        "target" => '',
-                        "link" => $link
-                ])->set_successful(false);
-                continue;
-            }
-
-            // When everything is okay.
-            $message = get_string(
-                    'checker_referencesettings_success',
-                    'block_course_checker',
-                    ['setting' => $setting]);
-            $this->result->add_detail([
-                    "successful" => true,
-                    "message" => $message . $comparison,
-                    "target" => '',
-                    "link" => $link
-            ]);
-        }
-
+        
+        // Check settings like Category, Format, Force Language. See plugin settings for complete list.
+        $this->compare_default_course_settings($course, $referencecourse, $currentcourse);
+        
+        // Check if the course filters have the same settings as the template reference course.
+        $this->compare_course_level_filters($currentcourse, $referencecourse);
+    
         // Return the check results.
         return $this->result;
     }
@@ -159,6 +124,19 @@ class checker implements check_plugin_interface {
                 'block_course_checker',
                 ['settingvaluereference' => $referencecourse->$setting, 'settingvaluecurrent' => $currentcourse->$setting]);
     }
+    
+    /**
+     * @param $filterinforeference
+     * @param $filterinfocurrent
+     * @return string
+     * @throws \coding_exception
+     */
+    private function get_filter_comparison_string($filterinforeference, $filterinfocurrent): string {
+        return get_string(
+                'checker_referencefilter_comparison',
+                'block_course_checker',
+                ['filtervaluereference' => $filterinforeference->localstate, 'filtervaluecurrent' => $filterinfocurrent->localstate]);
+    }
 
     /**
      * @param $course
@@ -171,5 +149,144 @@ class checker implements check_plugin_interface {
                 'id' => $course->id
         ]))->out_as_local_url(false);
         return $link;
+    }
+    
+    /**
+     * @param $coursecontext
+     * @return string
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    private function get_link_to_course_filter_page($coursecontext): string {
+        $link = (new \moodle_url('/filter/manage.php', [
+                'contextid' => $coursecontext->id
+        ]))->out_as_local_url(false);
+        return $link;
+    }
+    
+    /**
+     * @param $course
+     * @param \stdClass $referencecourse
+     * @param \stdClass $currentcourse
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    protected function compare_default_course_settings($course, \stdClass $referencecourse, \stdClass $currentcourse) {
+        // Run comparison for every attribute.
+        foreach ($this->referencesettings as $setting) {
+            // Does the attribute exist on both courses?
+            if (!property_exists($referencecourse, $setting) or !property_exists($currentcourse, $setting)) {
+                $message = get_string(
+                        'checker_referencesettings_settingismissing',
+                        'block_course_checker',
+                        ['setting' => $setting]);
+                $this->result->add_detail([
+                        "successful" => false,
+                        "message" => $message,
+                        "target" => '',
+                        "link" => ''
+                ])->set_successful(false);
+                continue;
+            }
+            
+            // Get link to course edit page.
+            $link = $this->get_link_to_course_edit_page($course);
+            
+            // What are the differences? (if any).
+            $comparison = $this->get_comparison_string($setting, $referencecourse, $currentcourse);
+            
+            // When the settings are not equal.
+            if ($referencecourse->$setting != $currentcourse->$setting) {
+                $message = get_string(
+                        'checker_referencesettings_failing',
+                        'block_course_checker',
+                        ['setting' => $setting]);
+                $this->result->add_detail([
+                        "successful" => false,
+                        "message" => $message . $comparison,
+                        "target" => '',
+                        "link" => $link
+                ])->set_successful(false);
+                continue;
+            }
+            
+            // When everything is okay.
+            $message = get_string(
+                    'checker_referencesettings_success',
+                    'block_course_checker',
+                    ['setting' => $setting]);
+            $this->result->add_detail([
+                    "successful" => true,
+                    "message" => $message . $comparison,
+                    "target" => '',
+                    "link" => $link
+            ]);
+        }
+    }
+    
+    /**
+     * @param \stdClass $currentcourse
+     * @param \stdClass $referencecourse
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    protected function compare_course_level_filters(\stdClass $currentcourse, \stdClass $referencecourse) {
+        if(!$this->referencefilterenabled){
+            return;
+        }
+        
+        // Get the course context for the current course and the reference course.
+        $currentcontext = context_course::instance($currentcourse->id);
+        $referencecontext = context_course::instance($referencecourse->id);
+        
+        // Get the list of available filters.
+        $currentavailablefilters = filter_get_available_in_context($currentcontext);
+        $referenceavailablefilters = filter_get_available_in_context($referencecontext);
+        
+        // Count occurring errors.
+        $occurringfilterproblems = 0;
+    
+        // Get link to course filter page.
+        $link = $this->get_link_to_course_filter_page($currentcontext);
+        
+        // Count all errors
+        foreach ($referenceavailablefilters as $filterkey => $referencefilterinfo) {
+            if (!isset($currentavailablefilters[$filterkey])) {
+                $message = get_string(
+                        'checker_referencefilter_filternotsetincurrentcourse',
+                        'block_course_checker',
+                        ['filterkey' => $filterkey]);
+                $this->result->add_detail([
+                        "successful" => false,
+                        "message" => $message,
+                        "target" => '',
+                        "link" => $link
+                ])->set_successful(false);
+                continue;
+            }
+            if ($currentavailablefilters[$filterkey]->localstate != $referencefilterinfo->localstate) {
+                // What are the differences? (if any).
+                $comparison = $this->get_filter_comparison_string($referencefilterinfo, $currentavailablefilters[$filterkey]);
+                $message = get_string(
+                        'checker_referencefilter_failing',
+                        'block_course_checker',
+                        ['filterkey' => $filterkey]);
+                $this->result->add_detail([
+                        "successful" => false,
+                        "message" => $message . $comparison,
+                        "target" => '',
+                        "link" => $link
+                ])->set_successful(false);
+                $occurringfilterproblems++;
+                continue;
+            }
+        }
+        
+        if($occurringfilterproblems === 0){
+            $this->result->add_detail([
+                    "successful" => true,
+                    "message" => get_string('checker_referencefilter_success','block_course_checker'),
+            ]);
+        }
     }
 }
