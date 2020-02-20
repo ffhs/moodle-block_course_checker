@@ -30,12 +30,13 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
+use block_course_checker\model\mod_type_interface;
 
-class checker implements check_plugin_interface {
+class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
 
     /** @var check_result */
-    protected $result = null;
+    protected $checkresult = null;
 
     const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
     const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
@@ -53,6 +54,12 @@ class checker implements check_plugin_interface {
 
     /** @var array list of ignored domain build from checker settings domainwhitelist */
     protected $ignoredomains;
+    
+    /** @var array list of modules which can be linked directly to the module config page  */
+    protected $directmodnames = [
+            self::MOD_TYPE_RESOURCE,
+            self::MOD_TYPE_LABEL
+    ];
 
     /**
      * Initialize checker by setting it up with the configuration
@@ -75,45 +82,27 @@ class checker implements check_plugin_interface {
      */
     public function run($course) {
         $this->init();
-        $this->result = new check_result();
-        $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
-        $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
-                get_string("checker_link_summary", "block_course_checker"));
-
-        $modinfo = get_fast_modinfo($course);
-        $modules = [];
-        foreach ($modinfo->cms as $cm) {
-            $modules[] = $cm->modname;
-        }
-        // Be sure to check each type of activity ONLY once.
-        $modules = array_unique($modules);
-
+        $this->checkresult = new check_result();
+        $this->check_course_summary($course);
+        $modules = $this->get_unique_modnames($course);
+    
         // You will got strait to the edition page for theses mods.
-        $directmodnames = ["resource", "label"];
         foreach ($modules as $modname) {
             $instances = get_all_instances_in_courses($modname, [$course->id => $course]);
             foreach ($instances as $mod) {
-                $target = get_string("checker_link_activity", "block_course_checker",
-                        (object) ["modname" => get_string("pluginname", $modname), "name" => strip_tags($mod->name)]);
-
-                $url = new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $mod->coursemodule]);
-
-                // We open the edition page instead of the mod/view itself.
-                if (in_array($modname, $directmodnames)) {
-                    $url = new \moodle_url('/course/modedit.php', [
-                            'return' => 0,
-                            "update" => $mod->coursemodule,
-                            "sr" => 0,
-                            "sesskey" => sesskey()
-                    ]);
-                    $url = $url->out_as_local_url(false); // FIXME: Url double decoded ?
-                }
+                $target = $this->get_target($modname,$mod);
+                $url = $this->get_link_to_modedit_or_view_page($modname, $mod);
 
                 // For url, we have to check the externalurl too.
-                if ($modname === "url") {
+                if ($modname === self::MOD_TYPE_URL) {
                     $this->check_urls_with_resolution_url([$mod->externalurl], $url, $target);
                 }
 
+                // For books, we have to check the chapters too.
+                if ($modname === self::MOD_TYPE_BOOK) {
+                    $this->check_book_chapters($mod, $url, $target);
+                }
+                
                 // Check modules properties.
                 if (property_exists($mod, "name")) {
                     $this->check_urls_with_resolution_url($this->get_urls_from_text($mod->name), $url, $target);
@@ -127,7 +116,7 @@ class checker implements check_plugin_interface {
             }
         }
 
-        return $this->result;
+        return $this->checkresult;
     }
 
     /**
@@ -141,8 +130,8 @@ class checker implements check_plugin_interface {
     protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
         foreach ($urls as $i => $url) {
             $urlcheckresult = $this->check_url($url);
-            $this->result->set_successful($this->result->is_successful() & $urlcheckresult['successful']);
-            $this->result->add_detail([
+            $this->checkresult->set_successful($this->checkresult->is_successful() & $urlcheckresult['successful']);
+            $this->checkresult->add_detail([
                     "successful" => $urlcheckresult['successful'],
                     "target" => $target,
                     "link" => $resolutionlink,
@@ -246,5 +235,79 @@ class checker implements check_plugin_interface {
      */
     protected function is_ignored_host(string $host) {
         return in_array($host, $this->ignoredomains);
+    }
+    
+    /**
+     * @param $modname
+     * @param $mod
+     * @return \moodle_url|string
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    private function get_link_to_modedit_or_view_page($modname,$mod) {
+        // We open the edition page instead of the mod/view itself.
+        if (in_array($modname, $this->directmodnames)) {
+            $url = new \moodle_url('/course/modedit.php', [
+                    'return' => 0,
+                    "update" => $mod->coursemodule,
+                    "sr" => 0,
+                    "sesskey" => sesskey()
+            ]);
+            return $url->out_as_local_url(false); // FIXME: Url double decoded ?
+        }
+        return new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $mod->coursemodule]);
+    }
+    
+    /**
+     * @param $modname
+     * @param $mod
+     * @return string
+     * @throws \coding_exception
+     */
+    private function get_target($modname, $mod) {
+        return get_string("checker_link_activity", "block_course_checker",
+                (object) ["modname" => get_string("pluginname", $modname), "name" => strip_tags($mod->name)]);
+    }
+    
+    /**
+     * @param $course
+     * @return array
+     * @throws \moodle_exception
+     */
+    protected function get_unique_modnames($course) {
+        $modinfo = get_fast_modinfo($course);
+        $modules = [];
+        foreach ($modinfo->cms as $cm) {
+            $modules[] = $cm->modname;
+        }
+        // Be sure to check each type of activity ONLY once.
+        $modules = array_unique($modules);
+        return $modules;
+    }
+    
+    /**
+     * @param $course
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    protected function check_course_summary($course) {
+        $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
+        $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
+                get_string("checker_link_summary", "block_course_checker"));
+    }
+    
+    /**
+     * @param $mod
+     * @param \moodle_url $url
+     * @param $target
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    protected function check_book_chapters($mod, \moodle_url $url, $target) {
+        global $DB;
+        $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), 'content');
+        foreach ($chapters as $chapter) {
+            $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
+        }
     }
 }
