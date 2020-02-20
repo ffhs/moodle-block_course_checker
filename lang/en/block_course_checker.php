@@ -97,6 +97,8 @@ $string['checker_subheadings'] = 'Label subheadings check';
 $string['checker_subheadings_display'] = 'Label subheadings';
 $string['checker_referencesettings'] = 'Reference settings check';
 $string['checker_referencesettings_display'] = 'Settings compared to reference course';
+$string['checker_activedates'] = 'Active dates check';
+$string['checker_activedates_display'] = 'Active dates in activity configurations';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
