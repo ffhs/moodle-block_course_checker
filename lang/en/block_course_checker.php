@@ -102,6 +102,8 @@ $string['checker_activedates_display'] = 'Active dates in activity configuration
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
+$string['checker_link_book_chapter'] = 'Book Chapter: {$a->title}';
+$string['checker_link_wiki_page'] = 'Wiki Page: {$a->title}';
 $string['checker_link_summary'] = 'Course summary';
 $string['checker_link_error_curl'] =
         'cURL Error {$a->curl_errno} {$a->curl_error} on {$a->url}'; // You can get any curl info or pare_url field in $a.

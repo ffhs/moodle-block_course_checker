@@ -19,6 +19,7 @@
  *
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @copyright  2020 FFHS <christoph.karlen@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,49 +30,18 @@ defined('MOODLE_INTERNAL') || die();
 use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
-use block_course_checker\model\checker_config_trait;
 use block_course_checker\model\mod_type_interface;
 
 class checker implements check_plugin_interface, mod_type_interface {
-    use checker_config_trait;
-
     /** @var check_result */
     protected $checkresult = null;
-
-    const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
-    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
-    const TIMEOUT_DEFAULT = 13;
-    const CONNECT_TIMEOUT_DEFAULT = 5;
-    const WHITELIST_SETTING = 'block_course_checker/checker_link_whitelist';
-    const WHITELIST_HEADING = 'block_course_checker/checker_link_whitelist_heading';
-    const WHITELIST_DEFAULT = 'www.w3.org';
-
-    /** @var int $connecttimeout from checker settings */
-    protected $connecttimeout;
-
-    /** @var int $connecttimeout from checker settings */
-    protected $timeout;
-
-    /** @var array list of ignored domain build from checker settings domainwhitelist */
-    protected $ignoredomains;
     
     /** @var array list of modules which can be linked directly to the module config page  */
     protected $directmodnames = [
             self::MOD_TYPE_RESOURCE,
             self::MOD_TYPE_LABEL
     ];
-
-    /**
-     * Initialize checker by setting it up with the configuration
-     */
-    public function init() {
-        // Load settings.
-        $this->connecttimeout = (int) $this->get_config(self::CONNECT_TIMEOUT_SETTING, self::CONNECT_TIMEOUT_DEFAULT);
-        $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
-        $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
-        $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
-    }
-
+    
     /**
      * Runs the check for all links of a course
      *
@@ -81,7 +51,6 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \moodle_exception
      */
     public function run($course) {
-        $this->init();
         $this->checkresult = new check_result();
         $this->check_course_summary($course);
         $modules = $this->get_unique_modnames($course);
@@ -92,15 +61,20 @@ class checker implements check_plugin_interface, mod_type_interface {
             foreach ($instances as $mod) {
                 $target = $this->get_target($modname,$mod);
                 $url = $this->get_link_to_modedit_or_view_page($modname, $mod);
-
+                
                 // For url, we have to check the externalurl too.
                 if ($modname === self::MOD_TYPE_URL) {
                     $this->check_urls_with_resolution_url([$mod->externalurl], $url, $target);
                 }
-
+                
                 // For books, we have to check the chapters too.
                 if ($modname === self::MOD_TYPE_BOOK) {
-                    $this->check_book_chapters($mod, $url, $target);
+                    $this->check_book_chapters($mod);
+                }
+                
+                // For wiki, we have to check the pages too.
+                if ($modname === self::MOD_TYPE_WIKI) {
+                    $this->check_wiki_pages($mod);
                 }
                 
                 // Check modules properties.
@@ -118,86 +92,27 @@ class checker implements check_plugin_interface, mod_type_interface {
 
         return $this->checkresult;
     }
-
+    
     /**
      * Check all urls for a single resolution_url
      *
-     * @param string[] $urls
+     * @param array $urls
      * @param string|null $resolutionlink
-     * @param string|null $target
-     * @throws \moodle_exception
+     * @param null $target
      */
     protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
         foreach ($urls as $i => $url) {
-            $urlcheckresult = $this->check_url($url);
-            $this->checkresult->set_successful($this->checkresult->is_successful() & $urlcheckresult['successful']);
+            $urlcheckresult = (new fetch_url())->fetch($url);
+            $this->checkresult->set_successful($this->checkresult->is_successful() & $urlcheckresult->successful);
             $this->checkresult->add_detail([
-                    "successful" => $urlcheckresult['successful'],
+                    "successful" => $urlcheckresult->successful,
                     "target" => $target,
                     "link" => $resolutionlink,
-                    "message" => $urlcheckresult['message'],
+                    "message" => $urlcheckresult->message,
                     "resource" => $url, // The custom-renderer will display the resource correctly.
-                    "ignored" => $urlcheckresult['ignoreddomain']
+                    "ignored" => $urlcheckresult->ignoreddomain
             ]);
         }
-    }
-
-    /**
-     * Fetch an url and return true if the code is between 200 and 400.
-     *
-     * @param string $url
-     * @return array of the url checkresult
-     * @throws \moodle_exception
-     */
-    protected function check_url($url) {
-        $parseurl = parse_url($url);
-        $urlcheckresult = [];
-        if ($parseurl["host"] == null) {
-            $urlcheckresult['message'] = get_string("checker_link_error_undefined", "block_course_checker");
-            $urlcheckresult['ignoreddomain'] = false;
-            $urlcheckresult['successful'] = false;
-            return $urlcheckresult;
-        }
-        // Skip whitelisted domains.
-        if ($this->is_ignored_host($parseurl["host"])) {
-            $context = $parseurl + ["url" => $url];
-            $urlcheckresult['message'] = get_string("checker_link_error_skipped", "block_course_checker", $context);
-            $urlcheckresult['ignoreddomain'] = true;
-            $urlcheckresult['successful'] = true;
-            return $urlcheckresult;
-        }
-
-        $urlcheckresult['ignoreddomain'] = false;
-
-        // Use curl to checks the urls.
-        $curl = new \curl();
-        $curl->head($url, [
-            "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
-            "CURLOPT_TIMEOUT" => $this->timeout,
-            "CURLOPT_FOLLOWLOCATION" => 1,
-            "CURLOPT_MAXREDIRS" => 3
-        ]);
-
-        $infos = $curl->get_info();
-        $code = (int) $infos["http_code"];
-        if ($code === 0) {
-            // Code 0: timeout or other curl error.
-            $context = $parseurl + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
-            $urlcheckresult['message'] = get_string("checker_link_error_curl", "block_course_checker", $context);
-            $urlcheckresult['successful'] = false;
-            return $urlcheckresult;
-        }
-
-        $context = $parseurl + ["url" => $url, "http_code" => $code];
-        if ($code >= 200 && $code < 400) {
-            $urlcheckresult['message'] = get_string("checker_link_ok", "block_course_checker", $context);
-            $urlcheckresult['successful'] = true;
-            return $urlcheckresult;
-        }
-        // Code != 0 means it's a http error.
-        $urlcheckresult['message'] = get_string("checker_link_error_code", "block_course_checker", $context);
-        $urlcheckresult['successful'] = false;
-        return $urlcheckresult;
     }
 
     /**
@@ -225,16 +140,6 @@ class checker implements check_plugin_interface, mod_type_interface {
      */
     public static function get_group() {
         return 'group_links';
-    }
-
-    /**
-     * Tells if an url should be skipped.
-     *
-     * @param string $host
-     * @return boolean
-     */
-    protected function is_ignored_host(string $host) {
-        return in_array($host, $this->ignoredomains);
     }
     
     /**
@@ -298,16 +203,32 @@ class checker implements check_plugin_interface, mod_type_interface {
     
     /**
      * @param $mod
-     * @param \moodle_url $url
-     * @param $target
      * @throws \dml_exception
      * @throws \moodle_exception
      */
-    protected function check_book_chapters($mod, \moodle_url $url, $target) {
+    protected function check_book_chapters($mod) {
         global $DB;
-        $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), 'content');
+        $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '','id,title,content');
         foreach ($chapters as $chapter) {
+            $target = get_string('checker_link_book_chapter','block_course_checker', (object) ["title" => $chapter->title]);
+            $url = new \moodle_url('/mod/wiki/edit.php', ['pageid' => $chapter->id]);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
+        }
+    }
+    
+    /**
+     * @param $mod
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    protected function check_wiki_pages($mod) {
+        global $DB;
+        
+        $pages = $DB->get_records('wiki_pages', array('subwikiid' => $mod->id), '', 'id,title,cachedcontent');
+        foreach ($pages as $page) {
+            $target = get_string('checker_link_wiki_page','block_course_checker', (object) ["title" => $page->title]);
+            $url = new \moodle_url('/mod/wiki/edit.php', ['pageid' => $page->id]);
+            $this->check_urls_with_resolution_url($this->get_urls_from_text($page->cachedcontent), $url, $target);
         }
     }
 }
