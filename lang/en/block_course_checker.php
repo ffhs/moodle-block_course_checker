@@ -33,6 +33,8 @@ $string['messageprovider:checker_completed'] = 'Course check is completed';
 // String specific for the checker settings.
 $string['settings_general'] = '<p>If the checker is disabled (after save changes) there will be shown below a new setting to hide and show each checker results.</p>';
 $string['settings_referencecourseid'] = 'Reference course id';
+$string['settings_rolesallowedmanual'] = 'Roles for manual check';
+$string['settings_rolesallowedmanual_description'] = 'Define the global roles which are allowed to use the manual check form.';
 $string['settings_checker_header'] = '{$a} settings';
 $string['settings_checker_toggle'] = '{$a} enabled';
 $string['settings_checker_hide'] = '{$a} hidden';

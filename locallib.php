@@ -46,3 +46,34 @@ function block_course_checker_get_dependency_info($checkername, $dependency) {
 
     return $dependency;
 }
+
+/**
+ * Checks if the user has any of the allowed global system roles.
+ *
+ * @param int $userid
+ * @param string $systemrolesids A comma-separated whitelist of allowed system role ids.
+ * @return bool
+ * @throws dml_exception
+ * @see https://github.com/moodleuulm/moodle-local_boostnavigation/blob/master/locallib.php
+ */
+function user_has_role_in_system($userid, $systemrolesids) {
+    // Is the user an admin?
+    if (is_siteadmin($userid)) {
+        return true;
+    }
+    // Split system role shortnames by comma.
+    $showforroles = explode(',', $systemrolesids);
+    // Retrieve the assigned roles for the system context only once and remember for next calls of this function.
+    static $rolesinsystemids;
+    if ($rolesinsystemids == null) {
+        // Get the assigned roles.
+        $rolesinsystem = get_user_roles(context_system::instance(), $userid);
+        $rolesinsystemids = [];
+        foreach ($rolesinsystem as $role) {
+            array_push($rolesinsystemids, $role->roleid);
+        }
+    }
+    // Check if the user has at least one of the required roles.
+    return count(array_intersect($rolesinsystemids, $showforroles)) > 0;
+}
+

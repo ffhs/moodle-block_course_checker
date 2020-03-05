@@ -25,6 +25,7 @@
 
 use block_course_checker\checkers\checker_attendance\checker;
 use block_course_checker\admin\admin_setting_courseid_selector;
+use block_course_checker\output\block_renderer;
 use block_course_checker\plugin_manager;
 
 defined('MOODLE_INTERNAL') || die;
@@ -33,9 +34,16 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('block_course_checker/description', null,
             get_string('settings_general', 'block_course_checker')));
 
-    $name = get_string("settings_referencecourseid", "block_course_checker");
-    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', SITEID));
+    // Define reference course id.
+    $visiblename = get_string("settings_referencecourseid", "block_course_checker");
+    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $visiblename, '', SITEID));
 
+    // Define the global roles which are allowed to use the manual check form.
+    $visiblename = get_string('settings_rolesallowedmanual', 'block_course_checker', null, true);
+    $description = get_string('settings_rolesallowedmanual_description', 'block_course_checker', null, true);
+    $settings->add(new admin_setting_pickroles(block_renderer::ROLESALLOWEDMANUAL_SETTING, $visiblename, $description, block_renderer::ROLESALLOWEDMANUAL_DEFAULT));
+    
+    // Get checker plugins settings.
     $manager = plugin_manager::instance();
     foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
         $truecheckername = get_string($checkername, 'block_course_checker');
