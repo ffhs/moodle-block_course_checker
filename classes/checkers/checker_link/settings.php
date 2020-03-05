@@ -26,28 +26,35 @@ defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\admin\admin_setting_restrictedint;
 use block_course_checker\admin\admin_setting_domainwhitelist;
-use block_course_checker\checkers\checker_link\checker;
+use block_course_checker\checkers\checker_link\fetch_url;
 
 /** @var admin_settingpage $setting */
 $setting;
 
 // CURL Timeout setting.
 $visiblename = get_string('checker_link_setting_timeout', 'block_course_checker');
-$timeout = new admin_setting_restrictedint(checker::CONNECT_TIMEOUT_SETTING, $visiblename, null,
-        checker::CONNECT_TIMEOUT_DEFAULT);
+$timeout = new admin_setting_restrictedint(fetch_url::CONNECT_TIMEOUT_SETTING, $visiblename, null,
+        fetch_url::CONNECT_TIMEOUT_DEFAULT);
 $timeout->set_maximum(300)->set_minimum(0);
 $setting->add($timeout);
 
 // CURL Connect timeout setting.
 $visiblename = get_string('checker_link_setting_connect_timeout', 'block_course_checker');
-$timeout = new admin_setting_restrictedint(checker::TIMEOUT_SETTING,
-        $visiblename, null, checker::TIMEOUT_DEFAULT);
+$timeout = new admin_setting_restrictedint(fetch_url::TIMEOUT_SETTING,
+        $visiblename, null, fetch_url::TIMEOUT_DEFAULT);
 $timeout->set_maximum(300)->set_minimum(0);
 $setting->add($timeout);
+
+// Link Checker Useragent setting.
+$visiblename = get_string('checker_link_setting_useragent', 'block_course_checker');
+$description = new lang_string('checker_link_setting_useragent_help', 'block_course_checker');
+$useragent = new admin_setting_configtext(fetch_url::USERAGENT_SETTING,
+        $visiblename, $description, fetch_url::USERAGENT_DEFAULT, PARAM_RAW, 600);
+$setting->add($useragent);
 
 // Link Checker Whitelist setting.
 $visiblename = get_string('checker_link_setting_whitelist', 'block_course_checker');
 $description = new lang_string('checker_link_setting_whitelist_help', 'block_course_checker');
-$domainwhitelist = new admin_setting_domainwhitelist(checker::WHITELIST_SETTING,
-    $visiblename, $description, checker::WHITELIST_DEFAULT, PARAM_RAW, 600);
+$domainwhitelist = new admin_setting_domainwhitelist(fetch_url::WHITELIST_SETTING,
+    $visiblename, $description, fetch_url::WHITELIST_DEFAULT, PARAM_RAW, 600);
 $setting->add($domainwhitelist);

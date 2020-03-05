@@ -35,12 +35,14 @@ defined('MOODLE_INTERNAL') || die();
  */
 class fetch_url {
     const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
-    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
     const TIMEOUT_DEFAULT = 13;
+    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
     const CONNECT_TIMEOUT_DEFAULT = 5;
     const WHITELIST_SETTING = 'block_course_checker/checker_link_whitelist';
     const WHITELIST_HEADING = 'block_course_checker/checker_link_whitelist_heading';
     const WHITELIST_DEFAULT = 'www.w3.org';
+    const USERAGENT_SETTING = 'block_course_checker/checker_link_useragent';
+    const USERAGENT_DEFAULT = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
     
     use checker_config_trait;
     
@@ -52,6 +54,9 @@ class fetch_url {
     
     /** @var array list of ignored domains  */
     protected $ignoredomains;
+    
+    /** @var string user agent  */
+    protected $useragent;
     
     /** @var string $message */
     public $message;
@@ -69,6 +74,7 @@ class fetch_url {
         // Load settings.
         $this->connecttimeout = (int) $this->get_config(self::CONNECT_TIMEOUT_SETTING, self::CONNECT_TIMEOUT_DEFAULT);
         $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
+        $this->useragent = (string) $this->get_config(self::USERAGENT_SETTING, self::USERAGENT_DEFAULT);
         $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
         $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
     }
@@ -80,6 +86,7 @@ class fetch_url {
      */
     public function __construct($ignoredomains = []) {
         $this->ignoredomains = $ignoredomains;
+        $this->init();
     }
     
     public function fetch($url) {
@@ -100,16 +107,18 @@ class fetch_url {
         }
     
         $this->ignoreddomain = false;
-    
+        
         // Use curl to checks the urls.
+        //$settings['debug'] = true;
         $curl = new \curl();
         $curl->head($url, [
                 "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
                 "CURLOPT_TIMEOUT" => $this->timeout,
                 "CURLOPT_FOLLOWLOCATION" => 1,
-                "CURLOPT_MAXREDIRS" => 3
+                "CURLOPT_MAXREDIRS" => 3,
+                "CURLOPT_USERAGENT" => $this->useragent,
         ]);
-    
+
         $infos = $curl->get_info();
         $code = (int) $infos["http_code"];
         if ($code === 0) {

@@ -115,6 +115,9 @@ $string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted fo
 $string['checker_link_error_undefined'] = 'A undefined error with the link occurred';
 $string['checker_link_setting_timeout'] = 'cURL timeout';
 $string['checker_link_setting_connect_timeout'] = 'cURL connection timeout';
+$string['checker_link_setting_useragent'] = 'User Agent';
+$string['checker_link_setting_useragent_help'] = 'User Agent';
+
 $string['checker_link_setting_whitelist'] = 'Link checker whitelist';
 $string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
 
