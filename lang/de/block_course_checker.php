@@ -134,7 +134,7 @@ $string['groups_activity'] = 'Aktivität "{$a->name}"';
 
 // String specific for the activedates checker.
 $string['activedates_noactivedates'] = 'Im Abschnitt "Aktivitätsabschluss" sollte es keine aktivierten Termine geben.';
-$string['activedates_noactivedatesinactivity'] = 'In der Aktivität {$modtype} sollte es keine aktivierten Daten geben, suchen Sie nach {$adateissetin}.';
+$string['activedates_noactivedatesinactivity'] = 'In der Aktivität {$a->modtype} sollte es keine aktivierten Daten geben, suchen Sie nach {$a->adateissetin}.';
 
 // String specific for the attendance checker.
 $string['attendance_missingplugin'] = 'Überspringen des Testfalls, weil das Plugin mod_attendance nicht installiert ist';
