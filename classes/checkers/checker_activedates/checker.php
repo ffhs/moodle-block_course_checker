@@ -113,9 +113,10 @@ class checker implements check_plugin_interface, mod_type_interface {
             
             // Search for problems in the "Activity completion" section.
             if ($cm->completionexpected !== 0) {
+                $message =  get_string('activedates_noactivedates', 'block_course_checker');
                 $this->checkresult->add_detail([
                         "successful" => false,
-                        "message" => "There shouldn't be enabled dates in the \"activity completion\" section.",
+                        "message" => $message,
                         "target" => $this->get_target($cm),
                         "link" => $this->get_link_to_modedit_page($cm)
                 ])->set_successful(false);
@@ -165,9 +166,17 @@ class checker implements check_plugin_interface, mod_type_interface {
         }
         
         if (!empty($adateissetin)) {
+            $message = get_string(
+                    "activedates_noactivedatesinactivity",
+                    "block_course_checker",
+                    array(
+                            'modtype'=>$modtype,
+                            'adateissetin'=>implode(',', $adateissetin)
+                    )
+            );
             $this->checkresult->add_detail([
                     "successful" => false,
-                    "message" => "There shouldn't be enabled dates in the ".$modtype." activity, look for ".implode(',', $adateissetin).".",
+                    "message" => $message,
                     "target" => $this->get_target($cm),
                     "link" => $this->get_link_to_modedit_page($cm)
             ])->set_successful(false);

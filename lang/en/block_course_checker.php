@@ -94,7 +94,7 @@ $string['checker_link_display'] = 'Links in course summary and URL activities';
 $string['checker_attendance'] = 'Attendance sessions check';
 $string['checker_attendance_display'] = 'Attendance sessions';
 $string['checker_data'] = 'Data activity check';
-$string['checker_data_display'] = 'Data activity';
+$string['checker_data_display'] = 'Data activity with fields';
 $string['checker_subheadings'] = 'Label subheadings check';
 $string['checker_subheadings_display'] = 'Label subheadings';
 $string['checker_referencesettings'] = 'Reference settings check';
@@ -130,6 +130,10 @@ $string['groups_missing'] = 'Grouping has not been set up correctly';
 $string['groups_lessthantwogroups'] = 'Less than 2 groups have been set up for the active grouping';
 $string['groups_success'] = 'Group submission setting is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
+
+// String specific for the activedates checker.
+$string['activedates_noactivedates'] = 'There shouldn\'t be enabled dates in the "activity completion" section.';
+$string['activedates_noactivedatesinactivity'] = 'There shouldn\'t be enabled dates in the {$modtype} activity, look for {$adateissetin}';
 
 // String specific for the attendance checker.
 $string['attendance_missingplugin'] = 'Skip this testcase because mod_attendance is not installed';
