@@ -88,7 +88,7 @@ if ($ADMIN->fulltree) {
             }
         }
 
-        // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle beaviour).
+        // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle behaviour).
         if ($setting === null) {
             continue;
         }
