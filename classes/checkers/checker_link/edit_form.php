@@ -26,7 +26,7 @@ use block_course_checker\model\check_edit_form_interface;
 
 defined('MOODLE_INTERNAL') || die();
 
-class checker_link_edit_form implements check_edit_form_interface{
+class checker_link_edit_form implements check_edit_form_interface {
     
     /**
      * @var string $checkername
@@ -43,11 +43,39 @@ class checker_link_edit_form implements check_edit_form_interface{
      * @return object $mform
      * @throws coding_exception
      */
-    public function specific_definition($mform){
+    public function specific_definition($mform) {
         // Whitelist for block-specific links.
-        $mform->addElement('textarea', 'config_link_whitelist', get_string('checker_link_setting_whitelist', 'block_course_checker'));
+        $mform->addElement('textarea', 'config_link_whitelist',
+                get_string('checker_link_setting_whitelist', 'block_course_checker'));
         $mform->setType('config_link_whitelist', PARAM_TEXT);
         $mform->addHelpButton('config_link_whitelist', 'checker_link_setting_whitelist', 'block_course_checker');
         return $mform;
+    }
+    
+    /**
+     * @param $data
+     * @param $files
+     * @param $errors
+     * @return mixed
+     * @throws coding_exception
+     */
+    function validation($data, $files, $errors) {
+        
+        if (!isset($data['config_link_whitelist'])) {
+            return $errors;
+        }
+        
+        if (trim($data['config_link_whitelist']) == "") {
+            return $errors;
+        }
+        
+        $domains = array_filter(array_map('trim', explode("\n", $data['config_link_whitelist'])));
+        foreach ($domains as $domainname) {
+            if (!is_valid_domain_name($domainname)) {
+                $errors['config_link_whitelist'] = get_string('admin_domain_name_notvalid', 'block_course_checker', $domainname);
+            };
+        }
+        
+        return $errors;
     }
 }

@@ -95,4 +95,17 @@ class block_course_checker_edit_form extends block_edit_form {
             return $checkerEditForm->specific_definition($mform);
         }
     }
+    
+    /**
+     * @param array $data
+     * @param array $files
+     * @return array
+     */
+    function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+        foreach ($this->checkerEditForms as $checkerEditForm){
+            $errors = $checkerEditForm->validation($data, $files, $errors);
+        }
+        return $errors;
+    }
 }

@@ -77,3 +77,16 @@ function user_has_role_in_system($userid, $systemrolesids) {
     return count(array_intersect($rolesinsystemids, $showforroles)) > 0;
 }
 
+/**
+ * Check one domain whether it is valid.
+ * Taken from https://stackoverflow.com/a/4694816
+ *
+ * @param $domainname
+ * @return bool
+ */
+function is_valid_domain_name($domainname) {
+    return (1 === preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domainname) // Valid chars check.
+            && 1 === preg_match("/^.{1,253}$/", $domainname) // Overall length check.
+            && 1 === preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)); // Length of each label.
+}
+

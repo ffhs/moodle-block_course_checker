@@ -32,19 +32,6 @@ defined('MOODLE_INTERNAL') || die();
 class admin_setting_domainwhitelist extends admin_setting_configtextarea {
 
     /**
-     * Check one domain whether it is valid.
-     * Taken from https://stackoverflow.com/a/4694816
-     *
-     * @param $domainname
-     * @return bool
-     */
-    protected function is_valid_domain_name($domainname) {
-        return (1 === preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domainname) // Valid chars check.
-                && 1 === preg_match("/^.{1,253}$/", $domainname) // Overall length check.
-                && 1 === preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)); // Length of each label.
-    }
-
-    /**
      * @inheritDoc
      */
     public function validate($data) {
@@ -53,7 +40,7 @@ class admin_setting_domainwhitelist extends admin_setting_configtextarea {
             return get_string('admin_domain_name_default_missing', 'block_course_checker', fetch_url::WHITELIST_DEFAULT);
         }
         foreach ($domains as $domainname) {
-            if (!$this->is_valid_domain_name($domainname)) {
+            if (!is_valid_domain_name($domainname)) {
                 return get_string('admin_domain_name_notvalid', 'block_course_checker', $domainname);
             };
         }

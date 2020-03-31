@@ -19,15 +19,17 @@
  * @copyright   2020 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_course_checker\model;
 
 use coding_exception;
 
 defined('MOODLE_INTERNAL') || die();
+
 /**
  * This is an interface made to run a single check.
  */
-interface check_edit_form_interface{
+interface check_edit_form_interface {
     
     /**
      * @param object $mform
@@ -35,4 +37,13 @@ interface check_edit_form_interface{
      * @throws coding_exception
      */
     public function specific_definition($mform);
+    
+    /**
+     * @param $data
+     * @param $files
+     * @param $errors
+     * @return mixed
+     * @throws coding_exception
+     */
+    function validation($data, $files, $errors);
 }
