@@ -23,37 +23,76 @@ require_once(__DIR__ . '/locallib.php');
  * Form for editing HTML block instances.
  *
  * @package     block_course_checker
- * @copyright   2018 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
+ * @copyright   2020 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_course_checker_edit_form extends block_edit_form {
+    
     /**
-     * @param object $mform
-     * @throws coding_exception
+     * @var array $checkerEditForms
      */
-    protected function specific_definition($mform) {
+    protected $checkerEditForms = [];
+    
+    /**
+     * block_course_checker_edit_form constructor.
+     *
+     * @param $actionurl
+     * @param $block
+     * @param $page
+     */
+    function __construct($actionurl, $block, $page) {
+        $this->checkerEditForms = $this->get_checker_edit_forms();
+        parent::__construct($actionurl, $block, $page);
+    }
+    
+    /**
+     * @return array
+     */
+    protected function get_checker_edit_forms(){
+        $checkerEditForms = [];
         // Get checker plugins.
         $manager = plugin_manager::instance();
         foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
-            $truecheckername = get_string($checkername, 'block_course_checker');
             $classname = $checkername . '_edit_form';
-            
+        
             // Include the checker's edit form file.
-            $mform = call_user_func(function() use ($mform, $checkername, $manager, $classname, $truecheckername) {
-                $settingfile = $manager->get_checker_edit_form_file($checkername);
-                if (null == $settingfile) {
-                    return $mform;
+            $checkerEditForm = call_user_func(function() use ($checkername, $manager, $classname) {
+                $editformfile = $manager->get_checker_edit_form_file($checkername);
+                if (null == $editformfile) {
+                    return null;
                 }
-                require($settingfile);
-                
+                require($editformfile);
+    
+                // Create new edit form class, if the class exists.
                 if (!class_exists($classname)) {
-                    return $mform;
+                    return null;
                 }
                 
-                // Load the checkers specific definition.
-                $mform->addElement('header', $checkername. '_header', $truecheckername);
-                return $classname::specific_definition($mform);
+                $checkerEditForm = new $classname();
+                $checkerEditForm->checkername = $checkername;
+                $checkerEditForm->truecheckername = get_string($checkername, 'block_course_checker');
+            
+                return $checkerEditForm;
             });
+            
+            if(null == $checkerEditForm){
+                continue;
+            }
+            
+            $checkerEditForms[] = $checkerEditForm;
+        }
+        return $checkerEditForms;
+    }
+    
+    /**
+     * @param object $mform
+     * @return mixed|void
+     */
+    protected function specific_definition($mform) {
+        foreach ($this->checkerEditForms as $checkerEditForm){
+            // Load the checkers specific definition.
+            $mform->addElement('header', $checkerEditForm->checkername. '_header', $checkerEditForm->truecheckername);
+            return $checkerEditForm->specific_definition($mform);
         }
     }
 }

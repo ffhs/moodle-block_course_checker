@@ -13,41 +13,26 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Settings for checking links inside the course
  *
  * @package     block_course_checker
  * @copyright   2020 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace block_course_checker\model;
 
-use block_course_checker\model\check_edit_form_interface;
+use coding_exception;
 
 defined('MOODLE_INTERNAL') || die();
-
-class checker_link_edit_form implements check_edit_form_interface{
-    
-    /**
-     * @var string $checkername
-     */
-    public $checkername;
-    
-    /**
-     * @var string $truecheckername
-     */
-    public $truecheckername;
+/**
+ * This is an interface made to run a single check.
+ */
+interface check_edit_form_interface{
     
     /**
      * @param object $mform
      * @return object $mform
      * @throws coding_exception
      */
-    public function specific_definition($mform){
-        // Whitelist for block-specific links.
-        $mform->addElement('textarea', 'config_link_whitelist', get_string('checker_link_setting_whitelist', 'block_course_checker'));
-        $mform->setType('config_link_whitelist', PARAM_TEXT);
-        $mform->addHelpButton('config_link_whitelist', 'checker_link_setting_whitelist', 'block_course_checker');
-        return $mform;
-    }
+    public function specific_definition($mform);
 }
