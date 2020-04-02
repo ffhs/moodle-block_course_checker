@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Checking if all dates are disabled
+ * Checking if all dates are disabled. In reference courses no dates should be enabled.
  *
  * @package    block_course_checker
  * @copyright  2020 FFHS <christoph.karlen@ffhs.ch>

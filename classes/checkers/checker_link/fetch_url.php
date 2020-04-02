@@ -69,6 +69,7 @@ class fetch_url {
     
     /**
      * Initialize checker by setting it up with the configuration
+     * Todo access to blockdomainwhitelist config is not working;
      */
     public function init() {
         // Load settings.
@@ -76,6 +77,7 @@ class fetch_url {
         $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
         $this->useragent = (string) $this->get_config(self::USERAGENT_SETTING, self::USERAGENT_DEFAULT);
         $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
+        //$blockdomainwhitelist = (string) $this->get_config('block_course_checker/config_link_whitelist');
         $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
     }
     

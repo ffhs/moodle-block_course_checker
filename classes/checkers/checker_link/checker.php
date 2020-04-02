@@ -101,8 +101,9 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @param null $target
      */
     protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
+        $urlcheckresult = new fetch_url();
         foreach ($urls as $i => $url) {
-            $urlcheckresult = (new fetch_url())->fetch($url);
+            $urlcheckresult->fetch($url);
             $this->checkresult->set_successful($this->checkresult->is_successful() & $urlcheckresult->successful);
             $this->checkresult->add_detail([
                     "successful" => $urlcheckresult->successful,
