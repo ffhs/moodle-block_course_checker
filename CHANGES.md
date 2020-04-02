@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.7-r2 (Build: )] + [ (Build: )] - 
+### Added
+- It's now possible to define a block configuration for every checker `classes/checkers/checker_name/edit_form.php`
+- New data checker to check if there are database activities without fields
+- New activedates checker to see if there are any active dates in activities
+- The referencesettings-checker can now be used to compare filter
+
+### Changed
+- The link-checker has been improved in order to get better results
+- The link-checker has now more possibilities to configure - User Agent
+- The link-checker now checks book-chapters and  
+
 ## [v3.7-r1 (Build: 2019121800)] + [v3.6-r5 (Build: 2019071004)] - 2019-12-18
 ### Changed
 - cURL request follows now three redirects

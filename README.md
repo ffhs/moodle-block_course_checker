@@ -35,6 +35,8 @@ This plugin provides interfaces and well defined result objects to extend this p
     - A list with edited and created activities since this date will be displayed
 - The user will be notified by Moodle when a check is done
 - Individual settings are defined in each checker (`classes/checkers/checker_name/settings.php`), rather than in settings.php
+- Individual edit_forms are defined in each checker (`classes/checkers/checker_name/edit_form.php`), rather than in edit_form.php
+    - Implement the check_edit_form_interface
 - Individual dependencies are defined in each checker (`classes/checkers/checker_name/dependency.php`)
 
 ### Available checkers
@@ -45,6 +47,8 @@ This plugin provides interfaces and well defined result objects to extend this p
 |Links|As editing teacher,<br>I would like to see if all the external links that are in the course are reachable,<br>In order to make sure there are no broken links in the course.<br>- Links that requires authentication are currently not supported (internal moodle links)| |
 |Reference Settings|As Administrator,<br> I would like to be able to compare specific setting fields between a course and the reference course and configure which fields are compared<br>In order to allow me to add easy checks without updating the plugin.| |
 |Label Subheadings|As editing teacher,<br>I would like to see, if all label activities starts with a h4 tag and a fontawesome icon.| |
+|Data activity check|As editing teacher,<br>I would like to see, if all data (database) activities containing fields.| |
+|Active dates check|As editing teacher,<br>I would like to see, if any activities have enabled dates.| |
 
 ## Copyright
 Copyright (C) 2019 <a href="https://www.liip.ch" target="_blank">Liip AG</a> the Swiss Moodle Partner.
