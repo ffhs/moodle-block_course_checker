@@ -19,7 +19,7 @@
  * assignments for a course.
  *
  * @package    block_course_checker
- * @copyright  2019 FFHS <christoph.karlen@ffhs.ch>
+ * @copyright  2020 FFHS <christoph.karlen@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,12 +31,10 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
+use block_course_checker\model\mod_type_interface;
 
-class checker implements check_plugin_interface {
+class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
-    // Module name for databases in Moodle.
-    const MOD_TYPE_DB = 'data';
-
     
     /**
      * Runs the check data activities of a course
@@ -55,7 +53,7 @@ class checker implements check_plugin_interface {
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
             // Skip activities that are not assignments.
-            if ($cm->modname != self::MOD_TYPE_DB) {
+            if ($cm->modname != self::MOD_TYPE_DATA) {
                 continue;
             }
             // Skip activities that are not visible.
