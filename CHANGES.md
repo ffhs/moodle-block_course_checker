@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v3.7-r2 (Build: )] + [ (Build: )] - 
 ### Added
 - It's now possible to define a block configuration for every checker `classes/checkers/checker_name/edit_form.php`
-- New data checker to check if there are database activities without fields
-- New activedates checker to see if there are any active dates in activities
-- The referencesettings-checker can now be used to compare filter
+- New data checker to check if there are database activities without fields ([issue #25](https://github.com/ffhs/moodle-block_course_checker/issues/25)) 
+- New activedates checker to see if there are any active dates in activities ([issue #19](https://github.com/ffhs/moodle-block_course_checker/issues/19)) 
+- The referencesettings-checker can now be used to compare filter ([issue #24](https://github.com/ffhs/moodle-block_course_checker/issues/24)) 
 
 ### Changed
-- The link-checker has been improved in order to get better results
-- The link-checker has now more possibilities to configure - User Agent
-- The link-checker now checks book-chapters and  
+- The link-checker has been improved in order to get better results ([issue #15](https://github.com/ffhs/moodle-block_course_checker/issues/15)) 
+- The link-checker has now more possibilities to configure: e.g. User Agent ([issue #12](https://github.com/ffhs/moodle-block_course_checker/issues/12)) 
+- The link-checker now checks book-chapters ([issue #13](https://github.com/ffhs/moodle-block_course_checker/issues/13))  
 
 ## [v3.7-r1 (Build: 2019121800)] + [v3.6-r5 (Build: 2019071004)] - 2019-12-18
 ### Changed
