@@ -134,7 +134,7 @@ $string['groups_activity'] = 'Activity "{$a->name}"';
 
 // String specific for the activedates checker.
 $string['activedates_noactivedates'] = 'There shouldn\'t be enabled dates in the "activity completion" section.';
-$string['activedates_noactivedatesinactivity'] = 'There shouldn\'t be enabled dates in the {$modtype} activity, look for {$adateissetin}';
+$string['activedates_noactivedatesinactivity'] = 'There shouldn\'t be enabled dates in the {$a->modtype} activity, look for the following fields: {$a->adateissetin}';
 
 // String specific for the attendance checker.
 $string['attendance_missingplugin'] = 'Skip this testcase because mod_attendance is not installed';

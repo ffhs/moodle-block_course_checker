@@ -42,54 +42,54 @@ class checker implements check_plugin_interface, mod_type_interface {
      */
     private $modtypstocheck = [
             self::MOD_TYPE_ASSIGN => [
-                    'allowsubmissionsfromdate',
-                    'duedate',
-                    'cutoffdate',
-                    'gradingduedate'
+                    'allowsubmissionsfromdate' => false,
+                    'duedate' => false,
+                    'cutoffdate' => false,
+                    'gradingduedate' => false
             ],
             self::MOD_TYPE_CHOICE => [
-                    'timeopen',
-                    'timeclose'
+                    'timeopen' => 'choiceopen',
+                    'timeclose' => 'choiceclose'
             ],
             self::MOD_TYPE_CHOICEGROUP => [
-                    'timeopen',
-                    'timeclose'
+                    'timeopen' => 'choicegroupopen',
+                    'timeclose' => 'choicegroupclose'
             ],
             self::MOD_TYPE_FEEDBACK => [
-                    'timeopen',
-                    'timeclose'
+                    'timeopen' => 'feedbackopen',
+                    'timeclose' => 'feedbackclose'
             ],
             self::MOD_TYPE_QUESTIONNAIRE => [
-                    'opendate',
-                    'closedate'
+                    'opendate' => false,
+                    'closedate' => false
             ],
             self::MOD_TYPE_QUIZ => [
-                    'timeopen',
-                    'timeclose'
+                    'timeopen' => 'quizopen',
+                    'timeclose' => 'quizclose'
             ],
             self::MOD_TYPE_LESSON => [
-                    'available',
-                    'deadline'
+                    'available' => false,
+                    'deadline' => false
             ],
             self::MOD_TYPE_DATA => [
-                    'timeavailablefrom',
-                    'timeavailableto',
-                    'timeviewfrom',
-                    'timeviewto'
+                    'timeavailablefrom' => 'availablefromdate',
+                    'timeavailableto' => 'availabletodate',
+                    'timeviewfrom' => 'viewfromdate',
+                    'timeviewto' => 'viewtodate'
             ],
             self::MOD_TYPE_FORUM => [
-                    'duedate',
-                    'cutoffdate'
+                    'duedate' => false,
+                    'cutoffdate' => false
             ],
             self::MOD_TYPE_SCORM => [
-                    'timeopen',
-                    'timeclose'
+                    'timeopen' => false,
+                    'timeclose' => false
             ],
             self::MOD_TYPE_WORKSHOP => [
-                    'submissionstart',
-                    'submissionend',
-                    'assessmentstart',
-                    'assessmentend'
+                    'submissionstart' => false,
+                    'submissionend' => false,
+                    'assessmentstart' => false,
+                    'assessmentend' => false
             ]
     ];
     
@@ -113,7 +113,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             
             // Search for problems in the "Activity completion" section.
             if ($cm->completionexpected !== 0) {
-                $message =  get_string('activedates_noactivedates', 'block_course_checker');
+                $message = get_string('activedates_noactivedates', 'block_course_checker');
                 $this->checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
@@ -154,14 +154,14 @@ class checker implements check_plugin_interface, mod_type_interface {
         }
         
         // Usually base table names of a module corresponds to the modname.
-        if(!$table){
+        if (!$table) {
             $table = $modtype;
         }
         
-        $assign = $DB->get_record($table, array('id' => $cm->instance), implode(',', $fields));
-        foreach ($fields as $field){
-            if($assign->$field != 0){
-                $adateissetin[] = $field;
+        $assign = $DB->get_record($table, array('id' => $cm->instance), implode(',', array_keys($fields)));
+        foreach ($fields as $field => $languagekey) {
+            if ($assign->$field != 0) {
+                $adateissetin[] = self::get_field_translation($field, $languagekey, $modtype);
             }
         }
         
@@ -170,8 +170,8 @@ class checker implements check_plugin_interface, mod_type_interface {
                     "activedates_noactivedatesinactivity",
                     "block_course_checker",
                     array(
-                            'modtype'=>$modtype,
-                            'adateissetin'=>implode(',', $adateissetin)
+                            'modtype' => $modtype,
+                            'adateissetin' => implode(', ', $adateissetin)
                     )
             );
             $this->checkresult->add_detail([
@@ -190,7 +190,7 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \moodle_exception
      */
     private function get_link_to_modedit_page(\cm_info $cm) {
-        $url = new \moodle_url('/mod/'.$cm->modname.'/view.php', [
+        $url = new \moodle_url('/mod/' . $cm->modname . '/view.php', [
                 "id" => $cm->id,
                 "sesskey" => sesskey()
         ]);
@@ -207,6 +207,19 @@ class checker implements check_plugin_interface, mod_type_interface {
         $targetcontext = (object) ["name" => strip_tags($cm->name)];
         $target = get_string("groups_activity", "block_course_checker", $targetcontext);
         return $target;
+    }
+    
+    /**
+     * @param $field
+     * @param $modtype
+     * @return string
+     * @throws \coding_exception
+     */
+    private static function get_field_translation($field, $laguagekey, $modtype) {
+        if($laguagekey){
+            return get_string($laguagekey, 'mod_' . $modtype);
+        }
+        return get_string($field, 'mod_' . $modtype);
     }
     
     /**
