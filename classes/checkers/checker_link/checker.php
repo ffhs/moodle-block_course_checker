@@ -54,14 +54,14 @@ class checker implements check_plugin_interface, mod_type_interface {
         $this->checkresult = new check_result();
         $this->check_course_summary($course);
         $modules = $this->get_unique_modnames($course);
-    
+
         // You will got strait to the edition page for theses mods.
         foreach ($modules as $modname) {
             $instances = get_all_instances_in_courses($modname, [$course->id => $course]);
             foreach ($instances as $mod) {
                 $target = $this->get_target($modname,$mod);
                 $url = $this->get_link_to_modedit_or_view_page($modname, $mod);
-                
+
                 // For url, we have to check the externalurl too.
                 if ($modname === self::MOD_TYPE_URL) {
                     $this->check_urls_with_resolution_url([$mod->externalurl], $url, $target);
