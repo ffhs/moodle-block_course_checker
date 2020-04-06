@@ -216,7 +216,7 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \coding_exception
      */
     private static function get_field_translation($field, $laguagekey, $modtype) {
-        if($laguagekey){
+        if ($laguagekey) {
             return get_string($laguagekey, 'mod_' . $modtype);
         }
         return get_string($field, 'mod_' . $modtype);

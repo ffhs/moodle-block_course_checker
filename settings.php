@@ -41,8 +41,12 @@ if ($ADMIN->fulltree) {
     // Define the global roles which are allowed to use the manual check form.
     $visiblename = get_string('settings_rolesallowedmanual', 'block_course_checker', null, true);
     $description = get_string('settings_rolesallowedmanual_description', 'block_course_checker', null, true);
-    $settings->add(new admin_setting_pickroles(block_renderer::ROLESALLOWEDMANUAL_SETTING, $visiblename, $description, block_renderer::ROLESALLOWEDMANUAL_DEFAULT));
-    
+    $settings->add(new admin_setting_pickroles(
+            block_renderer::ROLESALLOWEDMANUAL_SETTING,
+            $visiblename, $description,
+            block_renderer::ROLESALLOWEDMANUAL_DEFAULT
+    ));
+
     // Get checker plugins settings.
     $manager = plugin_manager::instance();
     foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {

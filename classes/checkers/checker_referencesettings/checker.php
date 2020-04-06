@@ -35,26 +35,26 @@ use context_course;
 
 class checker implements check_plugin_interface {
     use checker_config_trait;
-
+    
     /** @var check_result */
     protected $result = null;
-
+    
     const REFERENCE_COURSE = 'block_course_checker/referencecourseid';
     const REFERENCE_COURSE_DEFAULT = 1;
     const REFERENCE_COURSE_SETTINGS = 'block_course_checker/checker_referencesettings_checklist';
     const REFERENCE_COURSE_SETTINGS_DEFAULT = ['format' => 1];
     const REFERENCE_COURSE_FILTER_ENABLED = 'block_course_checker/checker_referencesettings_filter';
     const REFERENCE_COURSE_FILTER_ENABLED_DEFAULT = false;
-
+    
     /** @var int $referencecourseid from checker settings */
     protected $referencecourseid;
-
+    
     /** @var array $referencecourseid from checker settings */
     protected $referencesettings = [];
     
     /** @var array $referencefilterenabled from checker settings */
     protected $referencefilterenabled = false;
-
+    
     /**
      * Initialize checker by setting it up with the configuration
      *
@@ -71,7 +71,7 @@ class checker implements check_plugin_interface {
                 self::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT
         );
     }
-
+    
     /**
      * Runs the check
      *
@@ -83,10 +83,10 @@ class checker implements check_plugin_interface {
     public function run($course) {
         // Get active setting checks from configuration.
         $this->init();
-
+        
         // Initialize check result array.
         $this->result = new check_result();
-
+        
         // Get current and referencecourse configuration.
         $currentcourse = $course;
         $referencecourse = get_course($this->referencecourseid);
@@ -96,11 +96,11 @@ class checker implements check_plugin_interface {
         
         // Check if the course filters have the same settings as the template reference course.
         $this->compare_course_level_filters($currentcourse, $referencecourse);
-    
+        
         // Return the check results.
         return $this->result;
     }
-
+    
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -110,7 +110,7 @@ class checker implements check_plugin_interface {
     public static function get_group() {
         return 'group_course_settings';
     }
-
+    
     /**
      * @param $setting
      * @param \stdClass $referencecourse
@@ -135,9 +135,13 @@ class checker implements check_plugin_interface {
         return get_string(
                 'checker_referencefilter_comparison',
                 'block_course_checker',
-                ['filtervaluereference' => $filterinforeference->localstate, 'filtervaluecurrent' => $filterinfocurrent->localstate]);
+                [
+                        'filtervaluereference' => $filterinforeference->localstate,
+                        'filtervaluecurrent' => $filterinfocurrent->localstate
+                ]
+        );
     }
-
+    
     /**
      * @param $course
      * @return string
@@ -231,7 +235,7 @@ class checker implements check_plugin_interface {
      * @throws \moodle_exception
      */
     protected function compare_course_level_filters(\stdClass $currentcourse, \stdClass $referencecourse) {
-        if(!$this->referencefilterenabled){
+        if (!$this->referencefilterenabled) {
             return;
         }
         
@@ -245,11 +249,11 @@ class checker implements check_plugin_interface {
         
         // Count occurring errors.
         $occurringfilterproblems = 0;
-    
+        
         // Get link to course filter page.
         $link = $this->get_link_to_course_filter_page($currentcontext);
         
-        // Count all errors
+        // Count all errors.
         foreach ($referenceavailablefilters as $filterkey => $referencefilterinfo) {
             if (!isset($currentavailablefilters[$filterkey])) {
                 $message = get_string(
@@ -282,10 +286,10 @@ class checker implements check_plugin_interface {
             }
         }
         
-        if($occurringfilterproblems === 0){
+        if ($occurringfilterproblems === 0) {
             $this->result->add_detail([
                     "successful" => true,
-                    "message" => get_string('checker_referencefilter_success','block_course_checker'),
+                    "message" => get_string('checker_referencefilter_success', 'block_course_checker'),
             ]);
         }
     }

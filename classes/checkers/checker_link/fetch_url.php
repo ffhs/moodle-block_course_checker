@@ -53,10 +53,10 @@ class fetch_url {
     /** @var int $connecttimeout from checker settings */
     protected $timeout;
     
-    /** @var array list of ignored domains  */
+    /** @var array list of ignored domains */
     protected $ignoredomains;
     
-    /** @var string user agent  */
+    /** @var string user agent */
     protected $useragent;
     
     /** @var string $message */
@@ -78,7 +78,7 @@ class fetch_url {
         $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
         $this->useragent = (string) $this->get_config(self::USERAGENT_SETTING, self::USERAGENT_DEFAULT);
         $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
-        //$blockdomainwhitelist = (string) $this->get_config('block_course_checker/config_link_whitelist');
+        // $blockdomainwhitelist = (string) $this->get_config('block_course_checker/config_link_whitelist');
         $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
     }
     
@@ -108,16 +108,16 @@ class fetch_url {
             $this->successful = true;
             return $this;
         }
-    
+        
         $this->ignoreddomain = false;
         
         // Use curl to checks the urls.
-        //$settings['debug'] = true;
+        // You can use "$settings['debug'] = true" to debug the curl request.;
         $curl = new \curl();
         
-        $httpheader=array();
-        $httpheader[]="Accept-Encoding: gzip, deflate, br";
-        $httpheader[]="Accept:*/*";
+        $httpheader = array();
+        $httpheader[] = "Accept-Encoding: gzip, deflate, br";
+        $httpheader[] = "Accept:*/*";
         
         $curl->head($url, [
                 "CURLOPT_HTTPHEADER" => $httpheader,
@@ -129,13 +129,13 @@ class fetch_url {
                 "CURLOPT_SSL_VERIFYHOST" => 0,
                 "CURLOPT_SSL_VERIFYPEER" => 0,
                 "CURLOPT_ENCODING" => "gzip",
-                "CURLOPT_REFERER"  => $url // Essentially this tells the server which page sent you there.
+                "CURLOPT_REFERER" => $url // Essentially this tells the server which page sent you there.
         ]);
-
+        
         $infos = $curl->get_info();
         $code = (int) $infos["http_code"];
         if ($code === 0) {
-            if($this->fileGetContent($url,$parseurl)){
+            if ($this->file_get_content($url, $parseurl)) {
                 return $this;
             }
             
@@ -145,7 +145,7 @@ class fetch_url {
             $this->successful = false;
             return $this;
         }
-    
+        
         $context = $parseurl + ["url" => $url, "http_code" => $code];
         if ($code >= 200 && $code < 400) {
             $this->message = get_string("checker_link_ok", "block_course_checker", $context);
@@ -153,7 +153,7 @@ class fetch_url {
             return $this;
         }
         
-        if($this->fileGetContent($url,$parseurl) && $code != 404){  // If curl finds 404, we don't need to run file get content.
+        if ($this->file_get_content($url, $parseurl) && $code != 404) {  // If curl finds 404, we don't need to run file get content.
             return $this;
         }
         
@@ -168,22 +168,22 @@ class fetch_url {
      * @param $parseurl
      * @return bool
      */
-    protected function fileGetContent($url,$parseurl){
+    protected function file_get_content($url, $parseurl) {
         try {
             @file_get_contents($url);
-        
+            
             $httpresponse = null;
-            if(!empty($http_response_header)){
-                $httpresponse = $this->parseHeaders($http_response_header);
+            if (!empty($http_response_header)) {
+                $httpresponse = $this->parse_headers($http_response_header);
             }
-        
-            if(isset($httpresponse['reponse_code']) && (int) $httpresponse['reponse_code'] == 200){
+            
+            if (isset($httpresponse['reponse_code']) && (int) $httpresponse['reponse_code'] == 200) {
                 $context = $parseurl + ["url" => $url, "http_code" => "200"];
-                $this->message = get_string("checker_link_ok", "block_course_checker", $context)." (file_get_contents)";
+                $this->message = get_string("checker_link_ok", "block_course_checker", $context) . " (file_get_contents)";
                 $this->successful = true;
                 return true;
             }
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
         return false;
@@ -193,19 +193,17 @@ class fetch_url {
      * @param $headers
      * @return array
      */
-    protected function parseHeaders( $headers )
-    {
+    protected function parse_headers($headers) {
         $head = array();
-        foreach( $headers as $k=>$v )
-        {
-            $t = explode( ':', $v, 2 );
-            if( isset( $t[1] ) )
-                $head[ trim($t[0]) ] = trim( $t[1] );
-            else
-            {
+        foreach ($headers as $k => $v) {
+            $t = explode(':', $v, 2);
+            if (isset($t[1])) {
+                $head[trim($t[0])] = trim($t[1]);
+            } else {
                 $head[] = $v;
-                if( preg_match( "#HTTP/[0-9\.]+\s+([0-9]+)#",$v, $out ) )
+                if (preg_match("#HTTP/[0-9\.]+\s+([0-9]+)#", $v, $out)) {
                     $head['reponse_code'] = intval($out[1]);
+                }
             }
         }
         return $head;

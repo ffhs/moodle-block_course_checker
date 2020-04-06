@@ -60,12 +60,12 @@ class checker implements check_plugin_interface, mod_type_interface {
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
-    
+            
             $countfields = $DB->count_records('data_fields', array('dataid' => $cm->instance));
             $target = $this->get_target($cm);
             $link = $this->get_link_to_modedit_page($cm);
-
-            if($countfields == 0){
+            
+            if ($countfields == 0) {
                 $message = get_string('data_nofieldsdefined', 'block_course_checker');
                 $checkresult->add_detail([
                         "successful" => false,
@@ -75,7 +75,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                 ])->set_successful(false);
                 continue;
             }
-    
+            
             $message = get_string('data_fieldsdefined', 'block_course_checker');
             $checkresult->add_detail([
                     "successful" => true,

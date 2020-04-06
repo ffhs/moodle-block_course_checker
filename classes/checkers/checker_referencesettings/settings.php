@@ -32,24 +32,24 @@ $setting;
 
 /** @var array of coursesettings_fields to check $choices */
 $choices = [
-    // General.
-    'category' => get_string('category'),
-    'visible' => get_string('visible'),
-    'startdate' => get_string('startdate'),
-    // Summary.
-    'summary' => get_string('summary'),
-    // Course Format.
-    'format' => get_string('format'),
-    // Appearance.
-    'showgrades' => get_string('showgrades'),
-    'newsitems' => get_string('newsitemsnumber'),
-    'lang' => get_string('forcelanguage'),
-    'showreports' => get_string('showreports'),
-    // Files and uploads.
-    'legacyfiles' => get_string('courselegacyfiles'),
-    'maxbytes' => get_string('maximumupload'),
-    // Completion Tracking.
-    'enablecompletion' => get_string('enablecompletion', 'completion'),
+        // General.
+        'category' => get_string('category'),
+        'visible' => get_string('visible'),
+        'startdate' => get_string('startdate'),
+        // Summary.
+        'summary' => get_string('summary'),
+        // Course Format.
+        'format' => get_string('format'),
+        // Appearance.
+        'showgrades' => get_string('showgrades'),
+        'newsitems' => get_string('newsitemsnumber'),
+        'lang' => get_string('forcelanguage'),
+        'showreports' => get_string('showreports'),
+        // Files and uploads.
+        'legacyfiles' => get_string('courselegacyfiles'),
+        'maxbytes' => get_string('maximumupload'),
+        // Completion Tracking.
+        'enablecompletion' => get_string('enablecompletion', 'completion'),
 ];
 
 // Referencesettings Checker Checklist settings.
@@ -63,7 +63,7 @@ $checklist = new admin_setting_configmulticheckbox(
         $choices);
 $setting->add($checklist);
 
-// Referencesettings Checker Filter settings
+// Referencesettings Checker Filter settings.
 $visiblename = get_string('checker_referencefilter_enabled', 'block_course_checker');
 $description = new lang_string('checker_referencefilter_enabled_help', 'block_course_checker');
 $setting->add(new admin_setting_configcheckbox(

@@ -68,7 +68,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
         $record = new StdClass();
         $record->name = 'field-1';
         $record->type = 'text';
-    
+        
         $this->datagenerator->create_field($record, $this->instance);
         $this->assert_fields_in_data_activity();
     }
@@ -114,7 +114,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
     /**
      * @return string
      */
-    protected static function get_component(){
+    protected static function get_component() {
         return 'mod_' . self::MOD_TYPE_DATA;
     }
 }
