@@ -36,7 +36,7 @@ class checker implements check_plugin_interface, mod_type_interface {
     /** @var check_result */
     protected $checkresult = null;
     
-    /** @var array list of modules which can be linked directly to the module config page  */
+    /** @var array list of modules which can be linked directly to the module config page */
     protected $directmodnames = [
             self::MOD_TYPE_RESOURCE,
             self::MOD_TYPE_LABEL
@@ -54,14 +54,14 @@ class checker implements check_plugin_interface, mod_type_interface {
         $this->checkresult = new check_result();
         $this->check_course_summary($course);
         $modules = $this->get_unique_modnames($course);
-
+        
         // You will got strait to the edition page for theses mods.
         foreach ($modules as $modname) {
             $instances = get_all_instances_in_courses($modname, [$course->id => $course]);
             foreach ($instances as $mod) {
-                $target = $this->get_target($modname,$mod);
+                $target = $this->get_target($modname, $mod);
                 $url = $this->get_link_to_modedit_or_view_page($modname, $mod);
-
+                
                 // For url, we have to check the externalurl too.
                 if ($modname === self::MOD_TYPE_URL) {
                     $this->check_urls_with_resolution_url([$mod->externalurl], $url, $target);
@@ -89,7 +89,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                 }
             }
         }
-
+        
         return $this->checkresult;
     }
     
@@ -102,7 +102,7 @@ class checker implements check_plugin_interface, mod_type_interface {
      */
     protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
         $urlcheckresult = new fetch_url();
-        foreach ($urls as $i => $url) {
+        foreach ($urls as $url) {
             $urlcheckresult->fetch($url);
             $this->checkresult->set_successful($this->checkresult->is_successful() & $urlcheckresult->successful);
             $this->checkresult->add_detail([
@@ -115,7 +115,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             ]);
         }
     }
-
+    
     /**
      * Extract url from a string
      *
@@ -132,7 +132,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         }
         return [];
     }
-
+    
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -150,7 +150,7 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    private function get_link_to_modedit_or_view_page($modname,$mod) {
+    private function get_link_to_modedit_or_view_page($modname, $mod) {
         // We open the edition page instead of the mod/view itself.
         if (in_array($modname, $this->directmodnames)) {
             $url = new \moodle_url('/course/modedit.php', [
@@ -209,9 +209,9 @@ class checker implements check_plugin_interface, mod_type_interface {
      */
     protected function check_book_chapters($mod) {
         global $DB;
-        $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '','id,title,content');
+        $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '', 'id,title,content');
         foreach ($chapters as $chapter) {
-            $target = get_string('checker_link_book_chapter','block_course_checker', (object) ["title" => $chapter->title]);
+            $target = get_string('checker_link_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
             $url = new \moodle_url('/mod/wiki/edit.php', ['pageid' => $chapter->id]);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
         }
@@ -227,7 +227,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         
         $pages = $DB->get_records('wiki_pages', array('subwikiid' => $mod->id), '', 'id,title,cachedcontent');
         foreach ($pages as $page) {
-            $target = get_string('checker_link_wiki_page','block_course_checker', (object) ["title" => $page->title]);
+            $target = get_string('checker_link_wiki_page', 'block_course_checker', (object) ["title" => $page->title]);
             $url = new \moodle_url('/mod/wiki/edit.php', ['pageid' => $page->id]);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($page->cachedcontent), $url, $target);
         }

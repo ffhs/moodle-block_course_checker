@@ -85,7 +85,7 @@ if ($ADMIN->fulltree) {
             $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
             $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
                     true));
-            if (!$manager->get_checker_status($checkername)) {
+            if (!$manager->is_checker_status($checkername)) {
                 $visiblename = get_string('settings_checker_hide', 'block_course_checker', $truecheckername);
                 $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_hidden', $visiblename,
                         null, false));

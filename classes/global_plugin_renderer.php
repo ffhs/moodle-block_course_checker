@@ -159,7 +159,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
                 "resultdetails" => $resultdetails,
                 "lastrundate" => $lastrundate,
-                "enabled" => plugin_manager::instance()->get_checker_status($checkername)
+                "enabled" => plugin_manager::instance()->is_checker_status($checkername)
         ]);
 
         $output = "";
@@ -200,7 +200,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
         $canrerun = !task_helper::instance()->is_task_scheduled($courseid, $checkername);
         $canrerun &= !task_helper::instance()->is_task_scheduled($courseid);
         $isenabled = true;
-        if (plugin_manager::instance()->get_checker_status($checkername) == false) {
+        if (plugin_manager::instance()->is_checker_status($checkername) == false) {
             $canrerun = 0;
             $isenabled = false;
         }

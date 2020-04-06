@@ -167,7 +167,7 @@ class plugin_manager implements check_manager_interface {
         }
 
         $dependency = self::get_checker_dependency_info($checkername);
-        if ((!self::get_checker_status($checkername) && self::get_checker_hidden($checkername)) || !$dependency['status']) {
+        if ((!self::is_checker_status($checkername) && self::is_checker_hidden($checkername)) || !$dependency['status']) {
             return null;
         }
 
@@ -216,7 +216,7 @@ class plugin_manager implements check_manager_interface {
     public function run_checks($course, $lastchecksrecord) {
         $results = [];
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            if ($this->get_checker_status($checkername)) {
+            if ($this->is_checker_status($checkername)) {
                 $singleresult = $checker->run($course);
                 $singleresult->add_timestamp();
                 $results[$checkername] = $singleresult;
@@ -298,7 +298,7 @@ class plugin_manager implements check_manager_interface {
             return [];
         }
 
-        if (!$this->get_checker_status($checkname)) {
+        if (!$this->is_checker_status($checkname)) {
             return [];
         }
 
@@ -313,7 +313,7 @@ class plugin_manager implements check_manager_interface {
      * @param string $checkername
      * @return bool
      */
-    public function get_checker_status(string $checkername): bool {
+    public function is_checker_status(string $checkername): bool {
         return get_config('block_course_checker', $checkername . '_status');
     }
 
@@ -321,7 +321,7 @@ class plugin_manager implements check_manager_interface {
      * @param string $checkername
      * @return bool
      */
-    public function get_checker_hidden(string $checkername): bool {
+    public function is_checker_hidden(string $checkername): bool {
         return get_config('block_course_checker', $checkername . '_hidden');
     }
 
@@ -330,7 +330,7 @@ class plugin_manager implements check_manager_interface {
      */
     public function are_checkers_enabled(): bool {
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            if ($this->get_checker_status($checkername)) {
+            if ($this->is_checker_status($checkername)) {
                 return true;
             }
         }

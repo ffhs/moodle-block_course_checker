@@ -112,7 +112,7 @@ class fetch_url {
         $this->ignoreddomain = false;
         
         // Use curl to checks the urls.
-        // You can use "$settings['debug'] = true" to debug the curl request.;
+        // You can use "$settings['debug'] = true;" to debug the curl request.
         $curl = new \curl();
         
         $httpheader = array();
@@ -153,7 +153,8 @@ class fetch_url {
             return $this;
         }
         
-        if ($this->file_get_content($url, $parseurl) && $code != 404) {  // If curl finds 404, we don't need to run file get content.
+        // If curl finds 404, we don't need to run file get content.
+        if ($this->file_get_content($url, $parseurl) && $code != 404) {
             return $this;
         }
         
@@ -195,7 +196,7 @@ class fetch_url {
      */
     protected function parse_headers($headers) {
         $head = array();
-        foreach ($headers as $k => $v) {
+        foreach ($headers as $v) {
             $t = explode(':', $v, 2);
             if (isset($t[1])) {
                 $head[trim($t[0])] = trim($t[1]);

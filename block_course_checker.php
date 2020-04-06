@@ -139,7 +139,7 @@ class block_course_checker extends block_base {
     }
 
     /**
-     * Render the checks results
+     * Render the checks results.
      *
      * @param array $results
      * @param int $courseid
@@ -148,7 +148,7 @@ class block_course_checker extends block_base {
      * @throws moodle_exception
      */
     protected function render_block(array $results) {
-        global $PAGE, $COURSE;
+        global $PAGE;
 
         // Render each check result with the dedicated render for this checker.
         $manager = plugin_manager::instance();
@@ -169,7 +169,7 @@ class block_course_checker extends block_base {
         // Sort results by group.
         $groupedresults = [];
         $grouporder = $manager->get_group_order();
-        foreach ($htmlresults as $count => $result) {
+        foreach ($htmlresults as $result) {
             $group = $manager->get_group($result['checkername']);
             $groupnr = $grouporder[$group];
             $groupname = get_string($group, "block_course_checker");

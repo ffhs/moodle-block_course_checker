@@ -59,8 +59,7 @@ class checker_link_edit_form implements check_edit_form_interface {
      * @return mixed
      * @throws coding_exception
      */
-    function validation($data, $files, $errors) {
-        
+    public function validation($data, $files, $errors) {
         if (!isset($data['config_link_whitelist'])) {
             return $errors;
         }

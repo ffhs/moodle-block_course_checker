@@ -29,9 +29,9 @@ require_once(__DIR__ . '/locallib.php');
 class block_course_checker_edit_form extends block_edit_form {
     
     /**
-     * @var array $checker_edit_forms
+     * @var array $checkereditforms
      */
-    protected $checker_edit_forms = [];
+    protected $checkereditforms = [];
     
     /**
      * block_course_checker_edit_form constructor.
@@ -41,7 +41,7 @@ class block_course_checker_edit_form extends block_edit_form {
      * @param $page
      */
     public function __construct($actionurl, $block, $page) {
-        $this->checker_edit_forms = $this->get_checker_edit_forms();
+        $this->checkereditforms = $this->get_checker_edit_forms();
         parent::__construct($actionurl, $block, $page);
     }
     
@@ -49,14 +49,14 @@ class block_course_checker_edit_form extends block_edit_form {
      * @return array
      */
     protected function get_checker_edit_forms() {
-        $checker_edit_forms = [];
+        $checkereditforms = [];
         // Get checker plugins.
         $manager = plugin_manager::instance();
         foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
             $classname = $checkername . '_edit_form';
             
             // Include the checker's edit form file.
-            $checkerEditForm = call_user_func(function() use ($checkername, $manager, $classname) {
+            $checkereditforms = call_user_func(function() use ($checkername, $manager, $classname) {
                 $editformfile = $manager->get_checker_edit_form_file($checkername);
                 if (null == $editformfile) {
                     return null;
@@ -68,20 +68,20 @@ class block_course_checker_edit_form extends block_edit_form {
                     return null;
                 }
                 
-                $checkerEditForm = new $classname();
-                $checkerEditForm->checkername = $checkername;
-                $checkerEditForm->truecheckername = get_string($checkername, 'block_course_checker');
+                $checkereditforms = new $classname();
+                $checkereditforms->checkername = $checkername;
+                $checkereditforms->truecheckername = get_string($checkername, 'block_course_checker');
                 
-                return $checkerEditForm;
+                return $checkereditforms;
             });
             
-            if (null == $checkerEditForm) {
+            if (null == $checkereditforms) {
                 continue;
             }
             
-            $checker_edit_forms[] = $checkerEditForm;
+            $checkereditforms[] = $checkereditforms;
         }
-        return $checker_edit_forms;
+        return $checkereditforms;
     }
     
     /**
@@ -89,10 +89,10 @@ class block_course_checker_edit_form extends block_edit_form {
      * @return mixed|void
      */
     protected function specific_definition($mform) {
-        foreach ($this->checker_edit_forms as $checkerEditForm) {
+        foreach ($this->checkereditforms as $checkereditforms) {
             // Load the checkers specific definition.
-            $mform->addElement('header', $checkerEditForm->checkername . '_header', $checkerEditForm->truecheckername);
-            return $checkerEditForm->specific_definition($mform);
+            $mform->addElement('header', $checkereditforms->checkername . '_header', $checkereditforms->truecheckername);
+            return $checkereditforms->specific_definition($mform);
         }
     }
     
@@ -103,8 +103,8 @@ class block_course_checker_edit_form extends block_edit_form {
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-        foreach ($this->checker_edit_forms as $checkerEditForm) {
-            $errors = $checkerEditForm->validation($data, $files, $errors);
+        foreach ($this->checkereditforms as $checkereditforms) {
+            $errors = $checkereditforms->validation($data, $files, $errors);
         }
         return $errors;
     }

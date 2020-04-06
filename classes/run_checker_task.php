@@ -55,7 +55,7 @@ class run_checker_task extends adhoc_task {
         if ($checkername) {
 
             // The check is disabled. Noting to do.
-            if (!plugin_manager::instance()->get_checker_status($checkername)) {
+            if (!plugin_manager::instance()->is_checker_status($checkername)) {
                 task_helper::instance()->clear_is_scheduled_cache();
                 return;
             }

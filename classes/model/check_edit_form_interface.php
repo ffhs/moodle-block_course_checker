@@ -45,5 +45,5 @@ interface check_edit_form_interface {
      * @return mixed
      * @throws coding_exception
      */
-    function validation($data, $files, $errors);
+    public function validation($data, $files, $errors);
 }
