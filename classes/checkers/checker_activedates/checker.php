@@ -190,9 +190,10 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \moodle_exception
      */
     private function get_link_to_modedit_page(\cm_info $cm) {
-        $url = new \moodle_url('/mod/' . $cm->modname . '/view.php', [
-                "id" => $cm->id,
-                "sesskey" => sesskey()
+        $url = new \moodle_url('/course/mod.php', [
+                "sesskey" => sesskey(),
+                "update" => $cm->id,
+                "sr" => 0
         ]);
         $link = $url->out_as_local_url(false);
         return $link;
