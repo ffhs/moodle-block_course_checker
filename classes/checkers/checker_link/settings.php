@@ -49,7 +49,7 @@ $setting->add($timeout);
 $visiblename = get_string('checker_link_setting_useragent', 'block_course_checker');
 $description = new lang_string('checker_link_setting_useragent_help', 'block_course_checker');
 $useragent = new admin_setting_configtext(fetch_url::USERAGENT_SETTING,
-        $visiblename, $description, fetch_url::USERAGENT_DEFAULT, PARAM_RAW, 600);
+        $visiblename, $description, fetch_url::USERAGENT_DEFAULT, PARAM_TEXT);
 $setting->add($useragent);
 
 // Link Checker Whitelist setting.
