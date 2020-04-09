@@ -49,13 +49,11 @@ class checker implements check_plugin_interface, mod_type_interface {
         global $DB;
         // Initialize check result array.
         $checkresult = new check_result();
-        // Get all assignment activities for the course.
+        // Get all database activities in the course.
         $modinfo = get_fast_modinfo($course);
-        foreach ($modinfo->cms as $cm) {
-            // Skip activities that are not assignments.
-            if ($cm->modname != self::MOD_TYPE_DATA) {
-                continue;
-            }
+        $cms = $modinfo->get_instances_of( self::MOD_TYPE_DATA);
+
+        foreach ($cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
@@ -66,7 +64,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             $link = $this->get_link_to_modedit_page($cm);
             
             if ($countfields == 0) {
-                $message = get_string('data_nofieldsdefined', 'block_course_checker');
+                $message = get_string('nofieldindatabase', self::MOD_TYPE_DATA);
                 $checkresult->add_detail([
                         "successful" => false,
                         "message" => $message,
@@ -76,7 +74,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                 continue;
             }
             
-            $message = get_string('data_fieldsdefined', 'block_course_checker');
+            $message = get_string('data_success', 'block_course_checker');
             $checkresult->add_detail([
                     "successful" => true,
                     "message" => $message,
@@ -97,7 +95,6 @@ class checker implements check_plugin_interface, mod_type_interface {
     private function get_link_to_modedit_page(\cm_info $cm) {
         $url = new \moodle_url('/mod/data/view.php', [
                 "id" => $cm->id,
-                "sesskey" => sesskey()
         ]);
         $link = $url->out_as_local_url(false);
         return $link;

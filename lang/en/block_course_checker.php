@@ -144,8 +144,7 @@ $string['attendance_sessionsnotemty'] = 'Check attendance failed - it\'s not all
 $string['attendance_success'] = 'The attendance activity is configured correctly';
 
 // String specific for the data checker.
-$string['data_nofieldsdefined'] = 'No fields are defined for this database activity';
-$string['data_fieldsdefined'] = 'Fields are defined for this database activity';
+$string['data_success'] = 'The database activity is configured correctly and fields are defined';
 
 // String specific for the subheadings checker.
 $string['subheadings_wrongfirsthtmltag'] = 'The first html-tag is not a {$a->htmltag}';
