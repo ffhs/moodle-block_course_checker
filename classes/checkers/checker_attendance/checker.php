@@ -125,6 +125,16 @@ class checker implements check_plugin_interface {
     public static function get_group() {
         return 'group_activities';
     }
+
+    /**
+     * Get the defaultsetting to use in the global settings.
+     *
+     * @return bool
+     */
+    public static function get_defaultsetting() {
+        return true;
+    }
+
     protected function get_attendance_sessions(\stdClass $course) {
         global $DB;
         // Get all attendancesessions in a course.

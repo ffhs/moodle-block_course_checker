@@ -142,7 +142,16 @@ class checker implements check_plugin_interface, mod_type_interface {
     public static function get_group() {
         return 'group_links';
     }
-    
+
+    /**
+     * Get the defaultsetting to use in the global settings.
+     *
+     * @return bool
+     */
+    public static function get_defaultsetting() {
+        return true;
+    }
+
     /**
      * @param $modname
      * @param $mod

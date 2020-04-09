@@ -23,7 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use block_course_checker\checkers\checker_attendance\checker;
 use block_course_checker\admin\admin_setting_courseid_selector;
 use block_course_checker\output\block_renderer;
 use block_course_checker\plugin_manager;
@@ -72,8 +71,9 @@ if ($ADMIN->fulltree) {
 
         // Check if checker has a dependency to another plugin.
         $dependency = $manager->get_checker_dependency_info($checkername);
+        $checker = '\\block_course_checker\checkers\\' . $checkername . '\\checker';
         if (!$dependency['status']) {
-            $param = checker::get_modulename_constant($dependency['name']);
+            $param = $checker::get_modulename_constant($dependency['name']);
             if (!$param) {
                 $param = 'requirements';
             } else {
@@ -83,8 +83,9 @@ if ($ADMIN->fulltree) {
                     get_string('settings_checker_dependency', 'block_course_checker', $param)));
         } else {
             $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
+            $enabled = $checker::get_defaultsetting();
             $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
-                    true));
+                    $enabled));
             if (!$manager->is_checker_status($checkername)) {
                 $visiblename = get_string('settings_checker_hide', 'block_course_checker', $truecheckername);
                 $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_hidden', $visiblename,

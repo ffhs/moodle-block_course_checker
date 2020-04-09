@@ -39,4 +39,12 @@ interface check_plugin_interface{
      * @return string
      */
     public static function get_group();
+
+    /**
+     * Get the defaultsetting for this check.
+     * This is used to set if the checker is enabled/disabled per default in the global settings.
+     *
+     * @return bool
+     */
+    public static function get_defaultsetting();
 }
