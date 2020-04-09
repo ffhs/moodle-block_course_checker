@@ -158,9 +158,9 @@ class checker implements check_plugin_interface, mod_type_interface {
             $table = $modtype;
         }
         
-        $assign = $DB->get_record($table, array('id' => $cm->instance), implode(',', array_keys($fields)));
+        $coursemodule = $DB->get_record($table, array('id' => $cm->instance), implode(',', array_keys($fields)));
         foreach ($fields as $field => $languagekey) {
-            if ($assign->$field != 0) {
+            if ($coursemodule->$field != 0) {
                 $adateissetin[] = self::get_field_translation($field, $languagekey, $modtype);
             }
         }
@@ -209,20 +209,24 @@ class checker implements check_plugin_interface, mod_type_interface {
         $target = get_string("groups_activity", "block_course_checker", $targetcontext);
         return $target;
     }
-    
+
     /**
+     * Get the customfield string from Moodle core.
+     * Most times the lang string identifier and the db field name are the same.
+     *
      * @param $field
+     * @param $languagekey
      * @param $modtype
      * @return string
      * @throws \coding_exception
      */
-    private static function get_field_translation($field, $laguagekey, $modtype) {
-        if ($laguagekey) {
-            return get_string($laguagekey, 'mod_' . $modtype);
+    private static function get_field_translation($field, $languagekey, $modtype) {
+        if ($languagekey) {
+            return get_string($languagekey, $modtype);
         }
-        return get_string($field, 'mod_' . $modtype);
+        return get_string($field,  $modtype);
     }
-    
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
