@@ -31,6 +31,7 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
 use block_course_checker\model\mod_type_interface;
+use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
@@ -118,7 +119,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                         "successful" => false,
                         "message" => $message,
                         "target" => $this->get_target($cm),
-                        "link" => $this->get_link_to_modedit_page($cm)
+                        "link" => resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id)
                 ])->set_successful(false);
             }
             
@@ -178,25 +179,9 @@ class checker implements check_plugin_interface, mod_type_interface {
                     "successful" => false,
                     "message" => $message,
                     "target" => $this->get_target($cm),
-                    "link" => $this->get_link_to_modedit_page($cm)
+                    "link" => resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->instance->coursemodule)
             ])->set_successful(false);
         }
-    }
-    
-    /**
-     * @param \cm_info $cm
-     * @return string
-     * @throws \coding_exception
-     * @throws \moodle_exception
-     */
-    private function get_link_to_modedit_page(\cm_info $cm) {
-        $url = new \moodle_url('/course/mod.php', [
-                "sesskey" => sesskey(),
-                "update" => $cm->id,
-                "sr" => 0
-        ]);
-        $link = $url->out_as_local_url(false);
-        return $link;
     }
     
     /**

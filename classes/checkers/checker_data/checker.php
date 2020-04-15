@@ -32,6 +32,7 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
 use block_course_checker\model\mod_type_interface;
+use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
@@ -61,7 +62,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             
             $countfields = $DB->count_records('data_fields', array('dataid' => $cm->instance));
             $target = $this->get_target($cm);
-            $link = $this->get_link_to_modedit_page($cm);
+            $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
             
             if ($countfields == 0) {
                 $message = get_string('nofieldindatabase', self::MOD_TYPE_DATA);
@@ -85,21 +86,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         // Return the check results.
         return $checkresult;
     }
-    
-    /**
-     * @param \cm_info $cm
-     * @return string
-     * @throws \coding_exception
-     * @throws \moodle_exception
-     */
-    private function get_link_to_modedit_page(\cm_info $cm) {
-        $url = new \moodle_url('/mod/data/view.php', [
-                "id" => $cm->id,
-        ]);
-        $link = $url->out_as_local_url(false);
-        return $link;
-    }
-    
+
     /**
      * @param \cm_info $cm
      * @return string

@@ -31,6 +31,7 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
+use block_course_checker\resolution_link_helper;
 use context_course;
 
 class checker implements check_plugin_interface {
@@ -153,32 +154,6 @@ class checker implements check_plugin_interface {
     
     /**
      * @param $course
-     * @return string
-     * @throws \coding_exception
-     * @throws \moodle_exception
-     */
-    private function get_link_to_course_edit_page($course): string {
-        $link = (new \moodle_url('/course/edit.php', [
-                'id' => $course->id
-        ]))->out_as_local_url(false);
-        return $link;
-    }
-    
-    /**
-     * @param $coursecontext
-     * @return string
-     * @throws \coding_exception
-     * @throws \moodle_exception
-     */
-    private function get_link_to_course_filter_page($coursecontext): string {
-        $link = (new \moodle_url('/filter/manage.php', [
-                'contextid' => $coursecontext->id
-        ]))->out_as_local_url(false);
-        return $link;
-    }
-    
-    /**
-     * @param $course
      * @param \stdClass $referencecourse
      * @param \stdClass $currentcourse
      * @throws \coding_exception
@@ -203,7 +178,7 @@ class checker implements check_plugin_interface {
             }
             
             // Get link to course edit page.
-            $link = $this->get_link_to_course_edit_page($course);
+            $link = resolution_link_helper::get_link_to_course_edit_page($course);
             
             // What are the differences? (if any).
             $comparison = $this->get_comparison_string($setting, $referencecourse, $currentcourse);
@@ -260,7 +235,7 @@ class checker implements check_plugin_interface {
         $occurringfilterproblems = 0;
         
         // Get link to course filter page.
-        $link = $this->get_link_to_course_filter_page($currentcontext);
+        $link = resolution_link_helper::get_link_to_course_filter_page($currentcontext);
         
         // Count all errors.
         foreach ($referenceavailablefilters as $filterkey => $referencefilterinfo) {
