@@ -32,12 +32,11 @@ defined('MOODLE_INTERNAL') || die();
 use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
+use block_course_checker\model\mod_type_interface;
 
-class checker implements check_plugin_interface {
+class checker implements check_plugin_interface, mod_type_interface{
     /** @var check_result */
     protected $result = null;
-    // Module name for attendance in Moodle.
-    const MOD_TYPE_ATTENDANCE = 'attendance';
 
     /**
      * Runs the check on attendance activities of a course
@@ -56,11 +55,8 @@ class checker implements check_plugin_interface {
         $attendances = [];
         // Get all attendance activities for the course.
         $modinfo = get_fast_modinfo($course);
-        foreach ($modinfo->cms as $cm) {
-            // Skip activities that are not attendance.
-            if ($cm->modname != self::MOD_TYPE_ATTENDANCE) {
-                continue;
-            }
+        $cms = $modinfo->get_instances_of( self::MOD_TYPE_ATTENDANCE);
+        foreach ($cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->has_view()) {
                 continue;
