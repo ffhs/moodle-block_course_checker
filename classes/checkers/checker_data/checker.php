@@ -62,7 +62,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             
             $countfields = $DB->count_records('data_fields', array('dataid' => $cm->instance));
             $target = $this->get_target($cm);
-            $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
+            $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id, false);
             
             if ($countfields == 0) {
                 $message = get_string('nofieldindatabase', self::MOD_TYPE_DATA);

@@ -195,8 +195,9 @@ class checker implements check_plugin_interface, mod_type_interface {
         $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '', 'id,title,content');
         foreach ($chapters as $chapter) {
             $target = get_string('checker_link_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
-            $resolutionlink = new \moodle_url('/mod/book/edit.php', ['pageid' => $chapter->id]);
-            $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $resolutionlink, $target);
+            $resolutionlink = new \moodle_url('/mod/book/edit.php',['cmid'=>$mod->coursemodule,'id'=>$chapter->id]);
+            $url = $resolutionlink->out_as_local_url(false);
+            $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
         }
     }
     

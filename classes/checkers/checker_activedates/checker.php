@@ -179,7 +179,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                     "successful" => false,
                     "message" => $message,
                     "target" => $this->get_target($cm),
-                    "link" => resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->instance->coursemodule)
+                    "link" => resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id)
             ])->set_successful(false);
         }
     }

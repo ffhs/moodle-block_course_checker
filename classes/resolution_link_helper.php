@@ -42,6 +42,13 @@ class resolution_link_helper implements mod_type_interface {
             self::MOD_TYPE_URL,
             self::MOD_TYPE_BOOK,
             self::MOD_TYPE_WIKI,
+            self::MOD_TYPE_FEEDBACK,
+            self::MOD_TYPE_QUESTIONNAIRE,
+            self::MOD_TYPE_CHOICE,
+            self::MOD_TYPE_CHOICEGROUP,
+            self::MOD_TYPE_LESSON,
+            self::MOD_TYPE_DATA,
+            self::MOD_TYPE_FORUM,
     ];
     
     /**
@@ -51,18 +58,19 @@ class resolution_link_helper implements mod_type_interface {
      * @throws \coding_exception
      * @throws \moodle_exception
      */
-    public static function get_link_to_modedit_or_view_page($modname, $coursemoduleid) {
-        // We open the edition page instead of the mod/view itself.
-        if (in_array($modname, self::DIRECT_MOD_NAMES)) {
+    public static function get_link_to_modedit_or_view_page($modname, $coursemoduleid, $gotoeditsettingspage = true) {
+        // We open the edit settings page instead of the mod/view itself.
+        if (in_array($modname, self::DIRECT_MOD_NAMES) && $gotoeditsettingspage) {
             $url = new \moodle_url('/course/modedit.php', [
                     'return' => 0,
                     "update" => $coursemoduleid, // $mod->coursemodule
                     "sr" => 0,
                     "sesskey" => sesskey()
             ]);
-            return $url->out_as_local_url(false); // FIXME: Url double decoded ?
+        }else{
+            $url = new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $coursemoduleid]);
         }
-        return new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $coursemoduleid]);
+        return $url->out_as_local_url(false); // FIXME: Url double decoded ?
     }
     
     /**
