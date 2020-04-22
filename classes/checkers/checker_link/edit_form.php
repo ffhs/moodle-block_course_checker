@@ -27,17 +27,17 @@ use block_course_checker\model\check_edit_form_interface;
 defined('MOODLE_INTERNAL') || die();
 
 class checker_link_edit_form implements check_edit_form_interface {
-    
+
     /**
      * @var string $checkername
      */
     public $checkername;
-    
+
     /**
      * @var string $truecheckername
      */
     public $truecheckername;
-    
+
     /**
      * @param object $mform
      * @return object $mform
@@ -51,7 +51,7 @@ class checker_link_edit_form implements check_edit_form_interface {
         $mform->addHelpButton('config_link_whitelist', 'checker_link_setting_whitelist', 'block_course_checker');
         return $mform;
     }
-    
+
     /**
      * @param $data
      * @param $files
@@ -63,18 +63,18 @@ class checker_link_edit_form implements check_edit_form_interface {
         if (!isset($data['config_link_whitelist'])) {
             return $errors;
         }
-        
+
         if (trim($data['config_link_whitelist']) == "") {
             return $errors;
         }
-        
+
         $domains = array_filter(array_map('trim', explode("\n", $data['config_link_whitelist'])));
         foreach ($domains as $domainname) {
             if (!is_valid_domain_name($domainname)) {
                 $errors['config_link_whitelist'] = get_string('admin_domain_name_notvalid', 'block_course_checker', $domainname);
             };
         }
-        
+
         return $errors;
     }
 }

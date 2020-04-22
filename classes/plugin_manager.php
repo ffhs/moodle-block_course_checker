@@ -248,7 +248,7 @@ class plugin_manager implements check_manager_interface {
         $filelocation = $pluginroot . "/" . $checkername . "/settings.php";
         return file_exists($filelocation) ? $filelocation : null;
     }
-    
+
     /**
      * Return the path of the edit_form file for the specified checkername.
      *

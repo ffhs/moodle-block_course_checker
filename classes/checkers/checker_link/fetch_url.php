@@ -26,6 +26,8 @@
 namespace block_course_checker\checkers\checker_link;
 
 use block_course_checker\model\checker_config_trait;
+use curl;
+use Exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -46,28 +48,28 @@ class fetch_url {
     const USERAGENT_DEFAULT = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
     
     use checker_config_trait;
-    
+
     /** @var int $connecttimeout from checker settings */
     protected $connecttimeout;
-    
+
     /** @var int $connecttimeout from checker settings */
     protected $timeout;
-    
+
     /** @var array list of ignored domains */
     protected $ignoredomains;
-    
+
     /** @var string user agent */
     protected $useragent;
-    
+
     /** @var string $message */
     public $message;
-    
+
     /** @var bool $ignoreddomain */
     public $ignoreddomain;
-    
+
     /** @var bool $successful */
     public $successful;
-    
+
     /**
      * Initialize checker by setting it up with the configuration.
      * Todo access to blockdomainwhitelist config is not working;
@@ -78,10 +80,9 @@ class fetch_url {
         $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
         $this->useragent = (string) $this->get_config(self::USERAGENT_SETTING, self::USERAGENT_DEFAULT);
         $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
-        // $blockdomainwhitelist = (string) $this->get_config('block_course_checker/config_link_whitelist');
         $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
     }
-    
+
     /**
      * fetch_url constructor.
      *
@@ -91,7 +92,7 @@ class fetch_url {
         $this->ignoredomains = $ignoredomains;
         $this->init();
     }
-    
+
     public function fetch($url) {
         $parseurl = parse_url($url);
         if ($parseurl["host"] == null) {
@@ -108,17 +109,17 @@ class fetch_url {
             $this->successful = true;
             return $this;
         }
-        
+
         $this->ignoreddomain = false;
-        
+
         // Use curl to checks the urls.
         // You can use "$settings['debug'] = true;" to debug the curl request.
-        $curl = new \curl();
-        
+        $curl = new curl();
+
         $httpheader = array();
         $httpheader[] = "Accept-Encoding: gzip, deflate, br";
         $httpheader[] = "Accept:*/*";
-        
+
         $curl->head($url, [
                 "CURLOPT_HTTPHEADER" => $httpheader,
                 "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
@@ -131,39 +132,39 @@ class fetch_url {
                 "CURLOPT_ENCODING" => "gzip",
                 "CURLOPT_REFERER" => $url // Essentially this tells the server which page sent you there.
         ]);
-        
+
         $infos = $curl->get_info();
         $code = (int) $infos["http_code"];
         if ($code === 0) {
             if ($this->file_get_content($url, $parseurl)) {
                 return $this;
             }
-            
+
             // Code 0: timeout or other curl error.
             $context = $parseurl + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
             $this->message = get_string("checker_link_error_curl", "block_course_checker", $context);
             $this->successful = false;
             return $this;
         }
-        
+
         $context = $parseurl + ["url" => $url, "http_code" => $code];
         if ($code >= 200 && $code < 400) {
             $this->message = get_string("checker_link_ok", "block_course_checker", $context);
             $this->successful = true;
             return $this;
         }
-        
+
         // If curl finds 404, we don't need to run file get content.
         if ($this->file_get_content($url, $parseurl) && $code != 404) {
             return $this;
         }
-        
+
         // Code != 0 means it's a http error.
         $this->message = get_string("checker_link_error_code", "block_course_checker", $context);
         $this->successful = false;
         return $this;
     }
-    
+
     /**
      * @param $url
      * @param $parseurl
@@ -172,24 +173,24 @@ class fetch_url {
     protected function file_get_content($url, $parseurl) {
         try {
             @file_get_contents($url);
-            
+
             $httpresponse = null;
             if (!empty($http_response_header)) {
                 $httpresponse = $this->parse_headers($http_response_header);
             }
-            
+
             if (isset($httpresponse['reponse_code']) && (int) $httpresponse['reponse_code'] == 200) {
                 $context = $parseurl + ["url" => $url, "http_code" => "200"];
                 $this->message = get_string("checker_link_ok", "block_course_checker", $context) . " (file_get_contents)";
                 $this->successful = true;
                 return true;
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
         return false;
     }
-    
+
     /**
      * @param $headers
      * @return array
@@ -209,7 +210,7 @@ class fetch_url {
         }
         return $head;
     }
-    
+
     /**
      * Tells if an url should be skipped.
      *

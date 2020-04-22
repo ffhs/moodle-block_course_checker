@@ -39,8 +39,6 @@ class checker implements check_plugin_interface, mod_type_interface {
     /**
      * Runs the check on group assignment submissions for all assignments of a course
      *
-     * @todo sometime links are not serialized?
-     *
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
      * @throws \coding_exception
@@ -53,8 +51,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         $checkresult = new check_result();
         // Get all assignment activities in the course.
         $modinfo = get_fast_modinfo($course);
-        $cms = $modinfo->get_instances_of( self::MOD_TYPE_ASSIGN);
-        
+        $cms = $modinfo->get_instances_of(self::MOD_TYPE_ASSIGN);
         foreach ($cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
@@ -132,6 +129,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         // Return the check results.
         return $checkresult;
     }
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.

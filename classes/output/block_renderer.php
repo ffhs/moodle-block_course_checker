@@ -30,10 +30,10 @@ defined('MOODLE_INTERNAL') || die();
 
 class block_renderer extends \plugin_renderer_base {
     use checker_config_trait;
-    
+
     const ROLESALLOWEDMANUAL_SETTING = 'block_course_checker/checker_rolesallowedmanual';
     const ROLESALLOWEDMANUAL_DEFAULT = array();
-    
+
     /**
      * @param $context
      * @return bool|string
@@ -42,7 +42,7 @@ class block_renderer extends \plugin_renderer_base {
     public function renderer($context) {
         return $this->render_from_template("block_course_checker/full_block", $context);
     }
-    
+
     /**
      * @param $context
      * @return string
@@ -51,12 +51,12 @@ class block_renderer extends \plugin_renderer_base {
     public function renderer_human_check_form(int $courseid, string $manualreason = null) {
         global $CFG;
         global $USER;
-        
+
         $rolesallowedmanual = $this->get_config(self::ROLESALLOWEDMANUAL_SETTING, self::ROLESALLOWEDMANUAL_DEFAULT);
         if (!user_has_role_in_system($USER->id, $rolesallowedmanual)) {
             return "";
         }
-        
+
         $humanplaceholder = get_string('humancheck_comment_placeholder', 'block_course_checker');
         $humanreasonpresent = !empty($manualreason);
         $data = [
@@ -65,11 +65,11 @@ class block_renderer extends \plugin_renderer_base {
                 "humanplaceholder" => $humanplaceholder,
                 "manualreason" => trim($manualreason),
         ];
-        
+
         if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
             $data['token'] = \core\session\manager::get_login_token();
         }
-        
+
         $dateform = new date_picker_input();
         $html = $dateform->tohtmlwriter();
         $html = str_replace('</form>', '', $html); // Removed form due to date_picker_input generate a <form> itself.
@@ -77,7 +77,7 @@ class block_renderer extends \plugin_renderer_base {
         $html = str_replace('col-md-9', '', $html);
         $html = str_replace('form-group row', 'form-group', $html);
         $data["dateinputhtml"] = $html;
-        
+
         return $this->render_from_template("block_course_checker/human_check_form", $data);
     }
 }

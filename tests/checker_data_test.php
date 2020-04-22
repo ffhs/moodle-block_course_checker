@@ -42,7 +42,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
     protected $course;
     /** @var $instance */
     protected $instance;
-    
+
     /**
      *
      */
@@ -58,21 +58,21 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
         // Create instance.
         $this->instance = $this->datagenerator->create_instance(array('course' => $this->course->id));
     }
-    
+
     /**
      * @test
      */
     public function test_field_in_data_activity() {
         $this->init();
-        
+
         $record = new StdClass();
         $record->name = 'field-1';
         $record->type = 'text';
-        
+
         $this->datagenerator->create_field($record, $this->instance);
         $this->assert_fields_in_data_activity();
     }
-    
+
     /**
      * @test
      */
@@ -80,7 +80,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
         $this->init();
         $this->assert_fields_in_data_activity(false);
     }
-    
+
     /**
      * @param bool $assert
      * @throws coding_exception
@@ -96,7 +96,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
                     }
                 });
     }
-    
+
     /**
      * @param $assertion
      * @throws coding_exception
@@ -110,7 +110,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
             $assertion($detail);
         }
     }
-    
+
     /**
      * @return string
      */

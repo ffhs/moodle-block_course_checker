@@ -36,7 +36,26 @@ use block_course_checker\model\mod_type_interface;
 class checker implements check_plugin_interface, mod_type_interface {
     /** @var check_result */
     protected $checkresult = null;
-    
+
+    /**
+     * Get the group defined for this check.
+     * This is used to display checks from the same group together.
+     *
+     * @return string
+     */
+    public static function get_group() {
+        return 'group_links';
+    }
+
+    /**
+     * Get the defaultsetting to use in the global settings.
+     *
+     * @return bool
+     */
+    public static function get_defaultsetting() {
+        return true;
+    }
+
     /**
      * Runs the check for all links of a course
      *
@@ -49,29 +68,29 @@ class checker implements check_plugin_interface, mod_type_interface {
         $this->checkresult = new check_result();
         $this->check_course_summary($course);
         $modules = $this->get_unique_modnames($course);
-        
+
         // You will got strait to the edition page for theses mods.
         foreach ($modules as $modname) {
             $instances = get_all_instances_in_courses($modname, [$course->id => $course]);
             foreach ($instances as $mod) {
                 $target = $this->get_target($modname, $mod);
                 $resolutionlink = resolution_link_helper::get_link_to_modedit_or_view_page($modname, $mod->coursemodule);
-                
+
                 // For url, we have to check the externalurl too.
                 if ($modname === self::MOD_TYPE_URL) {
                     $this->check_urls_with_resolution_url([$mod->externalurl], $resolutionlink, $target);
                 }
-                
+
                 // For books, we have to check the chapters too.
                 if ($modname === self::MOD_TYPE_BOOK) {
                     $this->check_book_chapters($mod);
                 }
-                
+
                 // For wiki, we have to check the pages too.
                 if ($modname === self::MOD_TYPE_WIKI) {
                     $this->check_wiki_pages($mod);
                 }
-                
+
                 // Check modules properties.
                 if (property_exists($mod, "name")) {
                     $this->check_urls_with_resolution_url($this->get_urls_from_text($mod->name), $resolutionlink, $target);
@@ -84,10 +103,21 @@ class checker implements check_plugin_interface, mod_type_interface {
                 }
             }
         }
-        
+
         return $this->checkresult;
     }
-    
+
+    /**
+     * @param $course
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    protected function check_course_summary($course) {
+        $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
+        $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
+                get_string("checker_link_summary", "block_course_checker"));
+    }
+
     /**
      * Check all urls for a single resolution_url
      *
@@ -110,7 +140,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             ]);
         }
     }
-    
+
     /**
      * Extract url from a string
      *
@@ -127,37 +157,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         }
         return [];
     }
-    
-    /**
-     * Get the group defined for this check.
-     * This is used to display checks from the same group together.
-     *
-     * @return string
-     */
-    public static function get_group() {
-        return 'group_links';
-    }
 
-    /**
-     * Get the defaultsetting to use in the global settings.
-     *
-     * @return bool
-     */
-    public static function get_defaultsetting() {
-        return true;
-    }
-
-    /**
-     * @param $modname
-     * @param $mod
-     * @return string
-     * @throws \coding_exception
-     */
-    private function get_target($modname, $mod) {
-        return get_string("checker_link_activity", "block_course_checker",
-                (object) ["modname" => get_string("pluginname", $modname), "name" => strip_tags($mod->name)]);
-    }
-    
     /**
      * @param $course
      * @return array
@@ -173,18 +173,18 @@ class checker implements check_plugin_interface, mod_type_interface {
         $modules = array_unique($modules);
         return $modules;
     }
-    
+
     /**
-     * @param $course
+     * @param $modname
+     * @param $mod
+     * @return string
      * @throws \coding_exception
-     * @throws \moodle_exception
      */
-    protected function check_course_summary($course) {
-        $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
-        $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
-                get_string("checker_link_summary", "block_course_checker"));
+    private function get_target($modname, $mod) {
+        return get_string("checker_link_activity", "block_course_checker",
+                (object) ["modname" => get_string("pluginname", $modname), "name" => strip_tags($mod->name)]);
     }
-    
+
     /**
      * @param $mod
      * @throws \dml_exception
@@ -195,12 +195,12 @@ class checker implements check_plugin_interface, mod_type_interface {
         $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '', 'id,title,content');
         foreach ($chapters as $chapter) {
             $target = get_string('checker_link_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
-            $resolutionlink = new \moodle_url('/mod/book/edit.php',['cmid'=>$mod->coursemodule,'id'=>$chapter->id]);
+            $resolutionlink = new \moodle_url('/mod/book/edit.php', ['cmid' => $mod->coursemodule, 'id' => $chapter->id]);
             $url = $resolutionlink->out_as_local_url(false);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
         }
     }
-    
+
     /**
      * @param $mod
      * @throws \dml_exception
@@ -208,7 +208,7 @@ class checker implements check_plugin_interface, mod_type_interface {
      */
     protected function check_wiki_pages($mod) {
         global $DB;
-        
+
         $pages = $DB->get_records('wiki_pages', array('subwikiid' => $mod->id), '', 'id,title,cachedcontent');
         foreach ($pages as $page) {
             $target = get_string('checker_link_wiki_page', 'block_course_checker', (object) ["title" => $page->title]);

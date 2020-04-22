@@ -40,7 +40,7 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
     protected $generator;
     /** @var stdClass */
     protected $course;
-    
+
     /**
      * @var array
      */
@@ -51,7 +51,7 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
             'https://httpstat.us/522', // Connection timed out.
             'https://httpstat.us/524', // A timeout occurred.
     ];
-    
+
     /**
      * @var array
      */
@@ -59,35 +59,14 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
             'https://httpstat.us/200', // OK.
             'https://httpstat.us/301', // Moved Permanently.
     ];
-    
-    /**
-     *
-     */
-    protected function init() {
-        // Reset the database after test.
-        $this->resetAfterTest(true);
-        // Get an link checker.
-        $this->linkchecker = new checker_link\checker();
-        // Get new data generator helper.
-        $this->generator = $this->getDataGenerator();
-        // Create a new course.
-        $this->course = $this->generator->create_course();
-    }
-    
+
     /**
      * @test
      */
     public function test_failing_links_in_url_activity() {
         $this->assert_links_in_url_activity($this->urlactivitychecksfailing, false);
     }
-    
-    /**
-     * @test
-     */
-    public function test_success_links_in_url_activity() {
-        $this->assert_links_in_url_activity($this->urlactivitycheckssuccess);
-    }
-    
+
     /**
      * @param $urlactivitycheckurls
      * @param bool $assert
@@ -104,7 +83,7 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
                     ]
             );
         }
-        
+
         $this->run_linkchecker(
                 function($detail) use ($assert) {
                     if ($assert) {
@@ -114,7 +93,21 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
                     }
                 });
     }
-    
+
+    /**
+     *
+     */
+    protected function init() {
+        // Reset the database after test.
+        $this->resetAfterTest(true);
+        // Get an link checker.
+        $this->linkchecker = new checker_link\checker();
+        // Get new data generator helper.
+        $this->generator = $this->getDataGenerator();
+        // Create a new course.
+        $this->course = $this->generator->create_course();
+    }
+
     /**
      * @param null $course
      * @param array $record
@@ -135,7 +128,7 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
         $plugingenerator = $this->generator->get_plugin_generator('mod_' . self::MOD_TYPE_URL);
         return $plugingenerator->create_instance($record);
     }
-    
+
     /**
      * @param $assertion
      * @throws coding_exception
@@ -148,5 +141,12 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
         foreach ($details as $detail) {
             $assertion($detail);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function test_success_links_in_url_activity() {
+        $this->assert_links_in_url_activity($this->urlactivitycheckssuccess);
     }
 }

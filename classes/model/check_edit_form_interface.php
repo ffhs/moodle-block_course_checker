@@ -30,14 +30,14 @@ defined('MOODLE_INTERNAL') || die();
  * This is an interface made to run a single check.
  */
 interface check_edit_form_interface {
-    
+
     /**
      * @param object $mform
      * @return object $mform
      * @throws coding_exception
      */
     public function specific_definition($mform);
-    
+
     /**
      * @param $data
      * @param $files

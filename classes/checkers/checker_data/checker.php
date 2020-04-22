@@ -36,7 +36,7 @@ use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
-    
+
     /**
      * Runs the check data activities of a course
      *
@@ -52,18 +52,17 @@ class checker implements check_plugin_interface, mod_type_interface {
         $checkresult = new check_result();
         // Get all database activities in the course.
         $modinfo = get_fast_modinfo($course);
-        $cms = $modinfo->get_instances_of( self::MOD_TYPE_DATA);
-
+        $cms = $modinfo->get_instances_of(self::MOD_TYPE_DATA);
         foreach ($cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
-            
+
             $countfields = $DB->count_records('data_fields', array('dataid' => $cm->instance));
             $target = $this->get_target($cm);
             $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id, false);
-            
+
             if ($countfields == 0) {
                 $message = get_string('nofieldindatabase', self::MOD_TYPE_DATA);
                 $checkresult->add_detail([
@@ -74,7 +73,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                 ])->set_successful(false);
                 continue;
             }
-            
+
             $message = get_string('data_success', 'block_course_checker');
             $checkresult->add_detail([
                     "successful" => true,
@@ -97,7 +96,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         $target = get_string("groups_activity", "block_course_checker", $targetcontext);
         return $target;
     }
-    
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.

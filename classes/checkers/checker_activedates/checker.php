@@ -35,9 +35,9 @@ use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
-    
+
     private $checkresult;
-    
+
     /**
      * @var array
      */
@@ -93,7 +93,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                     'assessmentend' => false
             ]
     ];
-    
+
     /**
      * @param \stdClass $course
      * @return check_result|check_result_interface
@@ -103,15 +103,14 @@ class checker implements check_plugin_interface, mod_type_interface {
     public function run($course) {
         // Initialize check result array.
         $this->checkresult = new check_result();
-        
-        // Get all assignment activities for the course.
+        // Get all activities for the course.
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
-            
+
             // Search for problems in the "Activity completion" section.
             if ($cm->completionexpected !== 0) {
                 $message = get_string('activedates_noactivedates', 'block_course_checker');
@@ -122,7 +121,7 @@ class checker implements check_plugin_interface, mod_type_interface {
                         "link" => resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id)
                 ])->set_successful(false);
             }
-            
+
             // Search for custom date fields in different activities.
             foreach ($this->modtypstocheck as $modtypekey => $fields) {
                 $this->check_mod_date_fields(
@@ -135,7 +134,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         // Return the check results.
         return $this->checkresult;
     }
-    
+
     /**
      * @param $cm
      * @param $modtype
@@ -148,24 +147,24 @@ class checker implements check_plugin_interface, mod_type_interface {
     private function check_mod_date_fields($cm, $modtype, $fields, $table = false) {
         global $DB;
         $adateissetin = [];
-        
+
         // We only want to test some modules.
         if ($cm->modname != $modtype) {
             return;
         }
-        
+
         // Usually base table names of a module corresponds to the modname.
         if (!$table) {
             $table = $modtype;
         }
-        
+
         $coursemodule = $DB->get_record($table, array('id' => $cm->instance), implode(',', array_keys($fields)));
         foreach ($fields as $field => $languagekey) {
             if ($coursemodule->$field != 0) {
                 $adateissetin[] = self::get_field_translation($field, $languagekey, $modtype);
             }
         }
-        
+
         if (!empty($adateissetin)) {
             $message = get_string(
                     "activedates_noactivedatesinactivity",
@@ -183,7 +182,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             ])->set_successful(false);
         }
     }
-    
+
     /**
      * @param \cm_info $cm
      * @return string
@@ -209,7 +208,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         if ($languagekey) {
             return get_string($languagekey, $modtype);
         }
-        return get_string($field,  $modtype);
+        return get_string($field, $modtype);
     }
 
     /**

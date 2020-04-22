@@ -27,12 +27,12 @@ require_once(__DIR__ . '/locallib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_course_checker_edit_form extends block_edit_form {
-    
+
     /**
      * @var array $checkereditforms
      */
     protected $checkereditforms = [];
-    
+
     /**
      * block_course_checker_edit_form constructor.
      *
@@ -44,7 +44,7 @@ class block_course_checker_edit_form extends block_edit_form {
         $this->checkereditforms = $this->get_checker_edit_forms();
         parent::__construct($actionurl, $block, $page);
     }
-    
+
     /**
      * @return array
      */
@@ -54,7 +54,7 @@ class block_course_checker_edit_form extends block_edit_form {
         $manager = plugin_manager::instance();
         foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
             $classname = $checkername . '_edit_form';
-            
+
             // Include the checker's edit form file.
             $checkereditforms = call_user_func(function() use ($checkername, $manager, $classname) {
                 $editformfile = $manager->get_checker_edit_form_file($checkername);
@@ -62,40 +62,28 @@ class block_course_checker_edit_form extends block_edit_form {
                     return null;
                 }
                 require($editformfile);
-                
+
                 // Create new edit form class, if the class exists.
                 if (!class_exists($classname)) {
                     return null;
                 }
-                
+
                 $checkereditforms = new $classname();
                 $checkereditforms->checkername = $checkername;
                 $checkereditforms->truecheckername = get_string($checkername, 'block_course_checker');
-                
+
                 return $checkereditforms;
             });
-            
+
             if (null == $checkereditforms) {
                 continue;
             }
-            
+
             $checkereditforms[] = $checkereditforms;
         }
         return $checkereditforms;
     }
-    
-    /**
-     * @param object $mform
-     * @return mixed|void
-     */
-    protected function specific_definition($mform) {
-        foreach ($this->checkereditforms as $checkereditforms) {
-            // Load the checkers specific definition.
-            $mform->addElement('header', $checkereditforms->checkername . '_header', $checkereditforms->truecheckername);
-            return $checkereditforms->specific_definition($mform);
-        }
-    }
-    
+
     /**
      * @param array $data
      * @param array $files
@@ -107,5 +95,17 @@ class block_course_checker_edit_form extends block_edit_form {
             $errors = $checkereditforms->validation($data, $files, $errors);
         }
         return $errors;
+    }
+
+    /**
+     * @param object $mform
+     * @return mixed|void
+     */
+    protected function specific_definition($mform) {
+        foreach ($this->checkereditforms as $checkereditforms) {
+            // Load the checkers specific definition.
+            $mform->addElement('header', $checkereditforms->checkername . '_header', $checkereditforms->truecheckername);
+            return $checkereditforms->specific_definition($mform);
+        }
     }
 }

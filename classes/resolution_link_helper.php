@@ -29,7 +29,7 @@ use block_course_checker\model\mod_type_interface;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Class modedit_link_helper
+ * Class resolution_link_helper
  *
  * @package block_course_checker
  */
@@ -66,12 +66,12 @@ class resolution_link_helper implements mod_type_interface {
                     "sesskey" => sesskey(),
                     "sr" => 0
             ]);
-        }else{
+        } else {
             $url = new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $coursemoduleid]);
         }
         return $url->out_as_local_url(false); // FIXME: Url double decoded ?
     }
-    
+
     /**
      * @param $course
      * @return string
@@ -84,7 +84,7 @@ class resolution_link_helper implements mod_type_interface {
         ]))->out_as_local_url(false);
         return $link;
     }
-    
+
     /**
      * @param $coursecontext
      * @return string

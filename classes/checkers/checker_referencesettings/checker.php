@@ -36,26 +36,26 @@ use context_course;
 
 class checker implements check_plugin_interface {
     use checker_config_trait;
-    
+
     /** @var check_result */
     protected $result = null;
-    
+
     const REFERENCE_COURSE = 'block_course_checker/referencecourseid';
     const REFERENCE_COURSE_DEFAULT = 1;
     const REFERENCE_COURSE_SETTINGS = 'block_course_checker/checker_referencesettings_checklist';
     const REFERENCE_COURSE_SETTINGS_DEFAULT = ['format' => 1];
     const REFERENCE_COURSE_FILTER_ENABLED = 'block_course_checker/checker_referencesettings_filter';
     const REFERENCE_COURSE_FILTER_ENABLED_DEFAULT = false;
-    
+
     /** @var int $referencecourseid from checker settings */
     protected $referencecourseid;
-    
+
     /** @var array $referencecourseid from checker settings */
     protected $referencesettings = [];
-    
+
     /** @var array $referencefilterenabled from checker settings */
     protected $referencefilterenabled = false;
-    
+
     /**
      * Initialize checker by setting it up with the configuration
      *
@@ -72,7 +72,7 @@ class checker implements check_plugin_interface {
                 self::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT
         );
     }
-    
+
     /**
      * Runs the check
      *
@@ -84,24 +84,24 @@ class checker implements check_plugin_interface {
     public function run($course) {
         // Get active setting checks from configuration.
         $this->init();
-        
+
         // Initialize check result array.
         $this->result = new check_result();
-        
+
         // Get current and referencecourse configuration.
         $currentcourse = $course;
         $referencecourse = get_course($this->referencecourseid);
-        
+
         // Check settings like Category, Format, Force Language. See plugin settings for complete list.
         $this->compare_default_course_settings($course, $referencecourse, $currentcourse);
-        
+
         // Check if the course filters have the same settings as the template reference course.
         $this->compare_course_level_filters($currentcourse, $referencecourse);
-        
+
         // Return the check results.
         return $this->result;
     }
-    
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -134,7 +134,7 @@ class checker implements check_plugin_interface {
                 'block_course_checker',
                 ['settingvaluereference' => $referencecourse->$setting, 'settingvaluecurrent' => $currentcourse->$setting]);
     }
-    
+
     /**
      * @param $filterinforeference
      * @param $filterinfocurrent
@@ -151,7 +151,7 @@ class checker implements check_plugin_interface {
                 ]
         );
     }
-    
+
     /**
      * @param $course
      * @param \stdClass $referencecourse
@@ -176,13 +176,13 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-            
+
             // Get link to course edit page.
             $link = resolution_link_helper::get_link_to_course_edit_page($course);
-            
+
             // What are the differences? (if any).
             $comparison = $this->get_comparison_string($setting, $referencecourse, $currentcourse);
-            
+
             // When the settings are not equal.
             if ($referencecourse->$setting != $currentcourse->$setting) {
                 $message = get_string(
@@ -197,7 +197,7 @@ class checker implements check_plugin_interface {
                 ])->set_successful(false);
                 continue;
             }
-            
+
             // When everything is okay.
             $message = get_string(
                     'checker_referencesettings_success',
@@ -211,7 +211,7 @@ class checker implements check_plugin_interface {
             ]);
         }
     }
-    
+
     /**
      * @param \stdClass $currentcourse
      * @param \stdClass $referencecourse
@@ -222,21 +222,21 @@ class checker implements check_plugin_interface {
         if (!$this->referencefilterenabled) {
             return;
         }
-        
+
         // Get the course context for the current course and the reference course.
         $currentcontext = context_course::instance($currentcourse->id);
         $referencecontext = context_course::instance($referencecourse->id);
-        
+
         // Get the list of available filters.
         $currentavailablefilters = filter_get_available_in_context($currentcontext);
         $referenceavailablefilters = filter_get_available_in_context($referencecontext);
-        
+
         // Count occurring errors.
         $occurringfilterproblems = 0;
-        
+
         // Get link to course filter page.
         $link = resolution_link_helper::get_link_to_course_filter_page($currentcontext);
-        
+
         // Count all errors.
         foreach ($referenceavailablefilters as $filterkey => $referencefilterinfo) {
             if (!isset($currentavailablefilters[$filterkey])) {
@@ -269,7 +269,7 @@ class checker implements check_plugin_interface {
                 continue;
             }
         }
-        
+
         if ($occurringfilterproblems === 0) {
             $this->result->add_detail([
                     "successful" => true,
