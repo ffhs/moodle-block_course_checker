@@ -45,8 +45,9 @@ class fetch_url {
     const WHITELIST_HEADING = 'block_course_checker/checker_link_whitelist_heading';
     const WHITELIST_DEFAULT = 'www.w3.org';
     const USERAGENT_SETTING = 'block_course_checker/checker_link_useragent';
-    const USERAGENT_DEFAULT = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
-    
+    const USERAGENT_DEFAULT = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
+        'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
+
     use checker_config_trait;
 
     /** @var int $connecttimeout from checker settings */
@@ -72,7 +73,6 @@ class fetch_url {
 
     /**
      * Initialize checker by setting it up with the configuration.
-     * Todo access to blockdomainwhitelist config is not working;
      */
     public function init() {
         // Load settings.
