@@ -83,7 +83,7 @@ if ($ADMIN->fulltree) {
                     get_string('settings_checker_dependency', 'block_course_checker', $param)));
         } else {
             $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
-            $enabled = $checker::get_defaultsetting();
+            $enabled = $checker::is_checker_enabled_by_default();
             $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
                     $enabled));
             if (!$manager->is_checker_status($checkername)) {

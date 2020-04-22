@@ -165,7 +165,7 @@ class checker implements check_plugin_interface {
      *
      * @return bool
      */
-    public static function get_defaultsetting() {
+    public static function is_checker_enabled_by_default() {
         return true;
     }
 
