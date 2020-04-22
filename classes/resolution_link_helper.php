@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @package block_course_checker
  */
 class resolution_link_helper implements mod_type_interface {
-    
+
     /** @var array list of modules which can be linked directly to the module config page */
     const DIRECT_MOD_NAMES = [
             self::MOD_TYPE_RESOURCE,
@@ -50,7 +50,7 @@ class resolution_link_helper implements mod_type_interface {
             self::MOD_TYPE_DATA,
             self::MOD_TYPE_FORUM,
     ];
-    
+
     /**
      * @param $modname
      * @param $coursemoduleid
@@ -61,11 +61,10 @@ class resolution_link_helper implements mod_type_interface {
     public static function get_link_to_modedit_or_view_page($modname, $coursemoduleid, $gotoeditsettingspage = true) {
         // We open the edit settings page instead of the mod/view itself.
         if (in_array($modname, self::DIRECT_MOD_NAMES) && $gotoeditsettingspage) {
-            $url = new \moodle_url('/course/modedit.php', [
-                    'return' => 0,
-                    "update" => $coursemoduleid, // $mod->coursemodule
-                    "sr" => 0,
-                    "sesskey" => sesskey()
+            $url = new \moodle_url('/course/mod.php', [
+                    "update" => $coursemoduleid,
+                    "sesskey" => sesskey(),
+                    "sr" => 0
             ]);
         }else{
             $url = new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $coursemoduleid]);
