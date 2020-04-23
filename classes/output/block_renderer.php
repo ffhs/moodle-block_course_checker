@@ -32,7 +32,7 @@ class block_renderer extends \plugin_renderer_base {
     use checker_config_trait;
 
     const ROLESALLOWEDMANUAL_SETTING = 'block_course_checker/checker_rolesallowedmanual';
-    const ROLESALLOWEDMANUAL_DEFAULT = '';
+    const ROLESALLOWEDMANUAL_DEFAULT = [];
 
     /**
      * @param $context
@@ -52,7 +52,7 @@ class block_renderer extends \plugin_renderer_base {
         global $CFG, $USER;
 
         // Check if user is allowed to see the human check date form.
-        $rolesallowedmanual = $this->get_config(self::ROLESALLOWEDMANUAL_SETTING, self::ROLESALLOWEDMANUAL_DEFAULT);
+        $rolesallowedmanual = $this->get_config(self::ROLESALLOWEDMANUAL_SETTING, '');
         if (!user_has_given_role_in_course($USER->id, $courseid, $rolesallowedmanual)) {
             if (!user_has_role_in_system($USER->id, $rolesallowedmanual)) {
                 return '';
