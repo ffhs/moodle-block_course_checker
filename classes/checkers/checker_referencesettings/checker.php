@@ -191,7 +191,7 @@ class checker implements check_plugin_interface {
                         ['setting' => $setting]);
                 $this->result->add_detail([
                         "successful" => false,
-                        "message" => $message . $comparison,
+                        "message" => $message . ' ' . $comparison,
                         "target" => '',
                         "link" => $link
                 ])->set_successful(false);
@@ -205,7 +205,7 @@ class checker implements check_plugin_interface {
                     ['setting' => $setting]);
             $this->result->add_detail([
                     "successful" => true,
-                    "message" => $message . $comparison,
+                    "message" => $message,
                     "target" => '',
                     "link" => $link
             ]);
@@ -261,7 +261,7 @@ class checker implements check_plugin_interface {
                         ['filterkey' => $filterkey]);
                 $this->result->add_detail([
                         "successful" => false,
-                        "message" => $message . $comparison,
+                        "message" => $message . ' ' . $comparison,
                         "target" => '',
                         "link" => $link
                 ])->set_successful(false);
@@ -270,10 +270,17 @@ class checker implements check_plugin_interface {
             }
         }
 
+        // When everything is okay.
         if ($occurringfilterproblems === 0) {
+            $message = get_string(
+                    'checker_referencefilter_success',
+                    'block_course_checker'
+                    );
             $this->result->add_detail([
                     "successful" => true,
-                    "message" => get_string('checker_referencefilter_success', 'block_course_checker'),
+                    "message" => $message,
+                    "target" => '',
+                    "link" => $link
             ]);
         }
     }
