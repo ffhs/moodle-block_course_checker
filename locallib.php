@@ -78,6 +78,29 @@ function user_has_role_in_system($userid, $systemrolesids) {
 }
 
 /**
+ * Check if user has a allowed role in the course-context.
+ *
+ * @param $userid
+ * @param $courseid
+ * @param string $roles A comma-separated whitelist of allowed roles ids.
+ * @return bool
+ */
+function user_has_given_role_in_course($userid, $courseid, $roles) {
+    $hasrole = false;
+    $context = \context_course::instance($courseid);
+
+    $roles = explode(',', $roles);
+    foreach ($roles as $role) {
+        $hasrole = user_has_role_assignment($userid, $role, $context->id);
+        if ($hasrole) {
+            break;
+        }
+    }
+
+    return $hasrole;
+}
+
+/**
  * Check one domain whether it is valid.
  * Taken from https://stackoverflow.com/a/4694816
  *
