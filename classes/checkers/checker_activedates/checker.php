@@ -172,6 +172,9 @@ class checker implements check_plugin_interface, mod_type_interface {
             }
         }
 
+        $target = $this->get_target($cm);
+        $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
+
         if (!empty($adateissetin)) {
             $message = get_string(
                     "activedates_noactivedatesinactivity",
@@ -184,9 +187,17 @@ class checker implements check_plugin_interface, mod_type_interface {
             $this->checkresult->add_detail([
                     "successful" => false,
                     "message" => $message,
-                    "target" => $this->get_target($cm),
-                    "link" => resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id)
+                    "target" => $target,
+                    "link" => $link
             ])->set_successful(false);
+        } else {
+            $message = get_string('activedates_success', 'block_course_checker', $modtype);
+            $this->checkresult->add_detail([
+                    "successful" => true,
+                    "message" => $message,
+                    "target" => $target,
+                    "link" => $link,
+            ]);
         }
     }
 
