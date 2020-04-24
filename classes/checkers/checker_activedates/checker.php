@@ -103,11 +103,18 @@ class checker implements check_plugin_interface, mod_type_interface {
     public function run($course) {
         // Initialize check result array.
         $this->checkresult = new check_result();
+        // Get modules from checker setting that are allowed.
+        $enabledmodules = explode(',', get_config('block_course_checker', 'activedates_modules'));
         // Get all activities for the course.
         $modinfo = get_fast_modinfo($course);
         foreach ($modinfo->cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
+                continue;
+            }
+
+            // Skip activity if is not allowed.
+            if (!in_array($cm->modname, $enabledmodules)) {
                 continue;
             }
 
