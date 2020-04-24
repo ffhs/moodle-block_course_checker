@@ -370,7 +370,7 @@ class plugin_manager implements check_manager_interface {
 
         $sql = "SELECT * FROM {config_plugins} WHERE name LIKE '$checkername%_adv'";
 
-        return $DB->get_record_sql($sql, null,IGNORE_MULTIPLE);
+        return $DB->get_record_sql($sql, null, IGNORE_MULTIPLE);
     }
 
     /**
