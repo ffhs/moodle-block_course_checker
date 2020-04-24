@@ -107,7 +107,7 @@ class block_course_checker extends block_base {
                 "runbtn" => $this->render_run_task_button($COURSE->id),
                 "humancheckbtn" => $blockrenderer->renderer_human_check_form($COURSE->id, $humancomment),
                 "runscheduled" => task_helper::instance()->is_task_scheduled($COURSE->id),
-                "arecheckersenabled" => plugin_manager::instance()->are_checkers_enabled(),
+                "arecheckersenabled" => plugin_manager::instance()->are_checkers_enabled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
                 'lastactivityedition' => $lastactivityedition
         ]);

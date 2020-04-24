@@ -29,6 +29,14 @@ use block_course_checker\admin\admin_setting_pickmodules;
 /** @var admin_settingpage $setting */
 $setting;
 
+$visiblename = get_string('activedates_setting_coursesregex', 'block_course_checker');
+$description = get_string('activedates_setting_coursesregex_help', 'block_course_checker');
+$coursesregex = new admin_setting_configtext_with_advanced('block_course_checker/checker_activedates_coursesregex',
+        $visiblename,
+        $description,
+        ['value' => '', 'adv' => false]);
+$setting->add($coursesregex);
+
 $visiblename = get_string('activedates_setting_modules', 'block_course_checker');
 $description = get_string('activedates_setting_modules_help', 'block_course_checker');
 $modules = new admin_setting_pickmodules('block_course_checker/activedates_modules', $visiblename, $description, []);

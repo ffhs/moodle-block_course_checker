@@ -135,6 +135,8 @@ $string['groups_activity'] = 'Activity "{$a->name}"';
 // String specific for the activedates checker.
 $string['activedates_setting_modules'] = 'Enabled modules';
 $string['activedates_setting_modules_help'] = 'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>) to be checked for active dates.';
+$string['activedates_setting_coursesregex'] = 'Course fullname regex filter';
+$string['activedates_setting_coursesregex_help'] = 'Define the regexp to allow this checker only where it matches the course fullnames.';
 $string['activedates_noactivedates'] = 'There shouldn\'t be enabled dates in the "activity completion" section.';
 $string['activedates_noactivedatesinactivity'] = 'There shouldn\'t be enabled dates in the {$a->modtype} activity, look for the following fields: {$a->adateissetin}';
 $string['activedates_success'] = 'The {$a} activity is configured correctly';

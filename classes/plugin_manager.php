@@ -166,8 +166,8 @@ class plugin_manager implements check_manager_interface {
             return null;
         }
 
-        $dependency = self::get_checker_dependency_info($checkername);
-        if ((!self::is_checker_status($checkername) && self::is_checker_hidden($checkername)) || !$dependency['status']) {
+        // Skip checker if enabled but hide results.
+        if (self::is_checker_hidden($checkername)) {
             return null;
         }
 
@@ -210,13 +210,13 @@ class plugin_manager implements check_manager_interface {
 
     /**
      * @param \stdClass $course
-     * @param array $lastchecksresults
+     * @param array $lastchecksrecord
      * @return check_result_interface|array An array of result, indexed with the plugin/check name
      */
     public function run_checks($course, $lastchecksrecord) {
         $results = [];
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            if ($this->is_checker_status($checkername)) {
+            if ($this->is_checker_status($checkername, $course->id)) {
                 $singleresult = $checker->run($course);
                 $singleresult->add_timestamp();
                 $results[$checkername] = $singleresult;
@@ -298,7 +298,7 @@ class plugin_manager implements check_manager_interface {
             return [];
         }
 
-        if (!$this->is_checker_status($checkname)) {
+        if (!$this->is_checker_status($checkname, $course->id)) {
             return [];
         }
 
@@ -310,11 +310,32 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     *
+     * Returns if checker is enabled or not and depending on other settings.
+     * - First checks if plugin is enabled.
+     * - Then if enabled checks for problems with dependencies of 3rd party plugins.
+     * - After handle checkers with advanced settings. The "checker_activedates" is only useful for template courses.
+     *
      * @param string $checkername
+     * @param int $courseid
      * @return bool
+     * @throws \dml_exception
      */
-    public function is_checker_status(string $checkername): bool {
-        return get_config('block_course_checker', $checkername . '_status');
+    public function is_checker_status(string $checkername, int $courseid): bool {
+        if (!get_config('block_course_checker', $checkername . '_status')) {
+            return false;
+        }
+
+        if (!self::get_checker_dependency_info($checkername)) {
+            return false;
+        }
+
+        $advanced = self::has_checker_advanced_settings($checkername);
+        if (!empty($advanced->value)) {
+            return self::has_checker_restrictions($courseid, $checkername, 'coursesregex');
+        }
+
+        return true;
     }
 
     /**
@@ -326,15 +347,44 @@ class plugin_manager implements check_manager_interface {
     }
 
     /**
+     * @param int $courseid
      * @return bool returns true if a least one check is enabled.
+     * @throws \dml_exception
      */
-    public function are_checkers_enabled(): bool {
+    public function are_checkers_enabled(int $courseid): bool {
         foreach ($this->get_checkers_plugins() as $checkername => $checker) {
-            if ($this->is_checker_status($checkername)) {
+            if ($this->is_checker_status($checkername, $courseid)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * @param string $checkername
+     * @return bool|object
+     * @throws \dml_exception
+     */
+    public function has_checker_advanced_settings($checkername) {
+        global $DB;
+
+        $sql = "SELECT * FROM mdl_config_plugins WHERE name LIKE '$checkername%_adv'";
+
+        return $DB->get_record_sql($sql, null,IGNORE_MULTIPLE);
+    }
+
+    /**
+     * @param $courseid
+     * @param $checkername
+     * @param $setting
+     * @return bool
+     * @throws \dml_exception
+     */
+    public function has_checker_restrictions($courseid, $checkername, $setting) {
+        $course = get_course($courseid);
+        $regex = get_config('block_course_checker', $checkername . '_' . $setting);
+
+        return preg_match($regex, $course->fullname);
     }
 
     /**
