@@ -368,7 +368,7 @@ class plugin_manager implements check_manager_interface {
     public function has_checker_advanced_settings($checkername) {
         global $DB;
 
-        $sql = "SELECT * FROM mdl_config_plugins WHERE name LIKE '$checkername%_adv'";
+        $sql = "SELECT * FROM {config_plugins} WHERE name LIKE '$checkername%_adv'";
 
         return $DB->get_record_sql($sql, null,IGNORE_MULTIPLE);
     }
