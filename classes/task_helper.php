@@ -177,7 +177,7 @@ class task_helper {
         $data = [
                 "coursename" => $coursename,
                 "url" => $url,
-                "urlhtml" => sprintf('<a href="%s" style="color:#ec3e3f;">%s</a>', $url, $urlhtmllabel)
+                "urlhtml" => sprintf('<a href="%s">%s</a>', $url, $urlhtmllabel)
         ];
         $subject = get_string('messageprovider_allchecks_subject', 'block_course_checker', $data);
         $completed = get_string('messageprovider_allchecks_completed', 'block_course_checker', $data);
