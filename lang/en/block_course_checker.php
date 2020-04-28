@@ -32,14 +32,17 @@ $string['course_checker:view_notification'] = 'View the course checker notificat
 $string['messageprovider:checker_completed'] = 'Course check is completed';
 
 // String specific for the checker settings.
-$string['settings_general'] = '<p>If the checker is disabled (after save changes) there will be shown below a new setting to hide and show each checker results.</p>';
+$string['settings_general'] =
+        '<p>If the checker is disabled (after save changes) there will be shown below a new setting to hide and show each checker results.</p>';
 $string['settings_referencecourseid'] = 'Reference course id';
 $string['settings_rolesallowedmanual'] = 'Roles for manual check';
-$string['settings_rolesallowedmanual_description'] = 'Define the allowed roles that are set globally or per course to use the manual check form.';
+$string['settings_rolesallowedmanual_description'] =
+        'Define the allowed roles that are set globally or per course to use the manual check form.';
 $string['settings_checker_header'] = '{$a} settings';
 $string['settings_checker_toggle'] = '{$a} enabled';
 $string['settings_checker_hide'] = '{$a} hidden';
-$string['settings_checker_dependency'] = '<div class="alert alert-warning">Checker dependency failed, check if plugin <a href="/admin/modules.php" target="_blank">{$a}</a> installed and enabled.</div>';
+$string['settings_checker_dependency'] =
+        '<div class="alert alert-warning">Checker dependency failed, check if plugin <a href="/admin/modules.php" target="_blank">{$a}</a> installed and enabled.</div>';
 
 // String for checker block and results page.
 $string['noresults'] = 'This course has never been checked automatically';
@@ -102,6 +105,8 @@ $string['checker_referencesettings'] = 'Reference settings check';
 $string['checker_referencesettings_display'] = 'Settings compared to reference course';
 $string['checker_activedates'] = 'Active dates check';
 $string['checker_activedates_display'] = 'Active dates in activity configurations';
+$string['checker_quiz'] = 'Quiz check';
+$string['checker_quiz_display'] = 'Total mark in activity quiz';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
@@ -122,7 +127,8 @@ $string['checker_link_setting_useragent'] = 'User Agent';
 $string['checker_link_setting_useragent_help'] = 'User Agent';
 
 $string['checker_link_setting_whitelist'] = 'Link checker whitelist';
-$string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
+$string['checker_link_setting_whitelist_help'] =
+        'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
 
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';
@@ -134,11 +140,14 @@ $string['groups_activity'] = 'Activity "{$a->name}"';
 
 // String specific for the activedates checker.
 $string['activedates_setting_modules'] = 'Enabled modules';
-$string['activedates_setting_modules_help'] = 'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>) to be checked for active dates.';
+$string['activedates_setting_modules_help'] =
+        'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>) to be checked for active dates.';
 $string['activedates_setting_coursesregex'] = 'Course fullname regex filter';
-$string['activedates_setting_coursesregex_help'] = 'Define the regexp to allow this checker only where it matches the course fullnames.';
+$string['activedates_setting_coursesregex_help'] =
+        'Define the regexp to allow this checker only where it matches the course fullnames.';
 $string['activedates_noactivedates'] = 'There shouldn\'t be enabled dates in the "activity completion" section.';
-$string['activedates_noactivedatesinactivity'] = 'There shouldn\'t be enabled dates in the {$a->modtype} activity, look for the following fields: {$a->adateissetin}';
+$string['activedates_noactivedatesinactivity'] =
+        'There shouldn\'t be enabled dates in the {$a->modtype} activity, look for the following fields: {$a->adateissetin}';
 $string['activedates_success'] = 'The {$a} activity is configured correctly';
 
 // String specific for the attendance checker.
@@ -161,8 +170,15 @@ $string['subheadings_labelignored'] = 'This label is ignored due to whitelist in
 $string['checker_subheadings_setting_whitelist'] = 'Subheading checker strings whitelist';
 $string['checker_subheadings_setting_whitelist_help'] = 'Please add one string per line. Example: "Liebe(r) Modulentwickler".';
 
+// String specific for the quiz checker.
+$string['quiz_grade_sum_error'] =
+        'Maximum grade ({$a->grade}) and Total of marks ({$a->sumgrades}) should be the same number in this quiz';
+$string['quiz_grade_sum_success'] = 'This quiz is configured correctly';
+$string['quiz_activity'] = 'Activity: {$a->name}  ({$a->modname})';
+
 // String specific for the reference course settings checker.
-$string['checker_referencesettings_comparison'] = ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
+$string['checker_referencesettings_comparison'] =
+        ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
 $string['checker_referencesettings_settingismissing'] = 'The "{$a->setting}" is not a coursesetting';
 $string['checker_referencesettings_failing'] = 'The setting "{$a->setting}" is not correct';
 $string['checker_referencesettings_success'] = 'The setting "{$a->setting}" is correct';
@@ -170,7 +186,8 @@ $string['checker_referencesettings_checklist'] = 'Reference course checker setti
 $string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
 
 // String specific for the reference course settings checker filters.
-$string['checker_referencefilter_comparison'] = ' (Reference course: "{$a->filtervaluereference}" | Current course: "{$a->filtervaluecurrent}")';
+$string['checker_referencefilter_comparison'] =
+        ' (Reference course: "{$a->filtervaluereference}" | Current course: "{$a->filtervaluecurrent}")';
 $string['checker_referencefilter_failing'] = 'The filter "{$a->filterkey}" is not correct';
 $string['checker_referencefilter_success'] = 'All filters are correctly set in current course';
 $string['checker_referencefilter_enabled'] = 'Reference settings filter check enabled';
