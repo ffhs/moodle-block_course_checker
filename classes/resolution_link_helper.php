@@ -49,6 +49,7 @@ class resolution_link_helper implements mod_type_interface {
             self::MOD_TYPE_LESSON,
             self::MOD_TYPE_DATA,
             self::MOD_TYPE_FORUM,
+            self::MOD_TYPE_QUIZ
     ];
 
     /**
