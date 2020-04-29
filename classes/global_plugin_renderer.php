@@ -136,7 +136,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
             // Set icon.
             if ($detail['successful']) {
                 $resulticon = $ignored ? $this->get_ignored_icon() : $this->get_success_icon();
-            } elseif (isset($detail['manualtask']) && $detail['manualtask']) {
+            } else if (isset($detail['manualtask']) && $detail['manualtask']) {
                 $resulticon = $manualtask ? $this->get_manual_icon() : $this->get_success_icon();
             } else {
                 $resulticon = $this->get_failed_icon();
@@ -153,7 +153,7 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 $target = $detail['target'] ? \html_writer::div(s($detail['target'])) : '';
                 if ($detail['successful']) {
                     $classname = $ignored ? "text-warning" : "text-success";
-                } elseif (isset($detail['manualtask']) && $detail['manualtask']) {
+                } else if (isset($detail['manualtask']) && $detail['manualtask']) {
                     $classname = $manualtask ? "text-warning" : "text-success";
                 } else {
                     $classname = "text-danger";

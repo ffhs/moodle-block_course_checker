@@ -38,11 +38,11 @@ class checker_helper implements mod_type_interface {
     /** @var array list of modules which be supported by the checker_userdata */
     const ACTIVITIES_WITH_USER_DATA = [
             self::MOD_TYPE_DATA,
-        //self::MOD_TYPE_FORUM, TODO: Will be implemented later.
+        // TODO: Will be implemented later. self::MOD_TYPE_FORUM,
             self::MOD_TYPE_GLOSSARY,
-        //self::MOD_TYPE_JOURNAL, TODO: Will be implemented later.
+        // TODO: Will be implemented later.self::MOD_TYPE_JOURNAL,
             self::MOD_TYPE_WIKI,
-        //self::MOD_TYPE_WORKSHOP TODO: Will be implemented later.
+        // TODO: Will be implemented later. self::MOD_TYPE_WORKSHOP
     ];
 
     /**
@@ -55,20 +55,20 @@ class checker_helper implements mod_type_interface {
     public static function get_userdata_supported_mods($modnames) {
         global $CFG;
 
-        $supported_mods = [];
+        $supportedmods = [];
         foreach ($modnames as $modname) {
             if (in_array($modname, self::ACTIVITIES_WITH_USER_DATA)) {
                 $modfile = $CFG->dirroot . '/mod/' . $modname . '/lib.php';
-                $mod_reset_userdata = $modname . '_reset_userdata';
+                $modresetuserdata = $modname . '_reset_userdata';
                 if (file_exists($modfile)) {
                     include_once($modfile);
-                    if (function_exists($mod_reset_userdata)) {
-                        $supported_mods[] = $modname;
+                    if (function_exists($modresetuserdata)) {
+                        $supportedmods[] = $modname;
                     }
                 }
             }
         }
-        return $supported_mods;
+        return $supportedmods;
     }
 
     /**
