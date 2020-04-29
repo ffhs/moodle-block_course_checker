@@ -38,7 +38,7 @@ class checker_helper implements mod_type_interface {
     /** @var array list of modules which be supported by the checker_userdata */
     const ACTIVITIES_WITH_USER_DATA = [
             self::MOD_TYPE_DATA,
-        // TODO: Will be implemented later. self::MOD_TYPE_FORUM,
+            self::MOD_TYPE_FORUM,
             self::MOD_TYPE_GLOSSARY,
         // TODO: Will be implemented later.self::MOD_TYPE_JOURNAL,
             self::MOD_TYPE_WIKI,
@@ -102,6 +102,10 @@ class checker_helper implements mod_type_interface {
                     $subwikirecords = wiki_get_page_list($subwiki->id);
                     $records = array_merge($records, $subwikirecords);
                 }
+                break;
+            case self::MOD_TYPE_FORUM:
+                require_once($CFG->dirroot . '/mod/forum/lib.php');
+                $records = forum_get_discussions($cm, '', false, -1, -1, true, -1, 0, FORUM_POSTS_ALL_USER_GROUPS, 0);
                 break;
         }
 
