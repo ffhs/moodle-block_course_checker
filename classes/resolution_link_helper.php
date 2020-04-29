@@ -101,12 +101,18 @@ class resolution_link_helper implements mod_type_interface {
 
     /**
      * @param \cm_info $cm
+     * @param string $checkername
      * @return string
      * @throws \coding_exception
      */
-    public static function get_target(\cm_info $cm) {
-        $targetcontext = (object) ["name" => strip_tags($cm->name)];
-        $target = get_string("groups_activity", "block_course_checker", $targetcontext);
+    public static function get_target(\cm_info $cm, string $checkername = ''): string {
+        if ($checkername == 'checker_link') {
+            $targetcontext = (object) ["modname" => get_string("pluginname", $cm->modname), "name" => strip_tags($cm->name)];
+            $target = get_string("checker_link_activity", "block_course_checker", $targetcontext);
+        } else {
+            $targetcontext = (object) ["name" => strip_tags($cm->name)];
+            $target = get_string("groups_activity", "block_course_checker", $targetcontext);
+        }
         return $target;
     }
 }

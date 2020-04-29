@@ -35,7 +35,7 @@ use block_course_checker\resolution_link_helper;
 class checker implements check_plugin_interface, mod_type_interface {
     /** @var check_result */
     protected $checkresult = null;
-    
+
     /**
      * Runs the check for all quizzes of a course.
      *
@@ -44,16 +44,22 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \moodle_exception
      */
     public function run($course) {
+        // Initialize check result array.
         $this->checkresult = new check_result();
+        // Get all quiz activities in the course.
+        $modinfo = get_fast_modinfo($course);
         $instances = get_all_instances_in_courses(self::MOD_TYPE_QUIZ, [$course->id => $course]);
         foreach ($instances as $mod) {
-            $target = $this->get_target(self::MOD_TYPE_QUIZ, $mod);
-            $resolutionlink = resolution_link_helper::get_link_to_modedit_or_view_page(self::MOD_TYPE_QUIZ, $mod->coursemodule);
+            // Get cm_info object to use for target and resolution link.
+            $cm = $modinfo->get_cm($mod->coursemodule);
+            $target = resolution_link_helper::get_target($cm);
+            $resolutionlink = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
             // For all quizzes we like to check if the "Maximum grade" and the "Total of marks" are the same numbers.
             $this->check_quiz_maximum_grade($mod, $resolutionlink, $target);
         }
         return $this->checkresult;
     }
+
     /**
      * @param $mod
      * @param string $link
@@ -87,16 +93,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             ])->set_successful(true);
         }
     }
-    /**
-     * @param $modname
-     * @param $mod
-     * @return string
-     * @throws \coding_exception
-     */
-    private function get_target($modname, $mod) {
-        return get_string("quiz_activity", "block_course_checker",
-                (object) ["modname" => get_string("pluginname", $modname), "name" => strip_tags($mod->name)]);
-    }
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -106,15 +103,7 @@ class checker implements check_plugin_interface, mod_type_interface {
     public static function get_group() {
         return 'group_activities';
     }
-    /**
-     * Get the defaultsetting for this check.
-     * This is used to set if the checker is enabled/disabled per default in the global settings.
-     *
-     * @return bool
-     */
-    public static function get_defaultsetting() {
-        return true;
-    }
+
     /**
      * Get the defaultsetting for this check.
      * This is used to set if the checker is enabled/disabled per default in the global settings.

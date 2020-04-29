@@ -65,16 +65,20 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws \moodle_exception
      */
     public function run($course) {
+        // Initialize check result array.
         $this->checkresult = new check_result();
         $this->check_course_summary($course);
         $modules = $this->get_unique_modnames($course);
+        $modinfo = get_fast_modinfo($course);
 
-        // You will got strait to the edition page for theses mods.
         foreach ($modules as $modname) {
+            // Get all activities for each modname in the course.
             $instances = get_all_instances_in_courses($modname, [$course->id => $course]);
             foreach ($instances as $mod) {
-                $target = $this->get_target($modname, $mod);
-                $resolutionlink = resolution_link_helper::get_link_to_modedit_or_view_page($modname, $mod->coursemodule);
+                // Get cm_info object to use for target and resolution link.
+                $cm = $modinfo->get_cm($mod->coursemodule);
+                $target = resolution_link_helper::get_target($cm, 'checker_link');
+                $resolutionlink = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
 
                 // For url, we have to check the externalurl too.
                 if ($modname === self::MOD_TYPE_URL) {
@@ -172,17 +176,6 @@ class checker implements check_plugin_interface, mod_type_interface {
         // Be sure to check each type of activity ONLY once.
         $modules = array_unique($modules);
         return $modules;
-    }
-
-    /**
-     * @param $modname
-     * @param $mod
-     * @return string
-     * @throws \coding_exception
-     */
-    private function get_target($modname, $mod) {
-        return get_string("checker_link_activity", "block_course_checker",
-                (object) ["modname" => get_string("pluginname", $modname), "name" => strip_tags($mod->name)]);
     }
 
     /**
