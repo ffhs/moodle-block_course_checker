@@ -84,6 +84,7 @@ $string['result_last_activity_header'] = 'Last modified activities';
 $string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
 $string['result_last_activity_empty'] = 'No modified activities since {$a}';
 $string['result_checker_disabled'] = 'This checker is disabled by the administrator.';
+$string['result_checker_manualtask'] = 'This checker needs some manual work.';
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course settings';
@@ -107,6 +108,8 @@ $string['checker_activedates'] = 'Active dates check';
 $string['checker_activedates_display'] = 'Active dates in activity configurations';
 $string['checker_quiz'] = 'Quiz check';
 $string['checker_quiz_display'] = 'Total mark in activity quiz';
+$string['checker_userdata'] = 'User data check';
+$string['checker_userdata_display'] = 'Stored user data in activities';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
@@ -193,6 +196,18 @@ $string['checker_referencefilter_success'] = 'All filters are correctly set in c
 $string['checker_referencefilter_enabled'] = 'Reference settings filter check enabled';
 $string['checker_referencefilter_enabled_help'] = 'Please enable this to compare all course filter with the reference course.';
 $string['checker_referencefilter_filternotsetincurrentcourse'] = 'The filter "{$a->filterkey}" is missing in the current course.';
+
+// String specific for the userdata checker.
+$string['userdata_setting_modules'] = 'Enabled modules';
+$string['userdata_setting_modules_help'] =
+        'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>, contain reset_userdata method in <code>mod/{modname}/lib.php</code> and supported by this plugin) to be checked for user data.';
+$string['userdata_setting_coursesregex'] = 'Course fullname regex filter';
+$string['userdata_setting_coursesregex_help'] =
+        'Define the regexp to allow this checker only where it matches the course fullnames.';
+$string['userdata_error'] = 'There shouldn\'t be any user data stored in the {$a} activity.';
+$string['userdata_success'] = 'The {$a} activity has no user data stored';
+$string['userdata_help'] =
+        'If you want have this data copied in to other courses you must import it manually. Here are some useful manuals: <a href="https://docs.moodle.org/38/en/Backup_of_user_data" target="_blank">Backup of user data</a> and <a href="https://docs.moodle.org/38/en/Reusing_activities" target="_blank">Reusing activities</a>.';
 
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';

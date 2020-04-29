@@ -16,6 +16,7 @@
 /**
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @author     2020 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -35,6 +36,9 @@ class global_plugin_renderer extends \plugin_renderer_base {
     // Dump debug information in the page.
     const DEBUG = false;
 
+    /** @var array of manualtasks results */
+    protected $manualtasks = [];
+
     /**
      * Output a check_result for inside the block
      *
@@ -47,6 +51,13 @@ class global_plugin_renderer extends \plugin_renderer_base {
     public function render_for_block(string $checkername, check_result_interface $result): string {
         global $COURSE;
 
+        // Get result details for manualtask.
+        $resultdetails = $result->get_details();
+        foreach ($resultdetails as $index => $detail) {
+            $manualtask = isset($detail['manualtask']) && $detail['manualtask'];
+            array_push($this->manualtasks, $manualtask);
+        }
+
         $url = new \moodle_url('/blocks/course_checker/details.php', ['id' => $COURSE->id]);
         $url .= "#result-" . $checkername;
 
@@ -55,7 +66,8 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 'successful' => $result->is_successful(),
                 'checkername' => $checkername,
                 'checkername_display' => get_string($checkername . '_display', 'block_course_checker'),
-                'rerun_html' => $this->rerun($checkername, $COURSE->id)
+                'rerun_html' => $this->rerun($checkername, $COURSE->id),
+                "manualtask" => (in_array(true, $this->manualtasks)) ? true : false,
         ]);
         $output .= $this->debug($result);
         return $output;
@@ -80,6 +92,13 @@ class global_plugin_renderer extends \plugin_renderer_base {
      */
     private function get_ignored_icon() {
         return \html_writer::tag('i', null, ['class' => 'fa fa-minus text-warning']);
+    }
+
+    /**
+     * @return string
+     */
+    private function get_manual_icon() {
+        return \html_writer::tag('i', null, ['class' => 'fa fa-hand-stop-o text-warning']);
     }
 
     /**
@@ -110,10 +129,15 @@ class global_plugin_renderer extends \plugin_renderer_base {
         foreach ($resultdetails as $index => $detail) {
             // Is this check ignored.
             $ignored = isset($detail['ignored']) && $detail['ignored'] ? $detail['ignored'] : false;
+            // Does the result requires manual work.
+            $manualtask = isset($detail['manualtask']) && $detail['manualtask'];
+            array_push($this->manualtasks, $manualtask);
 
             // Set icon.
             if ($detail['successful']) {
                 $resulticon = $ignored ? $this->get_ignored_icon() : $this->get_success_icon();
+            } elseif (isset($detail['manualtask']) && $detail['manualtask']) {
+                $resulticon = $manualtask ? $this->get_manual_icon() : $this->get_success_icon();
             } else {
                 $resulticon = $this->get_failed_icon();
             }
@@ -129,6 +153,8 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 $target = $detail['target'] ? \html_writer::div(s($detail['target'])) : '';
                 if ($detail['successful']) {
                     $classname = $ignored ? "text-warning" : "text-success";
+                } elseif (isset($detail['manualtask']) && $detail['manualtask']) {
+                    $classname = $manualtask ? "text-warning" : "text-success";
                 } else {
                     $classname = "text-danger";
                 }
@@ -160,7 +186,8 @@ class global_plugin_renderer extends \plugin_renderer_base {
                 "checkername_display" => get_string($checkername . '_display', "block_course_checker"),
                 "resultdetails" => $resultdetails,
                 "lastrundate" => $lastrundate,
-                "enabled" => plugin_manager::instance()->is_checker_status($checkername, $COURSE->id)
+                "enabled" => plugin_manager::instance()->is_checker_status($checkername, $COURSE->id),
+                "manualtask" => (in_array(true, $this->manualtasks)) ? true : false
         ]);
 
         $output = "";

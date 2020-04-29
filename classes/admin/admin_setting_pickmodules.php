@@ -24,6 +24,8 @@
 
 namespace block_course_checker\admin;
 
+use block_course_checker\checker_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 class admin_setting_pickmodules extends \admin_setting_configmulticheckbox {
@@ -57,6 +59,12 @@ class admin_setting_pickmodules extends \admin_setting_configmulticheckbox {
         }
 
         $plugins = \core_plugin_manager::instance()->get_enabled_plugins('mod');
+
+        // Get only plugins that supports user data reset, used in checker_userdata.
+        if ($this->name == 'userdata_modules') {
+            $plugins = checker_helper::get_userdata_supported_mods($plugins);
+        }
+
         foreach ($plugins as $plugin) {
             $modules[$plugin] = get_string('modulename', $plugin);
         }

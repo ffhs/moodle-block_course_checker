@@ -26,7 +26,8 @@
         "url": "https://moodlesite/blocks/course_checker/details.php?id=1#result-checker_link",
         "checkername_display": "Links in Course Summary and URL Activities",
         "successful": false,
-        "rerun_html": "<div class=\"btn btn-secondary disabled\" title=\"This checker is disabled by the administrator.\"><i class=\"fa fa-redo\"></i></div>"
+        "rerun_html": "<div class=\"btn btn-secondary disabled\" title=\"This checker is disabled by the administrator.\"><i class=\"fa fa-redo\"></i></div>",
+        "manualtask": false
     }
 }}
 
@@ -37,12 +38,17 @@
         </a>
     </td>
     <td class="col result">
-        {{#successful}}
-            <i class="fa fa-check-circle text-success"></i>
-        {{/successful}}
-        {{^successful}}
-            <i class="fa fa-times-circle text-danger"></i>
-        {{/successful}}
+        {{#manualtask}}
+            <i class="fa fa-info-circle text-warning" title="{{#str}}result_checker_manualtask, block_course_checker{{/str}}"></i>
+        {{/manualtask}}
+        {{^manualtask}}
+            {{#successful}}
+                <i class="fa fa-check-circle text-success"></i>
+            {{/successful}}
+            {{^successful}}
+                <i class="fa fa-times-circle text-danger"></i>
+            {{/successful}}
+        {{/manualtask}}
     </td>
     <td class="col rerun">
         {{{rerun_html}}}
