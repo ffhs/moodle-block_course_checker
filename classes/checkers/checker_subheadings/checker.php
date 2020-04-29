@@ -78,7 +78,7 @@ class checker implements check_plugin_interface {
                 continue;
             }
             // Link to activity.
-            $target = $this->get_target($cm);
+            $target = resolution_link_helper::get_target($cm);
             $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
             // Load the html content
             // - DOMDocument is not loading correctly if there are line breaks.
@@ -169,16 +169,6 @@ class checker implements check_plugin_interface {
         return true;
     }
 
-    /**
-     * @param \cm_info $cm
-     * @return string
-     * @throws \coding_exception
-     */
-    private function get_target(\cm_info $cm) {
-        $targetcontext = (object) ["name" => strip_tags($cm->name)];
-        $target = get_string("groups_activity", "block_course_checker", $targetcontext);
-        return $target;
-    }
     /**
      * @param $target
      * @param $link

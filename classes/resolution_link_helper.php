@@ -98,4 +98,15 @@ class resolution_link_helper implements mod_type_interface {
         ]))->out_as_local_url(false);
         return $link;
     }
+
+    /**
+     * @param \cm_info $cm
+     * @return string
+     * @throws \coding_exception
+     */
+    public static function get_target(\cm_info $cm) {
+        $targetcontext = (object) ["name" => strip_tags($cm->name)];
+        $target = get_string("groups_activity", "block_course_checker", $targetcontext);
+        return $target;
+    }
 }
