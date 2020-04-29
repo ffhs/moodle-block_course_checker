@@ -27,11 +27,12 @@ require_once(__DIR__ . '/locallib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_course_checker_edit_form extends block_edit_form {
-    
+
     /**
      * @var array $checkereditforms
      */
     protected $checkereditforms = [];
+
     /**
      * block_course_checker_edit_form constructor.
      *
@@ -43,6 +44,7 @@ class block_course_checker_edit_form extends block_edit_form {
         $this->checkereditforms = $this->get_checker_edit_forms();
         parent::__construct($actionurl, $block, $page);
     }
+
     /**
      * @return array
      */
@@ -75,6 +77,7 @@ class block_course_checker_edit_form extends block_edit_form {
         }
         return $checkereditforms;
     }
+
     /**
      * @param array $data
      * @param array $files
@@ -87,6 +90,7 @@ class block_course_checker_edit_form extends block_edit_form {
         }
         return $errors;
     }
+
     /**
      * @param object $mform
      * @return mixed|void
