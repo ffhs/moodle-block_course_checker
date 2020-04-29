@@ -88,7 +88,11 @@ class checker_helper implements mod_type_interface {
                 list($records) = data_search_entries($data, $cm, $cm->context, 'list', $currentgroup);
                 break;
             case self::MOD_TYPE_GLOSSARY:
-                // TODO: Get user data for glossaries.
+                require_once($CFG->dirroot . '/mod/glossary/lib.php');
+                $glossary = $DB->get_record('data', array('id' => $cm->instance), '*', MUST_EXIST);
+                $options = ['includenotapproved' => true];
+                list($records) = glossary_get_entries_by_search($glossary, $cm->context, '', 1, 'CONCEPT', 'ASC', 0,
+                        999, $options);
                 break;
             case self::MOD_TYPE_WIKI:
                 // TODO: Get user data for wikis.
