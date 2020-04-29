@@ -95,7 +95,13 @@ class checker_helper implements mod_type_interface {
                         999, $options);
                 break;
             case self::MOD_TYPE_WIKI:
-                // TODO: Get user data for wikis.
+                require_once($CFG->dirroot . '/mod/wiki/locallib.php');
+                $records = [];
+                $subwikis = wiki_get_subwikis($cm->instance);
+                foreach ($subwikis as $subwiki) {
+                    $subwikirecords = wiki_get_page_list($subwiki->id);
+                    $records = array_merge($records, $subwikirecords);
+                }
                 break;
         }
 
