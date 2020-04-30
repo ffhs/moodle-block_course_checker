@@ -309,11 +309,9 @@ class checker implements check_plugin_interface {
         $current = course_get_format($COURSE)->get_format_options();
         $PAGE->set_course($referencecourse);
         $reference = course_get_format($COURSE)->get_format_options();
+        $link = resolution_link_helper::get_link_to_course_edit_page($currentcourse);
 
-        $currentcontext = context_course::instance($currentcourse->id);
-        $link = resolution_link_helper::get_link_to_course_filter_page($currentcontext);
-
-        foreach ($reference as $optionkey) {
+        foreach ($reference as $optionkey => $value) {
             if (!isset($current[$optionkey])) {
                 continue;
             }
