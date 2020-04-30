@@ -27,7 +27,6 @@ namespace block_course_checker\checkers\checker_userdata;
 defined('MOODLE_INTERNAL') || die();
 
 use block_course_checker\check_result;
-use block_course_checker\checker_helper;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
@@ -67,7 +66,8 @@ class checker implements check_plugin_interface, mod_type_interface {
             $target = resolution_link_helper::get_target($cm);
             $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id, false);
 
-            $records = checker_helper::check_for_userdata_in_module($cm);
+            $fetch_userdata = new fetch_userdata();
+            $records = $fetch_userdata->check_for_userdata_in_module($cm);
             if (!empty($records)) {
                 $message = get_string('userdata_error', 'block_course_checker', $cm->modname);
                 $checkresult->add_detail([

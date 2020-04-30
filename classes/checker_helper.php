@@ -29,7 +29,7 @@ use block_course_checker\model\mod_type_interface;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Class resolution_link_helper
+ * Class checker_helper
  *
  * @package block_course_checker
  */
@@ -47,7 +47,7 @@ class checker_helper implements mod_type_interface {
 
     /**
      * Retrieves only supported mods with reset methods for user data.
-     * - Copied mostly from core -> course/reset_form.php
+     * - Copied partially from core -> course/reset_form.php
      *
      * @param $modnames
      * @return array
@@ -57,58 +57,21 @@ class checker_helper implements mod_type_interface {
 
         $supportedmods = [];
         foreach ($modnames as $modname) {
-            if (in_array($modname, self::ACTIVITIES_WITH_USER_DATA)) {
-                $modfile = $CFG->dirroot . '/mod/' . $modname . '/lib.php';
-                $modresetuserdata = $modname . '_reset_userdata';
-                if (file_exists($modfile)) {
-                    include_once($modfile);
-                    if (function_exists($modresetuserdata)) {
-                        $supportedmods[] = $modname;
-                    }
-                }
+            if (!in_array($modname, self::ACTIVITIES_WITH_USER_DATA)) {
+                continue;
+            }
+
+            $modfile = $CFG->dirroot . '/mod/' . $modname . '/lib.php';
+            if (!file_exists($modfile)) {
+                continue;
+            }
+
+            include_once($modfile);
+            $modresetuserdata = $modname . '_reset_userdata';
+            if (function_exists($modresetuserdata)) {
+                $supportedmods[] = $modname;
             }
         }
         return $supportedmods;
-    }
-
-    /**
-     * @param string $modname
-     * @return array
-     * @throws \dml_exception
-     */
-    public static function check_for_userdata_in_module(\cm_info $cm) {
-        global $CFG, $DB;
-
-        $records = [];
-        switch ($cm->modname) {
-            case self::MOD_TYPE_DATA:
-                require_once($CFG->dirroot . '/mod/data/locallib.php');
-                $data = $DB->get_record('data', array('id' => $cm->instance), '*', MUST_EXIST);
-                $currentgroup = groups_get_activity_group($cm, true);
-                list($records) = data_search_entries($data, $cm, $cm->context, 'list', $currentgroup);
-                break;
-            case self::MOD_TYPE_GLOSSARY:
-                require_once($CFG->dirroot . '/mod/glossary/lib.php');
-                $glossary = $DB->get_record('data', array('id' => $cm->instance), '*', MUST_EXIST);
-                $options = ['includenotapproved' => true];
-                list($records) = glossary_get_entries_by_search($glossary, $cm->context, '', 1, 'CONCEPT', 'ASC', 0,
-                        999, $options);
-                break;
-            case self::MOD_TYPE_WIKI:
-                require_once($CFG->dirroot . '/mod/wiki/locallib.php');
-                $records = [];
-                $subwikis = wiki_get_subwikis($cm->instance);
-                foreach ($subwikis as $subwiki) {
-                    $subwikirecords = wiki_get_page_list($subwiki->id);
-                    $records = array_merge($records, $subwikirecords);
-                }
-                break;
-            case self::MOD_TYPE_FORUM:
-                require_once($CFG->dirroot . '/mod/forum/lib.php');
-                $records = forum_get_discussions($cm, '', false, -1, -1, true, -1, 0, FORUM_POSTS_ALL_USER_GROUPS, 0);
-                break;
-        }
-
-        return $records;
     }
 }
