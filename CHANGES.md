@@ -4,17 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v3.7-r2 (Build: )] + [ (Build: )] - 
+## [v3.8-r1 (Build: 202005xx00) + v3.7-r2 (Build: 2019121801)] - 2020-05-xx
 ### Added
-- It's now possible to define a block configuration for every checker `classes/checkers/checker_name/edit_form.php`
-- New data checker to check if there are database activities without fields ([issue #25](https://github.com/ffhs/moodle-block_course_checker/issues/25)) 
-- New activedates checker to see if there are any active dates in activities ([issue #19](https://github.com/ffhs/moodle-block_course_checker/issues/19)) 
-- The referencesettings-checker can now be used to compare filter ([issue #24](https://github.com/ffhs/moodle-block_course_checker/issues/24)) 
+- Add `userdata` checker to check `databases`, `forums`, `glossaries` and `wikis` for entries ([issue #21](https://github.com/ffhs/moodle-block_course_checker/issues/21))
+- Add `quiz` checker to check if the `maximumgrade` value is set correct ([issue #22](https://github.com/ffhs/moodle-block_course_checker/issues/22))
+- Add method `is_checker_enabled_by_default` to set the global `checker_<checkername>_status` setting
+  - This was done in due of FFHS-specific checkers, e.g `activedates` and `userdata` ([issue #19](https://github.com/ffhs/moodle-block_course_checker/issues/19))
+- Add `block configuration` where settings can be defined per checker in `classes/checkers/<checker_name>/edit_form.php` ([issue #26](https://github.com/ffhs/moodle-block_course_checker/issues/26), [issue #30](https://github.com/ffhs/moodle-block_course_checker/issues/30))
+- Enable `manual check date form` only for given roles ([issue #20](https://github.com/ffhs/moodle-block_course_checker/issues/20))
+- Extend `link` checker, now course summary and book chapters will be crawled ([issue #13](https://github.com/ffhs/moodle-block_course_checker/issues/13))
+- Add `activedates` checker to check if any `timing` configuration is set in activities ([issue #19](https://github.com/ffhs/moodle-block_course_checker/issues/19))
+- Extend `referencesettings` checker with a `filter comparison` ([issue #24](https://github.com/ffhs/moodle-block_course_checker/issues/24))
+- Add `database` checker to check if there are activities `without fields` ([issue #25](https://github.com/ffhs/moodle-block_course_checker/issues/25))
 
 ### Changed
-- The link-checker has been improved in order to get better results ([issue #15](https://github.com/ffhs/moodle-block_course_checker/issues/15)) 
-- The link-checker has now more possibilities to configure: e.g. User Agent ([issue #12](https://github.com/ffhs/moodle-block_course_checker/issues/12)) 
-- The link-checker now checks book-chapters ([issue #13](https://github.com/ffhs/moodle-block_course_checker/issues/13))  
+- Adapt the `referencesettings message` when the check is successful to be more consistent ([issue #24](https://github.com/ffhs/moodle-block_course_checker/issues/24))
+- Improved the `instances loop` to fetch given activities ([issue #25](https://github.com/ffhs/moodle-block_course_checker/issues/25))
+- Improved the `resolutionlink` method ([issue #27](https://github.com/ffhs/moodle-block_course_checker/issues/25))
+- Improved the `link` checker to get better results, e.g. `User-Agent` and `file handler` ([issue #12](https://github.com/ffhs/moodle-block_course_checker/issues/12), [issue #15](https://github.com/ffhs/moodle-block_course_checker/issues/15))
+
+### Fixed
+- Removed `hardcoded link color` in checkers full notification ([commit 81c0158](https://github.com/ffhs/moodle-block_course_checker/commit/81c015835972f8616406d2417d5b1aaa7aa759a3)) 
 
 ## [v3.7-r1 (Build: 2019121800)] + [v3.6-r5 (Build: 2019071004)] - 2019-12-18
 ### Changed
