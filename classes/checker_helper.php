@@ -40,9 +40,9 @@ class checker_helper implements mod_type_interface {
             self::MOD_TYPE_DATA,
             self::MOD_TYPE_FORUM,
             self::MOD_TYPE_GLOSSARY,
-        // TODO: Will be implemented later.self::MOD_TYPE_JOURNAL,
+        // TODO: "self::MOD_TYPE_JOURNAL" will be implemented later.
             self::MOD_TYPE_WIKI,
-        // TODO: Will be implemented later. self::MOD_TYPE_WORKSHOP
+        // TODO: "self::MOD_TYPE_WORKSHOP" will be implemented later.
     ];
 
     /**

@@ -66,8 +66,8 @@ class checker implements check_plugin_interface, mod_type_interface {
             $target = resolution_link_helper::get_target($cm);
             $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id, false);
 
-            $fetch_userdata = new fetch_userdata();
-            $records = $fetch_userdata->check_for_userdata_in_module($cm);
+            $fetchuserdata = new fetch_userdata();
+            $records = $fetchuserdata->check_for_userdata_in_module($cm);
             if (!empty($records)) {
                 $message = get_string('userdata_error', 'block_course_checker', $cm->modname);
                 $checkresult->add_detail([
