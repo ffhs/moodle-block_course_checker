@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - This was done in due of FFHS-specific checkers, e.g `activedates` and `userdata` ([issue #19](https://github.com/ffhs/moodle-block_course_checker/issues/19))
 - Add `block configuration` where settings can be defined per checker in `classes/checkers/<checker_name>/edit_form.php` ([issue #26](https://github.com/ffhs/moodle-block_course_checker/issues/26), [issue #30](https://github.com/ffhs/moodle-block_course_checker/issues/30))
 - Enable `manual check date form` only for given roles ([issue #20](https://github.com/ffhs/moodle-block_course_checker/issues/20))
-- Extend `link` checker, now course summary and book chapters will be crawled ([issue #13](https://github.com/ffhs/moodle-block_course_checker/issues/13))
+- Extend `link` checker, now course summary, book chapters and wiki pages will be crawled ([issue #13](https://github.com/ffhs/moodle-block_course_checker/issues/13))
 - Add `activedates` checker to check if any `timing` configuration is set in activities ([issue #19](https://github.com/ffhs/moodle-block_course_checker/issues/19))
 - Extend `referencesettings` checker with a `filter comparison` ([issue #24](https://github.com/ffhs/moodle-block_course_checker/issues/24))
 - Add `database` checker to check if there are activities `without fields` ([issue #25](https://github.com/ffhs/moodle-block_course_checker/issues/25))
