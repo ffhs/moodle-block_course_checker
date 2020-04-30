@@ -112,7 +112,7 @@ class checker implements check_plugin_interface {
      *
      */
     public function init() {
-        //// Load settings.
+        // Load settings.
         $this->referencecourseid = (int) $this->get_config(self::REFERENCE_COURSE, self::REFERENCE_COURSE_DEFAULT);
         $this->enabledblocks = explode(',', $this->get_config('block_course_checker/blocks'));
     }
