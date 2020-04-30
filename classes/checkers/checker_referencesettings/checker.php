@@ -33,12 +33,10 @@ use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
 use block_course_checker\resolution_link_helper;
 use context_course;
+use context_system;
 
 class checker implements check_plugin_interface {
     use checker_config_trait;
-
-    /** @var check_result */
-    protected $result = null;
 
     const REFERENCE_COURSE = 'block_course_checker/referencecourseid';
     const REFERENCE_COURSE_DEFAULT = 1;
@@ -46,16 +44,19 @@ class checker implements check_plugin_interface {
     const REFERENCE_COURSE_SETTINGS_DEFAULT = ['format' => 1];
     const REFERENCE_COURSE_FILTER_ENABLED = 'block_course_checker/checker_referencesettings_filter';
     const REFERENCE_COURSE_FILTER_ENABLED_DEFAULT = false;
+    const REFERENCE_COURSE_FORMAT_OPTION_ENABLED = 'block_course_checker/checker_referencesettings_formatoptions';
+    const REFERENCE_COURSE_FORMAT_OPTION_ENABLED_DEFAULT = false;
 
+    /** @var check_result */
+    protected $result = null;
     /** @var int $referencecourseid from checker settings */
     protected $referencecourseid;
-
     /** @var array $referencecourseid from checker settings */
     protected $referencesettings = [];
-
     /** @var array $referencefilterenabled from checker settings */
     protected $referencefilterenabled = false;
-
+    /** @var array $referenceformatoptionsenabled from checker settings */
+    protected $referenceformatoptionsenabled = false;
     /**
      * Initialize checker by setting it up with the configuration
      *
@@ -70,6 +71,10 @@ class checker implements check_plugin_interface {
         $this->referencefilterenabled = $this->get_config(
                 self::REFERENCE_COURSE_FILTER_ENABLED,
                 self::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT
+        );
+        $this->referenceformatoptionsenabled = $this->get_config(
+                self::REFERENCE_COURSE_FORMAT_OPTION_ENABLED,
+                self::REFERENCE_COURSE_FORMAT_OPTION_ENABLED_DEFAULT
         );
     }
 
@@ -97,6 +102,9 @@ class checker implements check_plugin_interface {
 
         // Check if the course filters have the same settings as the template reference course.
         $this->compare_course_level_filters($currentcourse, $referencecourse);
+
+        // Compare the course format options.
+        $this->compare_course_format_options($currentcourse, $referencecourse);
 
         // Return the check results.
         return $this->result;
@@ -275,7 +283,66 @@ class checker implements check_plugin_interface {
             $message = get_string(
                     'checker_referencefilter_success',
                     'block_course_checker'
-                    );
+            );
+            $this->result->add_detail([
+                    "successful" => true,
+                    "message" => $message,
+                    "target" => '',
+                    "link" => $link
+            ]);
+        }
+    }
+    /**
+     * @param \stdClass $currentcourse
+     * @param \stdClass $referencecourse
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    protected function compare_course_format_options(\stdClass $currentcourse, \stdClass $referencecourse) {
+        global $PAGE, $COURSE;
+        if (!$this->referenceformatoptionsenabled) {
+            return;
+        }
+        $occurringoptionproblems = 0;
+
+        $PAGE->set_course($currentcourse);
+        $current = course_get_format($COURSE)->get_format_options();
+        $PAGE->set_course($referencecourse);
+        $reference = course_get_format($COURSE)->get_format_options();
+
+        $currentcontext = context_course::instance($currentcourse->id);
+        $link = resolution_link_helper::get_link_to_course_filter_page($currentcontext);
+
+        foreach ($reference as $optionkey) {
+            if (!isset($current[$optionkey])) {
+                continue;
+            }
+            if ($reference[$optionkey] == $current[$optionkey]) {
+                continue;
+            }
+            $comparison = get_string(
+                    'checker_referencesettings_comparison',
+                    'block_course_checker',
+                    ['settingvaluereference' => $reference[$optionkey], 'settingvaluecurrent' => $current[$optionkey]]);
+            $message = get_string(
+                    'checker_referenceformatoptions_failing',
+                    'block_course_checker',
+                    ['optionkey' => $optionkey]);
+            $this->result->add_detail([
+                    "successful" => false,
+                    "message" => $message . ' ' . $comparison,
+                    "target" => '',
+                    "link" => $link
+            ])->set_successful(false);
+            $occurringoptionproblems++;
+        }
+
+        // When everything is okay.
+        if ($occurringoptionproblems === 0) {
+            $message = get_string(
+                    'checker_referenceformatoptions_success',
+                    'block_course_checker'
+            );
             $this->result->add_detail([
                     "successful" => true,
                     "message" => $message,

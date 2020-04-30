@@ -71,3 +71,12 @@ $setting->add(new admin_setting_configcheckbox(
         $visiblename,
         $description,
         checker::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT));
+
+// Referencesettings Checker Form Options settings.
+$visiblename = get_string('checker_referenceformatoptions_enabled', 'block_course_checker');
+$description = new lang_string('checker_referenceformatoptions_enabled_help', 'block_course_checker');
+$setting->add(new admin_setting_configcheckbox(
+        checker::REFERENCE_COURSE_FORMAT_OPTION_ENABLED,
+        $visiblename,
+        $description,
+        checker::REFERENCE_COURSE_FORMAT_OPTION_ENABLED_DEFAULT));

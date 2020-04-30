@@ -196,6 +196,10 @@ $string['checker_referencefilter_success'] = 'All filters are correctly set in c
 $string['checker_referencefilter_enabled'] = 'Reference settings filter check enabled';
 $string['checker_referencefilter_enabled_help'] = 'Please enable this to compare all course filter with the reference course.';
 $string['checker_referencefilter_filternotsetincurrentcourse'] = 'The filter "{$a->filterkey}" is missing in the current course.';
+$string['checker_referenceformatoptions_failing'] = 'The format option "{$a->optionkey}" is not correct';
+$string['checker_referenceformatoptions_success'] = 'All format options are correctly set in current course';
+$string['checker_referenceformatoptions_enabled'] = 'Reference settings format options check enabled';
+$string['checker_referenceformatoptions_enabled_help'] = 'Please enable this to compare all course format options with the reference course.';
 
 // String specific for the userdata checker.
 $string['userdata_setting_modules'] = 'Enabled modules';
