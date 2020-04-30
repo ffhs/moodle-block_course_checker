@@ -46,21 +46,6 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         }
     }
 
-    // Migration to change type of fields.
-    if ($oldversion < 2019071002) {
-        $dbman = $DB->get_manager();
-
-        $table = new xmldb_table('block_course_checker_events');
-        $fields = [
-                new xmldb_field('action', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null),
-                new xmldb_field('modulename', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null),
-                new xmldb_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null)
-        ];
-        foreach ($fields as $field) {
-            $dbman->change_field_type($table, $field);
-        }
-    }
-
     // Migration to add the field "last_activity_edition".
     if (intval($oldversion) === 2019031507) {
         $xmldbfile = new xmldb_file($file);
@@ -73,6 +58,9 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         $table = $xmldbfile->getStructure()->getTable("block_course_checker");
         $field = $table->getField("last_activity_edition");
         $DB->get_manager()->add_field($table, $field);
+
+        // Sitestats savepoint reached.
+        upgrade_plugin_savepoint(true, 2019031507, 'block', 'course_checker');
     }
 
     // Load the new table.
@@ -86,6 +74,27 @@ function xmldb_block_course_checker_upgrade($oldversion) {
 
         // Install the table.
         $DB->get_manager()->install_one_table_from_xmldb_file($file, $table->getName());
+
+        // Sitestats savepoint reached.
+        upgrade_plugin_savepoint(true, 2019050800, 'block', 'course_checker');
+    }
+
+    // Migration to change type of fields.
+    if ($oldversion < 2019071002) {
+        $dbman = $DB->get_manager();
+
+        $table = new xmldb_table('block_course_checker_events');
+        $fields = [
+                new xmldb_field('action', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null),
+                new xmldb_field('modulename', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null),
+                new xmldb_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null)
+        ];
+        foreach ($fields as $field) {
+            $dbman->change_field_type($table, $field);
+        }
+
+        // Sitestats savepoint reached.
+        upgrade_plugin_savepoint(true, 2019071002, 'block', 'course_checker');
     }
     return true;
 }

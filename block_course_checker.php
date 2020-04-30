@@ -50,7 +50,7 @@ class block_course_checker extends block_base {
      * @return string
      */
     public function get_content() {
-        global $COURSE, $PAGE;
+        global $COURSE;
         if (!has_capability('moodle/course:update', $this->context)) {
             return null;
         }
@@ -94,10 +94,10 @@ class block_course_checker extends block_base {
         }
 
         /** @var \block_course_checker\output\footer_renderer $footerrenderer */
-        $footerrenderer = $PAGE->get_renderer('block_course_checker', "footer");
+        $footerrenderer = $this->page->get_renderer('block_course_checker', "footer");
 
         /** @var \block_course_checker\output\block_renderer $blockrenderer */
-        $blockrenderer = $PAGE->get_renderer('block_course_checker', "block");
+        $blockrenderer = $this->page->get_renderer('block_course_checker', "block");
 
         $this->content->footer = $footerrenderer->renderer([
                 'automaticcheck' => $rundate,
@@ -148,8 +148,6 @@ class block_course_checker extends block_base {
      * @throws moodle_exception
      */
     protected function render_block(array $results) {
-        global $PAGE;
-
         // Render each check result with the dedicated render for this checker.
         $manager = plugin_manager::instance();
         $htmlresults = [];
@@ -182,7 +180,7 @@ class block_course_checker extends block_base {
         $groupedresults = array_values($groupedresults);
 
         /** @var \block_course_checker\output\block_renderer $renderer */
-        $renderer = $PAGE->get_renderer("block_course_checker", "block");
+        $renderer = $this->page->get_renderer("block_course_checker", "block");
         return $renderer->renderer([
                 "groupedresults" => $groupedresults,
                 "hasresults" => !empty($htmlresults),
