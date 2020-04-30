@@ -83,6 +83,7 @@ $string['result_checker_disabled'] = 'This checker is disabled by the administra
 $string['group_course_settings'] = 'Course settings';
 $string['group_links'] = 'Link validator';
 $string['group_activities'] = 'Activity settings';
+$string['group_blocks'] = 'Block settings';
 
 // Name and title of each checker.
 $string['checker_groups'] = 'Group submission check';
@@ -95,8 +96,8 @@ $string['checker_subheadings'] = 'Label subheadings check';
 $string['checker_subheadings_display'] = 'Label subheadings';
 $string['checker_referencesettings'] = 'Reference settings check';
 $string['checker_referencesettings_display'] = 'Settings compared to reference course';
-$string['checker_completionprogress'] = 'Completion progress check';
-$string['checker_completionprogress_display'] = 'Completion progress';
+$string['checker_blocks'] = 'Blocks check';
+$string['checker_blocks_display'] = 'Blocks exists';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
@@ -148,8 +149,13 @@ $string['checker_referencesettings_checklist'] = 'Reference course checker setti
 $string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
 
 // String specific for the completion progress checker.
-$string['checker_completionprogress_success'] = 'The block instance is present';
-$string['checker_completionprogress_blockmissing'] = 'The block instance is missing';
+$string['blocks_setting'] = 'Enabled blocks';
+$string['blocks_setting_help'] =
+        'Define the allowed blocks (must be enabled in <a href="/admin/blocks.php" target="_blank">Manage blocks</a>) to be checked.';
+$string['blocks_comparison'] = '(Reference course: "{$a->valuereference}" | Current course: "{$a->valuecurrent}")';
+$string['blocks_success'] = 'The block is correctly inserted in the current course';
+$string['blocks_error'] = 'The block is present by mistake or is missing in the current course.';
+$string['blocks_activity'] = 'Block "{$a->name}"';
 
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
