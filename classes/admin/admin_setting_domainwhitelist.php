@@ -25,6 +25,7 @@
 namespace block_course_checker\admin;
 
 use admin_setting_configtextarea;
+use block_course_checker\checkers\checker_link\config;
 use block_course_checker\checkers\checker_link\fetch_url;
 
 defined('MOODLE_INTERNAL') || die();
@@ -36,8 +37,8 @@ class admin_setting_domainwhitelist extends admin_setting_configtextarea {
      */
     public function validate($data) {
         $domains = array_filter(array_map('trim', explode("\n", $data)));
-        if (!in_array(fetch_url::WHITELIST_DEFAULT, $domains)) {
-            return get_string('admin_domain_name_default_missing', 'block_course_checker', fetch_url::WHITELIST_DEFAULT);
+        if (!in_array(config::WHITELIST_DEFAULT, $domains)) {
+            return get_string('admin_domain_name_default_missing', 'block_course_checker', config::WHITELIST_DEFAULT);
         }
         foreach ($domains as $domainname) {
             if (!is_valid_domain_name($domainname)) {
