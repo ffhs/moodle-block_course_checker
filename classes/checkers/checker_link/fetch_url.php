@@ -37,30 +37,10 @@ defined('MOODLE_INTERNAL') || die();
  * @package block_course_checker\checkers\checker_link
  */
 class fetch_url {
-    const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
-    const TIMEOUT_DEFAULT = 13;
-    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
-    const CONNECT_TIMEOUT_DEFAULT = 5;
-    const WHITELIST_SETTING = 'block_course_checker/checker_link_whitelist';
-    const WHITELIST_HEADING = 'block_course_checker/checker_link_whitelist_heading';
-    const WHITELIST_DEFAULT = 'www.w3.org';
-    const USERAGENT_SETTING = 'block_course_checker/checker_link_useragent';
-    const USERAGENT_DEFAULT = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
-        'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
-
     use checker_config_trait;
 
-    /** @var int $connecttimeout from checker settings */
-    protected $connecttimeout;
-
-    /** @var int $connecttimeout from checker settings */
-    protected $timeout;
-
-    /** @var array list of ignored domains */
-    protected $ignoredomains;
-
-    /** @var string user agent */
-    protected $useragent;
+    /** @var int $config */
+    protected $config;
 
     /** @var string $message */
     public $message;
@@ -72,27 +52,19 @@ class fetch_url {
     public $successful;
 
     /**
-     * Initialize checker by setting it up with the configuration.
+     * fetch_url constructor.
+     *
+     * @param config $config
      */
-    public function init() {
-        // Load settings.
-        $this->connecttimeout = (int) $this->get_config(self::CONNECT_TIMEOUT_SETTING, self::CONNECT_TIMEOUT_DEFAULT);
-        $this->timeout = (int) $this->get_config(self::TIMEOUT_SETTING, self::TIMEOUT_DEFAULT);
-        $this->useragent = (string) $this->get_config(self::USERAGENT_SETTING, self::USERAGENT_DEFAULT);
-        $domainwhitelist = (string) $this->get_config(self::WHITELIST_SETTING, self::WHITELIST_DEFAULT);
-        $this->ignoredomains = array_filter(array_map('trim', explode("\n", $domainwhitelist)));
+    public function __construct($config) {
+        $this->config = $config;
     }
 
     /**
-     * fetch_url constructor.
-     *
-     * @param array $ignoredomains
+     * @param $url
+     * @return $this
+     * @throws \coding_exception
      */
-    public function __construct($ignoredomains = []) {
-        $this->ignoredomains = $ignoredomains;
-        $this->init();
-    }
-
     public function fetch($url) {
         $parseurl = parse_url($url);
         if ($parseurl["host"] == null) {
@@ -122,11 +94,11 @@ class fetch_url {
 
         $curl->head($url, [
                 "CURLOPT_HTTPHEADER" => $httpheader,
-                "CURLOPT_CONNECTTIMEOUT" => $this->connecttimeout,
-                "CURLOPT_TIMEOUT" => $this->timeout,
+                "CURLOPT_CONNECTTIMEOUT" => $this->config->connecttimeout,
+                "CURLOPT_TIMEOUT" => $this->config->timeout,
                 "CURLOPT_FOLLOWLOCATION" => 1,  // Follows redirects.
                 "CURLOPT_MAXREDIRS" => 3,   // Maximal number of redirects 301,302
-                "CURLOPT_USERAGENT" => $this->useragent, // Default Moodle USERAGENT causing problems.
+                "CURLOPT_USERAGENT" => $this->config->useragent, // Default Moodle USERAGENT causing problems.
                 "CURLOPT_SSL_VERIFYHOST" => 0,
                 "CURLOPT_SSL_VERIFYPEER" => 0,
                 "CURLOPT_ENCODING" => "gzip",
@@ -218,6 +190,6 @@ class fetch_url {
      * @return boolean
      */
     protected function is_ignored_host(string $host) {
-        return in_array($host, $this->ignoredomains);
+        return in_array($host, $this->config->ignoredomains);
     }
 }

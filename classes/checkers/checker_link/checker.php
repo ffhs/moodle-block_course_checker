@@ -32,10 +32,17 @@ use block_course_checker\resolution_link_helper;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\mod_type_interface;
+use coding_exception;
+use moodle_exception;
+use moodle_url;
+use stdClass;
 
 class checker implements check_plugin_interface, mod_type_interface {
-    /** @var check_result */
+    /** @var check_result $checkresult*/
     protected $checkresult = null;
+
+    /** @var config $config */
+    protected $config = null;
 
     /**
      * Get the group defined for this check.
@@ -59,12 +66,15 @@ class checker implements check_plugin_interface, mod_type_interface {
     /**
      * Runs the check for all links of a course
      *
-     * @param \stdClass $course The course itself.
+     * @param stdClass $course The course itself.
      * @return check_result_interface The check result.
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public function run($course) {
+        // Initialize check config.
+        $this->config = new config($course);
+
         // Initialize check result array.
         $this->checkresult = new check_result();
         $this->check_course_summary($course);
@@ -113,11 +123,11 @@ class checker implements check_plugin_interface, mod_type_interface {
 
     /**
      * @param $course
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     protected function check_course_summary($course) {
-        $courseurl = new \moodle_url("/course/view.php", ["id" => $course->id]);
+        $courseurl = new moodle_url("/course/view.php", ["id" => $course->id]);
         $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
                 get_string("checker_link_summary", "block_course_checker"));
     }
@@ -126,11 +136,12 @@ class checker implements check_plugin_interface, mod_type_interface {
      * Check all urls for a single resolution_url
      *
      * @param array $urls
-     * @param string|null $resolutionlink
+     * @param string $resolutionlink
      * @param null $target
+     * @throws coding_exception
      */
     protected function check_urls_with_resolution_url(array $urls, string $resolutionlink = null, $target = null) {
-        $urlcheckresult = new fetch_url();
+        $urlcheckresult = new fetch_url($this->config);
         foreach ($urls as $url) {
             $urlcheckresult->fetch($url);
             $this->checkresult->set_successful($this->checkresult->is_successful() & $urlcheckresult->successful);
@@ -165,7 +176,7 @@ class checker implements check_plugin_interface, mod_type_interface {
     /**
      * @param $course
      * @return array
-     * @throws \moodle_exception
+     * @throws moodle_exception
      */
     protected function get_unique_modnames($course) {
         $modinfo = get_fast_modinfo($course);
@@ -181,14 +192,14 @@ class checker implements check_plugin_interface, mod_type_interface {
     /**
      * @param $mod
      * @throws \dml_exception
-     * @throws \moodle_exception
+     * @throws moodle_exception
      */
     protected function check_book_chapters($mod) {
         global $DB;
         $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '', 'id,title,content');
         foreach ($chapters as $chapter) {
             $target = get_string('checker_link_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
-            $resolutionlink = new \moodle_url('/mod/book/edit.php', ['cmid' => $mod->coursemodule, 'id' => $chapter->id]);
+            $resolutionlink = new moodle_url('/mod/book/edit.php', ['cmid' => $mod->coursemodule, 'id' => $chapter->id]);
             $url = $resolutionlink->out_as_local_url(false);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
         }
@@ -197,7 +208,7 @@ class checker implements check_plugin_interface, mod_type_interface {
     /**
      * @param $mod
      * @throws \dml_exception
-     * @throws \moodle_exception
+     * @throws moodle_exception
      */
     protected function check_wiki_pages($mod) {
         global $DB;
@@ -205,7 +216,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         $pages = $DB->get_records('wiki_pages', array('subwikiid' => $mod->id), '', 'id,title,cachedcontent');
         foreach ($pages as $page) {
             $target = get_string('checker_link_wiki_page', 'block_course_checker', (object) ["title" => $page->title]);
-            $resolutionlink = new \moodle_url('/mod/wiki/edit.php', ['pageid' => $page->id]);
+            $resolutionlink = new moodle_url('/mod/wiki/edit.php', ['pageid' => $page->id]);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($page->cachedcontent), $resolutionlink, $target);
         }
     }

@@ -25,15 +25,18 @@
 
 namespace block_course_checker\model;
 
+use dml_exception;
+
 defined('MOODLE_INTERNAL') || die();
 
 trait checker_config_trait {
     /**
      * Read a setting based on plugin name.
      *
-     * @param string $name Plugin name + / + setting name
-     * @param mixed|null $defaultvalue
+     * @param $name
+     * @param null $defaultvalue
      * @return mixed|null
+     * @throws dml_exception
      */
     protected function get_config($name, $defaultvalue = null) {
         list($plugin, $name) = explode("/", $name);
