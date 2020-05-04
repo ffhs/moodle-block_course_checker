@@ -207,11 +207,11 @@ $string['userdata_setting_modules_help'] =
         'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>, contain reset_userdata method in <code>mod/{modname}/lib.php</code> and supported by this plugin) to be checked for user data.';
 $string['userdata_setting_coursesregex'] = 'Course fullname regex filter';
 $string['userdata_setting_coursesregex_help'] =
-        'Define the regexp to allow this checker only where it matches the course fullnames.';
-$string['userdata_error'] = 'There shouldn\'t be any user data stored in the {$a} activity.';
-$string['userdata_success'] = 'The {$a} activity has no user data stored';
+        'Define a regexp, to run this checker only, when the course fullname matches it.';
+$string['userdata_error'] = 'There shouldn\'t be any user data in the {$a} activity.';
+$string['userdata_success'] = 'The {$a} activity contains no user data.';
 $string['userdata_help'] =
-        'If you want have this data copied in to other courses you must import it manually. Here are some useful manuals: <a href="https://docs.moodle.org/38/en/Backup_of_user_data" target="_blank">Backup of user data</a> and <a href="https://docs.moodle.org/38/en/Reusing_activities" target="_blank">Reusing activities</a>.';
+        'If you want this data to be copied to other courses, you have to import it manually. Here are some useful manuals: <a href="https://docs.moodle.org/38/en/Backup_of_user_data" target="_blank">Backup of user data</a> and <a href="https://docs.moodle.org/38/en/Reusing_activities" target="_blank">Reusing activities</a>.';
 
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
