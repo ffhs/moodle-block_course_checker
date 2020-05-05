@@ -128,10 +128,9 @@ $string['checker_link_setting_timeout'] = 'cURL timeout';
 $string['checker_link_setting_connect_timeout'] = 'cURL connection timeout';
 $string['checker_link_setting_useragent'] = 'User Agent';
 $string['checker_link_setting_useragent_help'] = 'User Agent';
-
 $string['checker_link_setting_whitelist'] = 'Link checker whitelist';
-$string['checker_link_setting_whitelist_help'] =
-        'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
+$string['checker_link_setting_whitelist_desc'] = 'Note that <code>www.w3.org</code> must be present.';
+$string['checker_link_setting_whitelist_help'] = 'Please add one URL per line e.g. <code>https://moodle.org</code>';
 
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';

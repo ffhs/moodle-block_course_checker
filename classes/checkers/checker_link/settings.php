@@ -54,7 +54,8 @@ $setting->add($useragent);
 
 // Link Checker Whitelist setting.
 $visiblename = get_string('checker_link_setting_whitelist', 'block_course_checker');
-$description = new lang_string('checker_link_setting_whitelist_help', 'block_course_checker');
+$description = get_string('checker_link_setting_whitelist_desc', 'block_course_checker') . ' ' .
+        get_string('checker_link_setting_whitelist_help', 'block_course_checker');
 $domainwhitelist = new admin_setting_domainwhitelist(config::WHITELIST_SETTING,
-    $visiblename, $description, config::WHITELIST_DEFAULT, PARAM_RAW, 600);
+        $visiblename, $description, config::WHITELIST_DEFAULT, PARAM_RAW, 600);
 $setting->add($domainwhitelist);
