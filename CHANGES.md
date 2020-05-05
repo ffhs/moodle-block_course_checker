@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v3.8-r1 (Build: 202005xx00) + v3.7-r2 (Build: 2019121801)] - 2020-05-xx
+## [v3.8-r1 (Build: 2019111800) + v3.7-r2 (Build: 2019121801)] - 2020-05-05
 ### Added
+- Add `blocks` checker to check if the same blocks are present
+- Extend `link` checker, now in each course can be defined a own `domain whitelist` ([issue #30](https://github.com/ffhs/moodle-block_course_checker/issues/30))
 - Add `userdata` checker to check `databases`, `forums`, `glossaries` and `wikis` for entries ([issue #21](https://github.com/ffhs/moodle-block_course_checker/issues/21))
 - Add `quiz` checker to check if the `maximumgrade` value is set correct ([issue #22](https://github.com/ffhs/moodle-block_course_checker/issues/22))
 - Add method `is_checker_enabled_by_default` to set the global `checker_<checkername>_status` setting
@@ -24,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the `link` checker to get better results, e.g. `User-Agent` and `file handler` ([issue #12](https://github.com/ffhs/moodle-block_course_checker/issues/12), [issue #15](https://github.com/ffhs/moodle-block_course_checker/issues/15))
 
 ### Fixed
+- The `domain whitelist` input textarea now allows URLs and not only domains ([issue #30](https://github.com/ffhs/moodle-block_course_checker/issues/30))
 - Removed `hardcoded link color` in checkers full notification ([commit 81c0158](https://github.com/ffhs/moodle-block_course_checker/commit/81c015835972f8616406d2417d5b1aaa7aa759a3)) 
 
 ## [v3.7-r1 (Build: 2019121800)] + [v3.6-r5 (Build: 2019071004)] - 2019-12-18
