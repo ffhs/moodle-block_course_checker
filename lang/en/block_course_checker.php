@@ -90,6 +90,7 @@ $string['result_checker_manualtask'] = 'This checker needs some manual work.';
 $string['group_course_settings'] = 'Course settings';
 $string['group_links'] = 'Link validator';
 $string['group_activities'] = 'Activity settings';
+$string['group_blocks'] = 'Block settings';
 
 // Name and title of each checker.
 $string['checker_groups'] = 'Group submission check';
@@ -110,6 +111,8 @@ $string['checker_quiz'] = 'Quiz check';
 $string['checker_quiz_display'] = 'Total mark in activity quiz';
 $string['checker_userdata'] = 'User data check';
 $string['checker_userdata_display'] = 'Stored user data in activities';
+$string['checker_blocks'] = 'Blocks check';
+$string['checker_blocks_display'] = 'Blocks exists';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
@@ -211,6 +214,15 @@ $string['userdata_error'] = 'There shouldn\'t be any user data in the {$a} activ
 $string['userdata_success'] = 'The {$a} activity contains no user data.';
 $string['userdata_help'] =
         'If you want this data to be copied to other courses, you have to import it manually. Here are some useful manuals: <a href="https://docs.moodle.org/38/en/Backup_of_user_data" target="_blank">Backup of user data</a> and <a href="https://docs.moodle.org/38/en/Reusing_activities" target="_blank">Reusing activities</a>.';
+
+// String specific for the completion progress checker.
+$string['blocks_setting'] = 'Enabled blocks';
+$string['blocks_setting_help'] =
+        'Define the allowed blocks (must be enabled in <a href="/admin/blocks.php" target="_blank">Manage blocks</a>) to be checked.';
+$string['blocks_comparison'] = '(Reference course: "{$a->valuereference}" | Current course: "{$a->valuecurrent}")';
+$string['blocks_success'] = 'The block is correctly inserted in the current course';
+$string['blocks_error'] = 'The block is present by mistake or is missing in the current course.';
+$string['blocks_activity'] = 'Block "{$a->name}"';
 
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';
