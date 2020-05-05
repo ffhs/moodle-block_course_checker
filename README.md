@@ -1,12 +1,14 @@
 # Moodle Course Checker [![Build Status](https://travis-ci.org/ffhs/moodle-block_course_checker.svg?branch=master)](https://travis-ci.org/ffhs/moodle-block_course_checker)
+## A Moodle course checker plugin that improves the quality and eliminate human routine tasks in online courses
+
 This plugin provides a framework that can check a course based on independent checkers. It will
 help you find misconfiguration in your courses and follow your internal guidelines.
 The checkers can be triggered manually an will be executed by the Moodle AdHoc task system.
 
 ## Requirements
-This plugin should be compatible with Moodle 3.5+.
+This plugin should be compatible with Moodle 3.7+
  - You have to set up a cron to run the checkers
- - php-ext-curl should be on (for the link checker)
+ - `php-ext-curl` should be on (for the link checker)
  
 ## Installation
 Install the plugin like any other plugin to folder `blocks/course_checker`.
@@ -46,12 +48,13 @@ This plugin provides interfaces and well defined result objects to extend this p
 |Attendance sessions|As editing teacher,<br>- I would like to see if in my course the attendance activity is created.<br><br><i>There must be no sessions added to the activity, to ensure teachers can take attendance during class and that no old sessions are copied.|[mod_attendance](https://moodle.org/plugins/mod_attendance)</i>|
 |Group submission for assignments|As editing teacher,<br>- I would like to see, if in my course in an assignment the option "students submit in groups" is set, whether the "group mode" is activated.<br><br><i>A grouping is created and selected, and corresponding groups exist and are allocated.<br>This allows me to ensure that the first submission of a student does not block the submission for all other students.<i>| |
 |Links in course summary and URL activities|As editing teacher,<br>- I would like to see if all the external links that are in the course are reachable<br>-I would like to be able to create my own domain whitelist per course<br><br><i>Links that requires authentication are currently not supported (e.g internal Moodle links)</i>| |
-|Settings compared to reference course|As editing teacher,<br>- I would like to be able to compare specific coursesetting fields between a course and the reference course<br>- I would like to be able to compare the filter settings between a course and the reference course| |
+|Settings compared to reference course|As editing teacher,<br>- I would like to be able to compare specific coursesetting fields between a course and the reference course<br>- I would like to be able to compare the filter settings between a course and the reference course<br>-I would like to be able to compare courseformat options between a course and the reference course| |
 |Label subheadings check|As editing teacher,<br>- I would like to see, if all labels starts with a h4 HTML tag and a FontAwesome icon| |
 |Data activity with fieldsk|As editing teacher,<br>- I would like to see, if databases have fields defined| |
 |Active dates in activity configurations|As editing teacher,<br>- I would like to see, if activities has timing configurations set| |
 |Total mark in activity quiz|As editing teacher,<br>- I see that for quizzes, the maximum points correspond to the total number questions points| |
 |Stored user data in activities|As editing teacher,<br>- I see that no user data is entered for activities that may contain user data (e.g. databases, forums, glossaries, wikis)<br><br><i>They will not be copied to the individual courses</i>| |
+|Blocks exists|As editing teacher,<br>- I would like to be able to compare the present blocks between a course and the reference course| |
 
 ## Copyright
 Copyright (C) 2019 <a href="https://www.liip.ch" target="_blank">Liip AG</a> the Swiss Moodle Partner.
