@@ -31,16 +31,13 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
+use block_course_checker\model\mod_type_interface;
 
-class checker implements check_plugin_interface {
+class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
-    // Module name for assignments in Moodle.
-    const MOD_TYPE_ASSIGN = 'assign';
 
     /**
      * Runs the check on group assignment submissions for all assignments of a course
-     *
-     * @todo sometime links are not serialized?
      *
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
@@ -52,13 +49,10 @@ class checker implements check_plugin_interface {
         global $DB;
         // Initialize check result array.
         $checkresult = new check_result();
-        // Get all assignment activities for the course.
+        // Get all assignment activities in the course.
         $modinfo = get_fast_modinfo($course);
-        foreach ($modinfo->cms as $cm) {
-            // Skip activities that are not assignments.
-            if ($cm->modname != self::MOD_TYPE_ASSIGN) {
-                continue;
-            }
+        $cms = $modinfo->get_instances_of(self::MOD_TYPE_ASSIGN);
+        foreach ($cms as $cm) {
             // Skip activities that are not visible.
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
@@ -135,6 +129,7 @@ class checker implements check_plugin_interface {
         // Return the check results.
         return $checkresult;
     }
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -143,5 +138,14 @@ class checker implements check_plugin_interface {
      */
     public static function get_group() {
         return 'group_activities';
+    }
+
+    /**
+     * Get the defaultsetting to use in the global settings.
+     *
+     * @return bool
+     */
+    public static function is_checker_enabled_by_default() {
+        return true;
     }
 }

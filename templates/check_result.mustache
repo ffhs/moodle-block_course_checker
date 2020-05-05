@@ -31,35 +31,46 @@
         "isignored": false,
         "icon": "<i class=\"fa fa-times text-danger\"></i>",
         "link": "<a href=\"/course/modedit.php?return=0&amp;update=1&amp;sr=0&amp;sesskey=abc1234\"><i class=\"fa fa-link text-muted\"></i></a>",
-        "message": "<span><div>Activity: This is a example (URL)</div><span class=\"text-danger\">cURL Error 0 The URL is blocked. on https://moodlesite/course/view.php?id=1</span></span> - <a target=\"_blank\" href=\"https://moodlesite/course/view.php?id=1\"><i class=\"text-muted fa fa-external-link\"></i></a>"
+        "message": "<span><div>Activity: This is a example (URL)</div><span class=\"text-danger\">cURL Error 0 The URL is blocked. on https://moodlesite/course/view.php?id=1</span></span> - <a target=\"_blank\" href=\"https://moodlesite/course/view.php?id=1\"><i class=\"text-muted fa fa-external-link\"></i></a>",
+        "manualtask": false,
     }
 }}
 
 <tr id="result-{{checkername}}">
-     <th scope="col" colspan="3" class="col message {{^enabled}} text-muted{{/enabled}}">
-         {{^enabled}}
-             <i class="fa fa-exclamation-triangle text-warning" title="{{#str}}result_checker_disabled, block_course_checker{{/str}}"></i>
-         {{/enabled}}
-        {{#successful}}
-            <i class="fa fa-check-circle text-success"></i>
-        {{/successful}}
-        {{^successful}}
-            <i class="fa fa-times-circle text-danger"></i>
-        {{/successful}}
+    <th scope="col" colspan="3" class="col message {{^enabled}} text-muted{{/enabled}}">
+        {{#manualtask}}
+            <i class="fa fa-info-circle text-warning" title="{{#str}}result_checker_manualtask, block_course_checker{{/str}}"></i>
+        {{/manualtask}}
+        {{^enabled}}
+            <i class="fa fa-exclamation-triangle text-warning" title="{{#str}}result_checker_disabled, block_course_checker{{/str}}"></i>
+        {{/enabled}}
+        {{^manualtask}}
+            {{#successful}}
+                <i class="fa fa-check-circle text-success"></i>
+            {{/successful}}
+            {{^successful}}
+                <i class="fa fa-times-circle text-danger"></i>
+            {{/successful}}
+        {{/manualtask}}
         {{checkername_display}}
         {{#timestamp}}
             <span class="single-checker-timestamp ml-2">
-                 {{#str}}checker_last_run, block_course_checker, {{#userdate}} {{timestamp}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}
+                {{#str}}checker_last_run, block_course_checker, {{#userdate}} {{timestamp}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}
             </span>
         {{/timestamp}}
-         {{^timestamp}}
-             {{#lastrundate}}
-                 <span class="single-checker-timestamp ml-2">
-                     {{#str}}checker_last_run_global, block_course_checker, {{#userdate}} {{lastrundate}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}
-                 </span>
-             {{/lastrundate}}
-         {{/timestamp}}
-     </th>
+        {{^timestamp}}
+            {{#lastrundate}}
+                <span class="single-checker-timestamp ml-2">
+                    {{#str}}checker_last_run_global, block_course_checker, {{#userdate}} {{lastrundate}}, {{#str}} strftimedatetime {{/str}} {{/userdate}}{{/str}}
+                </span>
+            {{/lastrundate}}
+        {{/timestamp}}
+        {{#manualtask}}
+            <div class="alert alert alert-warning mt-1 mb-0">
+                {{#str}}userdata_help, block_course_checker{{/str}}
+            </div>
+        {{/manualtask}}
+    </th>
 </tr>
 
 {{!
@@ -67,15 +78,15 @@ row for a check result displaying message, link to fix and result
 }}
 
 {{#resultdetails}}
-<tr {{#isignored}}class="ignored"{{/isignored}}>
-    <td class="col result{{^enabled}} text-muted{{/enabled}}">
-        {{{icon}}}
-    </td>
-    <td class="col link{{^enabled}} text-muted{{/enabled}}">
-        {{{link}}}
-    </td>
-    <td class="col message{{^enabled}} text-muted{{/enabled}}">
-        {{{message}}}
-    </td>
-</tr>
+    <tr {{#isignored}}class="ignored"{{/isignored}}{{#manualtask}}class="manualtask"{{/manualtask}}>
+        <td class="col result{{^enabled}} text-muted{{/enabled}}">
+            {{{icon}}}
+        </td>
+        <td class="col link{{^enabled}} text-muted{{/enabled}}">
+            {{{link}}}
+        </td>
+        <td class="col message{{^enabled}} text-muted{{/enabled}}">
+            {{{message}}}
+        </td>
+    </tr>
 {{/resultdetails}}

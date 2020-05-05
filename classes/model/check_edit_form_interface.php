@@ -13,37 +13,37 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  *
- * Used to simplify the reading of config values
- *
- * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     block_course_checker
+ * @copyright   2020 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace block_course_checker\model;
 
-use dml_exception;
+use coding_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
-trait checker_config_trait {
+/**
+ * This is an interface made to run a single check.
+ */
+interface check_edit_form_interface {
+
     /**
-     * Read a setting based on plugin name.
-     *
-     * @param $name
-     * @param null $defaultvalue
-     * @return mixed|null
-     * @throws dml_exception
+     * @param object $mform
+     * @return object $mform
+     * @throws coding_exception
      */
-    protected function get_config($name, $defaultvalue = null) {
-        list($plugin, $name) = explode("/", $name);
-        $value = get_config($plugin, $name);
-        if ($value) {
-            return $value;
-        }
-        return $defaultvalue;
-    }
+    public function specific_definition($mform);
+
+    /**
+     * @param $data
+     * @param $files
+     * @param $errors
+     * @return mixed
+     * @throws coding_exception
+     */
+    public function validation($data, $files, $errors);
 }

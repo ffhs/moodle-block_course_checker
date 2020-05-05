@@ -32,29 +32,51 @@ $setting;
 
 /** @var array of coursesettings_fields to check $choices */
 $choices = [
-    // General.
-    'category' => get_string('category'),
-    'visible' => get_string('visible'),
-    'startdate' => get_string('startdate'),
-    // Summary.
-    'summary' => get_string('summary'),
-    // Course Format.
-    'format' => get_string('format'),
-    // Appearance.
-    'showgrades' => get_string('showgrades'),
-    'newsitems' => get_string('newsitemsnumber'),
-    'lang' => get_string('forcelanguage'),
-    'showreports' => get_string('showreports'),
-    // Files and uploads.
-    'legacyfiles' => get_string('courselegacyfiles'),
-    'maxbytes' => get_string('maximumupload'),
-    // Completion Tracking.
-    'enablecompletion' => get_string('enablecompletion', 'completion'),
+        // General.
+        'category' => get_string('category'),
+        'visible' => get_string('visible'),
+        'startdate' => get_string('startdate'),
+        // Summary.
+        'summary' => get_string('summary'),
+        // Course Format.
+        'format' => get_string('format'),
+        // Appearance.
+        'showgrades' => get_string('showgrades'),
+        'newsitems' => get_string('newsitemsnumber'),
+        'lang' => get_string('forcelanguage'),
+        'showreports' => get_string('showreports'),
+        // Files and uploads.
+        'legacyfiles' => get_string('courselegacyfiles'),
+        'maxbytes' => get_string('maximumupload'),
+        // Completion Tracking.
+        'enablecompletion' => get_string('enablecompletion', 'completion'),
 ];
 
 // Referencesettings Checker Checklist settings.
 $visiblename = get_string('checker_referencesettings_checklist', 'block_course_checker');
 $description = new lang_string('checker_referencesettings_checklist_help', 'block_course_checker');
-$checklist = new admin_setting_configmulticheckbox(checker::REFERENCE_COURSE_SETTINGS,
-    $visiblename, $description, checker::REFERENCE_COURSE_SETTINGS_DEFAULT, $choices);
+$checklist = new admin_setting_configmulticheckbox(
+        checker::REFERENCE_COURSE_SETTINGS,
+        $visiblename,
+        $description,
+        checker::REFERENCE_COURSE_SETTINGS_DEFAULT,
+        $choices);
 $setting->add($checklist);
+
+// Referencesettings Checker Filter settings.
+$visiblename = get_string('checker_referencefilter_enabled', 'block_course_checker');
+$description = new lang_string('checker_referencefilter_enabled_help', 'block_course_checker');
+$setting->add(new admin_setting_configcheckbox(
+        checker::REFERENCE_COURSE_FILTER_ENABLED,
+        $visiblename,
+        $description,
+        checker::REFERENCE_COURSE_FILTER_ENABLED_DEFAULT));
+
+// Referencesettings Checker Form Options settings.
+$visiblename = get_string('checker_referenceformatoptions_enabled', 'block_course_checker');
+$description = new lang_string('checker_referenceformatoptions_enabled_help', 'block_course_checker');
+$setting->add(new admin_setting_configcheckbox(
+        checker::REFERENCE_COURSE_FORMAT_OPTION_ENABLED,
+        $visiblename,
+        $description,
+        checker::REFERENCE_COURSE_FORMAT_OPTION_ENABLED_DEFAULT));

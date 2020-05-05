@@ -20,6 +20,7 @@
  * @package    block_course_checker
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @author     2019 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
+ * @author     2020 Christoph Karlen, Fernfachhochschule Schweiz (FFHS) <christoph.karlen@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['pluginname'] = 'Course checker';
@@ -31,12 +32,17 @@ $string['course_checker:view_notification'] = 'View the course checker notificat
 $string['messageprovider:checker_completed'] = 'Course check is completed';
 
 // String specific for the checker settings.
-$string['settings_general'] = '<p>If the checker is disabled (after save changes) there will be shown below a new setting to hide and show each checker results.</p>';
+$string['settings_general'] =
+        '<p>If the checker is disabled (after save changes) there will be shown below a new setting to hide and show each checker results.</p>';
 $string['settings_referencecourseid'] = 'Reference course id';
+$string['settings_rolesallowedmanual'] = 'Roles for manual check';
+$string['settings_rolesallowedmanual_description'] =
+        'Define the allowed roles that are set globally or per course to use the manual check form.';
 $string['settings_checker_header'] = '{$a} settings';
 $string['settings_checker_toggle'] = '{$a} enabled';
 $string['settings_checker_hide'] = '{$a} hidden';
-$string['settings_checker_dependency'] = '<div class="alert alert-warning">Checker dependency failed, check if plugin <a href="/admin/modules.php" target="_blank">{$a}</a> installed and enabled.</div>';
+$string['settings_checker_dependency'] =
+        '<div class="alert alert-warning">Checker dependency failed, check if plugin <a href="/admin/modules.php" target="_blank">{$a}</a> installed and enabled.</div>';
 
 // String for checker block and results page.
 $string['noresults'] = 'This course has never been checked automatically';
@@ -78,11 +84,13 @@ $string['result_last_activity_header'] = 'Last modified activities';
 $string['result_last_activity_header_date'] = 'Last modified activities since {$a}';
 $string['result_last_activity_empty'] = 'No modified activities since {$a}';
 $string['result_checker_disabled'] = 'This checker is disabled by the administrator.';
+$string['result_checker_manualtask'] = 'This checker needs some manual work.';
 
 // Name of each group that can be assigned to checkers.
 $string['group_course_settings'] = 'Course settings';
 $string['group_links'] = 'Link validator';
 $string['group_activities'] = 'Activity settings';
+$string['group_blocks'] = 'Block settings';
 
 // Name and title of each checker.
 $string['checker_groups'] = 'Group submission check';
@@ -91,13 +99,25 @@ $string['checker_link'] = 'Links check';
 $string['checker_link_display'] = 'Links in course summary and URL activities';
 $string['checker_attendance'] = 'Attendance sessions check';
 $string['checker_attendance_display'] = 'Attendance sessions';
+$string['checker_data'] = 'Data activity check';
+$string['checker_data_display'] = 'Data activity with fields';
 $string['checker_subheadings'] = 'Label subheadings check';
 $string['checker_subheadings_display'] = 'Label subheadings';
 $string['checker_referencesettings'] = 'Reference settings check';
 $string['checker_referencesettings_display'] = 'Settings compared to reference course';
+$string['checker_activedates'] = 'Active dates check';
+$string['checker_activedates_display'] = 'Active dates in activity configurations';
+$string['checker_quiz'] = 'Quiz check';
+$string['checker_quiz_display'] = 'Total mark in activity quiz';
+$string['checker_userdata'] = 'User data check';
+$string['checker_userdata_display'] = 'Stored user data in activities';
+$string['checker_blocks'] = 'Blocks check';
+$string['checker_blocks_display'] = 'Blocks exists';
 
 // String specific for the link checker.
 $string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
+$string['checker_link_book_chapter'] = 'Book Chapter: {$a->title}';
+$string['checker_link_wiki_page'] = 'Wiki Page: {$a->title}';
 $string['checker_link_summary'] = 'Course summary';
 $string['checker_link_error_curl'] =
         'cURL Error {$a->curl_errno} {$a->curl_error} on {$a->url}'; // You can get any curl info or pare_url field in $a.
@@ -109,8 +129,11 @@ $string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted fo
 $string['checker_link_error_undefined'] = 'A undefined error with the link occurred';
 $string['checker_link_setting_timeout'] = 'cURL timeout';
 $string['checker_link_setting_connect_timeout'] = 'cURL connection timeout';
+$string['checker_link_setting_useragent'] = 'User Agent';
+$string['checker_link_setting_useragent_help'] = 'User Agent';
 $string['checker_link_setting_whitelist'] = 'Link checker whitelist';
-$string['checker_link_setting_whitelist_help'] = 'Please add one url per line. Example: "www.google.com". Note that www.w3.org must be present.';
+$string['checker_link_setting_whitelist_desc'] = 'Note that <code>www.w3.org</code> must be present.';
+$string['checker_link_setting_whitelist_help'] = 'Please add one URL per line e.g. <code>https://moodle.org</code>';
 
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';
@@ -120,12 +143,27 @@ $string['groups_lessthantwogroups'] = 'Less than 2 groups have been set up for t
 $string['groups_success'] = 'Group submission setting is well defined';
 $string['groups_activity'] = 'Activity "{$a->name}"';
 
+// String specific for the activedates checker.
+$string['activedates_setting_modules'] = 'Enabled modules';
+$string['activedates_setting_modules_help'] =
+        'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>) to be checked for active dates.';
+$string['activedates_setting_coursesregex'] = 'Course fullname regex filter';
+$string['activedates_setting_coursesregex_help'] =
+        'Define the regexp to allow this checker only where it matches the course fullnames.';
+$string['activedates_noactivedates'] = 'There shouldn\'t be enabled dates in the "activity completion" section.';
+$string['activedates_noactivedatesinactivity'] =
+        'There shouldn\'t be enabled dates in the {$a->modtype} activity, look for the following fields: {$a->adateissetin}';
+$string['activedates_success'] = 'The {$a} activity is configured correctly';
+
 // String specific for the attendance checker.
 $string['attendance_missingplugin'] = 'Skip this testcase because mod_attendance is not installed';
 $string['attendance_missingattendanceactivity'] = 'Check attendance failed - no attendance activity in this course';
 $string['attendance_onlyoneattendenceactivityallowed'] = 'Check attendance failed - only one attendance activity is allowed';
 $string['attendance_sessionsnotemty'] = 'Check attendance failed - it\'s not allowed to have any attendance sessions';
 $string['attendance_success'] = 'The attendance activity is configured correctly';
+
+// String specific for the data checker.
+$string['data_success'] = 'The database activity is configured correctly and fields are defined';
 
 // String specific for the subheadings checker.
 $string['subheadings_wrongfirsthtmltag'] = 'The first html-tag is not a {$a->htmltag}';
@@ -137,13 +175,54 @@ $string['subheadings_labelignored'] = 'This label is ignored due to whitelist in
 $string['checker_subheadings_setting_whitelist'] = 'Subheading checker strings whitelist';
 $string['checker_subheadings_setting_whitelist_help'] = 'Please add one string per line. Example: "Liebe(r) Modulentwickler".';
 
+// String specific for the quiz checker.
+$string['quiz_grade_sum_error'] =
+        'Maximum grade ({$a->grade}) and Total of marks ({$a->sumgrades}) should be the same number in this quiz';
+$string['quiz_grade_sum_success'] = 'This quiz is configured correctly';
+$string['quiz_activity'] = 'Activity: {$a->name}  ({$a->modname})';
+
 // String specific for the reference course settings checker.
-$string['checker_referencesettings_comparison'] = ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
+$string['checker_referencesettings_comparison'] =
+        ' (Reference course: "{$a->settingvaluereference}" | Current course: "{$a->settingvaluecurrent}")';
 $string['checker_referencesettings_settingismissing'] = 'The "{$a->setting}" is not a coursesetting';
 $string['checker_referencesettings_failing'] = 'The setting "{$a->setting}" is not correct';
 $string['checker_referencesettings_success'] = 'The setting "{$a->setting}" is correct';
 $string['checker_referencesettings_checklist'] = 'Reference course checker settings checklist';
 $string['checker_referencesettings_checklist_help'] = 'Please select one or multiple settings to check with the reference course.';
+
+// String specific for the reference course settings checker filters.
+$string['checker_referencefilter_comparison'] =
+        ' (Reference course: "{$a->filtervaluereference}" | Current course: "{$a->filtervaluecurrent}")';
+$string['checker_referencefilter_failing'] = 'The filter "{$a->filterkey}" is not correct';
+$string['checker_referencefilter_success'] = 'All filters are correctly set in current course';
+$string['checker_referencefilter_enabled'] = 'Reference settings filter check enabled';
+$string['checker_referencefilter_enabled_help'] = 'Please enable this to compare all course filter with the reference course.';
+$string['checker_referencefilter_filternotsetincurrentcourse'] = 'The filter "{$a->filterkey}" is missing in the current course.';
+$string['checker_referenceformatoptions_failing'] = 'The format option "{$a->optionkey}" is not correct';
+$string['checker_referenceformatoptions_success'] = 'All format options are correctly set in current course';
+$string['checker_referenceformatoptions_enabled'] = 'Reference settings format options check enabled';
+$string['checker_referenceformatoptions_enabled_help'] = 'Please enable this to compare all course format options with the reference course.';
+
+// String specific for the userdata checker.
+$string['userdata_setting_modules'] = 'Enabled modules';
+$string['userdata_setting_modules_help'] =
+        'Define the allowed modules (must be enabled in <a href="/admin/modules.php" target="_blank">Manage activities</a>, contain reset_userdata method in <code>mod/{modname}/lib.php</code> and supported by this plugin) to be checked for user data.';
+$string['userdata_setting_coursesregex'] = 'Course fullname regex filter';
+$string['userdata_setting_coursesregex_help'] =
+        'Define a regexp, to run this checker only, when the course fullname matches it.';
+$string['userdata_error'] = 'There shouldn\'t be any user data in the {$a} activity.';
+$string['userdata_success'] = 'The {$a} activity contains no user data.';
+$string['userdata_help'] =
+        'If you want this data to be copied to other courses, you have to import it manually. Here are some useful manuals: <a href="https://docs.moodle.org/38/en/Backup_of_user_data" target="_blank">Backup of user data</a> and <a href="https://docs.moodle.org/38/en/Reusing_activities" target="_blank">Reusing activities</a>.';
+
+// String specific for the completion progress checker.
+$string['blocks_setting'] = 'Enabled blocks';
+$string['blocks_setting_help'] =
+        'Define the allowed blocks (must be enabled in <a href="/admin/blocks.php" target="_blank">Manage blocks</a>) to be checked.';
+$string['blocks_comparison'] = '(Reference course: "{$a->valuereference}" | Current course: "{$a->valuecurrent}")';
+$string['blocks_success'] = 'The block is correctly inserted in the current course';
+$string['blocks_error'] = 'The block is present by mistake or is missing in the current course.';
+$string['blocks_activity'] = 'Block "{$a->name}"';
 
 // String for messageprovider.
 $string['messageprovider_allchecks_subject'] = 'Checks completed on course {$a->coursename}';

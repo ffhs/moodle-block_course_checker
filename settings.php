@@ -23,8 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use block_course_checker\checkers\checker_attendance\checker;
 use block_course_checker\admin\admin_setting_courseid_selector;
+use block_course_checker\output\block_renderer;
 use block_course_checker\plugin_manager;
 
 defined('MOODLE_INTERNAL') || die;
@@ -33,9 +33,20 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('block_course_checker/description', null,
             get_string('settings_general', 'block_course_checker')));
 
-    $name = get_string("settings_referencecourseid", "block_course_checker");
-    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $name, '', SITEID));
+    // Define reference course id.
+    $visiblename = get_string("settings_referencecourseid", "block_course_checker");
+    $settings->add(new admin_setting_courseid_selector('block_course_checker/referencecourseid', $visiblename, '', SITEID));
 
+    // Define the global roles which are allowed to use the manual check form.
+    $visiblename = get_string('settings_rolesallowedmanual', 'block_course_checker', null, true);
+    $description = get_string('settings_rolesallowedmanual_description', 'block_course_checker', null, true);
+    $settings->add(new admin_setting_pickroles(
+            block_renderer::ROLESALLOWEDMANUAL_SETTING,
+            $visiblename, $description,
+            block_renderer::ROLESALLOWEDMANUAL_DEFAULT
+    ));
+
+    // Get checker plugins settings.
     $manager = plugin_manager::instance();
     foreach ($manager->get_checkers_plugins() as $checkername => $plugin) {
         $truecheckername = get_string($checkername, 'block_course_checker');
@@ -60,8 +71,9 @@ if ($ADMIN->fulltree) {
 
         // Check if checker has a dependency to another plugin.
         $dependency = $manager->get_checker_dependency_info($checkername);
+        $checker = '\\block_course_checker\checkers\\' . $checkername . '\\checker';
         if (!$dependency['status']) {
-            $param = checker::get_modulename_constant($dependency['name']);
+            $param = $checker::get_modulename_constant($dependency['name']);
             if (!$param) {
                 $param = 'requirements';
             } else {
@@ -71,16 +83,17 @@ if ($ADMIN->fulltree) {
                     get_string('settings_checker_dependency', 'block_course_checker', $param)));
         } else {
             $visiblename = get_string('settings_checker_toggle', 'block_course_checker', $truecheckername);
+            $enabled = $checker::is_checker_enabled_by_default();
             $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_status', $visiblename, null,
-                    true));
-            if (!$manager->get_checker_status($checkername)) {
+                    $enabled));
+            if (!$manager->is_checker_status($checkername, 1)) {
                 $visiblename = get_string('settings_checker_hide', 'block_course_checker', $truecheckername);
                 $settings->add(new admin_setting_configcheckbox("block_course_checker/" . $checkername . '_hidden', $visiblename,
                         null, false));
             }
         }
 
-        // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle beaviour).
+        // We add the settings only if the plugin itself did not set the value to null. (This is a Moodle behaviour).
         if ($setting === null) {
             continue;
         }

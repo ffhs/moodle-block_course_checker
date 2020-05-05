@@ -26,7 +26,7 @@
         "arecheckersenabled": true,
         "runscheduled": false,
         "runbtn": "<input type=\"submit\" value=\"Check this course\" class=\"btn btn-primary btn-block\">",
-        "humancheckbtn": "<input class=\"btn btn-secondary btn-block\" type=\"submit\" placeholder=\"Update human review\">",
+        "humancheckbtn": "<input class=\"btn btn-secondary btn-block\" type=\"submit\" title=\"Update human review\">",
         "automaticcheck": 1570805592,
         "humancheck": 1570805592,
         "humanreason": "Test check",
@@ -59,22 +59,22 @@ buttons to run the checkers and to display the result page
 
     </div>
 
-{{!
-messages about the status of the last run
-}}
-    <br>
+    {{!
+    messages about the status of the last run
+    }}
+    <hr>
     <b>{{#str}} automaticcheck, block_course_checker {{/str}}:</b>
     <br>
     {{#automaticcheck}}
-       {{#userdate}} {{automaticcheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+        {{#userdate}} {{automaticcheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
     {{/automaticcheck}}
     {{^automaticcheck}}
-      {{#str}} automaticcheckempty, block_course_checker {{/str}}
+        {{#str}} automaticcheckempty, block_course_checker {{/str}}
     {{/automaticcheck}}
     <br>
     <b>{{#str}} humancheck, block_course_checker {{/str}}</b><br>
     {{#humancheck}}
-      {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
+        {{#userdate}} {{humancheck}}, {{#str}} strftimedatetime {{/str}}{{/userdate}}
 
         {{#humanreason}}
             <p class="humanreason-label">{{#str}}humancheck_reason, block_course_checker{{/str}}</p>
@@ -85,7 +85,7 @@ messages about the status of the last run
 
     {{/humancheck}}
     {{^humancheck}}
-      {{#str}} humancheckempty, block_course_checker {{/str}}
+        {{#str}} humancheckempty, block_course_checker {{/str}}
     {{/humancheck}}
     <br>
     <b>{{#str}}lastactivityedition, block_course_checker{{/str}}:</b><br>

@@ -15,35 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
- * Used to simplify the reading of config values
+ * Settings for checking blocks inside the course
  *
  * @package    block_course_checker
- * @copyright  2019 Liip SA <elearning@liip.ch>
+ * @copyright  2020 Adrian Perez, Fernfachhochschule Schweiz (FFHS) <adrian.perez@ffhs.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_course_checker\model;
-
-use dml_exception;
-
 defined('MOODLE_INTERNAL') || die();
 
-trait checker_config_trait {
-    /**
-     * Read a setting based on plugin name.
-     *
-     * @param $name
-     * @param null $defaultvalue
-     * @return mixed|null
-     * @throws dml_exception
-     */
-    protected function get_config($name, $defaultvalue = null) {
-        list($plugin, $name) = explode("/", $name);
-        $value = get_config($plugin, $name);
-        if ($value) {
-            return $value;
-        }
-        return $defaultvalue;
-    }
-}
+use block_course_checker\admin\admin_setting_pickblocks;
+
+/** @var admin_settingpage $setting */
+$setting;
+
+$visiblename = get_string('blocks_setting', 'block_course_checker');
+$description = get_string('blocks_setting_help', 'block_course_checker');
+$blocks = new admin_setting_pickblocks('block_course_checker/blocks', $visiblename, $description, []);
+$setting->add($blocks);

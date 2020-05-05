@@ -25,35 +25,23 @@
 namespace block_course_checker\admin;
 
 use admin_setting_configtextarea;
-use block_course_checker\checkers\checker_link\checker;
+use block_course_checker\checkers\checker_link\config;
+use block_course_checker\checkers\checker_link\fetch_url;
 
 defined('MOODLE_INTERNAL') || die();
 
 class admin_setting_domainwhitelist extends admin_setting_configtextarea {
 
     /**
-     * Check one domain whether it is valid.
-     * Taken from https://stackoverflow.com/a/4694816
-     *
-     * @param $domainname
-     * @return bool
-     */
-    protected function is_valid_domain_name($domainname) {
-        return (1 === preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domainname) // Valid chars check.
-                && 1 === preg_match("/^.{1,253}$/", $domainname) // Overall length check.
-                && 1 === preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)); // Length of each label.
-    }
-
-    /**
      * @inheritDoc
      */
     public function validate($data) {
         $domains = array_filter(array_map('trim', explode("\n", $data)));
-        if (!in_array(checker::WHITELIST_DEFAULT, $domains)) {
-            return get_string('admin_domain_name_default_missing', 'block_course_checker', checker::WHITELIST_DEFAULT);
+        if (!in_array(config::WHITELIST_DEFAULT, $domains)) {
+            return get_string('admin_domain_name_default_missing', 'block_course_checker', config::WHITELIST_DEFAULT);
         }
         foreach ($domains as $domainname) {
-            if (!$this->is_valid_domain_name($domainname)) {
+            if (!is_valid_domain_name($domainname)) {
                 return get_string('admin_domain_name_notvalid', 'block_course_checker', $domainname);
             };
         }

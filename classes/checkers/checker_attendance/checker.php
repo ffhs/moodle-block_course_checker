@@ -32,22 +32,21 @@ defined('MOODLE_INTERNAL') || die();
 use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
+use block_course_checker\model\mod_type_interface;
 
-class checker implements check_plugin_interface {
+class checker implements check_plugin_interface, mod_type_interface {
     /** @var check_result */
     protected $result = null;
-    // Module name for attendance in Moodle.
-    const MOD_TYPE_ATTENDANCE = 'attendance';
 
     /**
      * Runs the check on attendance activities of a course
-     *
-     * @todo investigate if we skip activities that are not visible and if we should add uservisible
      *
      * @param \stdClass $course The course itself.
      * @return check_result_interface The check result.
      * @throws \coding_exception
      * @throws \moodle_exception
+     * @todo Investigate if we skip activities that are not visible and if we should add uservisible.
+     *
      */
     public function run($course) {
         // Initialize check result array.
@@ -56,13 +55,10 @@ class checker implements check_plugin_interface {
         $attendances = [];
         // Get all attendance activities for the course.
         $modinfo = get_fast_modinfo($course);
-        foreach ($modinfo->cms as $cm) {
-            // Skip activities that are not attendance.
-            if ($cm->modname != self::MOD_TYPE_ATTENDANCE) {
-                continue;
-            }
+        $cms = $modinfo->get_instances_of(self::MOD_TYPE_ATTENDANCE);
+        foreach ($cms as $cm) {
             // Skip activities that are not visible.
-            if (!$cm->has_view()) {
+            if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
             $attendances[] = $cm;
@@ -116,6 +112,7 @@ class checker implements check_plugin_interface {
         // Return the check results.
         return $this->result;
     }
+
     /**
      * Get the group defined for this check.
      * This is used to display checks from the same group together.
@@ -125,6 +122,16 @@ class checker implements check_plugin_interface {
     public static function get_group() {
         return 'group_activities';
     }
+
+    /**
+     * Get the defaultsetting to use in the global settings.
+     *
+     * @return bool
+     */
+    public static function is_checker_enabled_by_default() {
+        return true;
+    }
+
     protected function get_attendance_sessions(\stdClass $course) {
         global $DB;
         // Get all attendancesessions in a course.
@@ -141,6 +148,6 @@ class checker implements check_plugin_interface {
      * Get constant of checker to use as parameter.
      */
     public static function get_modulename_constant($pluginname) {
-        return constant('self::MOD_TYPE_'. strtoupper($pluginname));
+        return constant('self::MOD_TYPE_' . strtoupper($pluginname));
     }
 }

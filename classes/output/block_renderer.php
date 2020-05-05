@@ -24,9 +24,16 @@
 
 namespace block_course_checker\output;
 
+use block_course_checker\model\checker_config_trait;
+
 defined('MOODLE_INTERNAL') || die();
 
 class block_renderer extends \plugin_renderer_base {
+    use checker_config_trait;
+
+    const ROLESALLOWEDMANUAL_SETTING = 'block_course_checker/checker_rolesallowedmanual';
+    const ROLESALLOWEDMANUAL_DEFAULT = [];
+
     /**
      * @param $context
      * @return bool|string
@@ -42,7 +49,15 @@ class block_renderer extends \plugin_renderer_base {
      * @throws \moodle_exception
      */
     public function renderer_human_check_form(int $courseid, string $manualreason = null) {
-        global $CFG;
+        global $CFG, $USER;
+
+        // Check if user is allowed to see the human check date form.
+        $rolesallowedmanual = $this->get_config(self::ROLESALLOWEDMANUAL_SETTING, '');
+        if (!user_has_given_role_in_course($USER->id, $courseid, $rolesallowedmanual)) {
+            if (!user_has_role_in_system($USER->id, $rolesallowedmanual)) {
+                return '';
+            }
+        }
 
         $humanplaceholder = get_string('humancheck_comment_placeholder', 'block_course_checker');
         $humanreasonpresent = !empty($manualreason);

@@ -46,3 +46,71 @@ function block_course_checker_get_dependency_info($checkername, $dependency) {
 
     return $dependency;
 }
+
+/**
+ * Checks if the user has any of the allowed global system roles.
+ *
+ * @param int $userid
+ * @param string $systemrolesids A comma-separated whitelist of allowed system role ids.
+ * @return bool
+ * @throws dml_exception
+ * @see https://github.com/moodleuulm/moodle-local_boostnavigation/blob/master/locallib.php
+ */
+function user_has_role_in_system($userid, $systemrolesids) {
+    // Is the user an admin?
+    if (is_siteadmin($userid)) {
+        return true;
+    }
+    // Split system role shortnames by comma.
+    $showforroles = explode(',', $systemrolesids);
+    // Retrieve the assigned roles for the system context only once and remember for next calls of this function.
+    static $rolesinsystemids;
+    if ($rolesinsystemids == null) {
+        // Get the assigned roles.
+        $rolesinsystem = get_user_roles(context_system::instance(), $userid);
+        $rolesinsystemids = [];
+        foreach ($rolesinsystem as $role) {
+            array_push($rolesinsystemids, $role->roleid);
+        }
+    }
+    // Check if the user has at least one of the required roles.
+    return count(array_intersect($rolesinsystemids, $showforroles)) > 0;
+}
+
+/**
+ * Check if user has a allowed role in the course-context.
+ *
+ * @param $userid
+ * @param $courseid
+ * @param string $roles A comma-separated whitelist of allowed roles ids.
+ * @return bool
+ */
+function user_has_given_role_in_course($userid, $courseid, $roles) {
+    $hasrole = false;
+    $context = \context_course::instance($courseid);
+
+    $roles = explode(',', $roles);
+    foreach ($roles as $role) {
+        $hasrole = user_has_role_assignment($userid, $role, $context->id);
+        if ($hasrole) {
+            break;
+        }
+    }
+
+    return $hasrole;
+}
+
+/**
+ * Check one domain whether it is valid.
+ * - Extended to allow HTTP/HTTPS protocol.
+ * Taken from https://stackoverflow.com/a/4694816
+ *
+ * @param $domainname
+ * @return bool
+ */
+function is_valid_domain_name($domainname) {
+    return (1 === preg_match("/^((http|https:\/\/)?[a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domainname) // Valid chars check.
+            && 1 === preg_match("/^.{1,253}$/", $domainname) // Overall length check.
+            && 1 === preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)); // Length of each label.
+}
+
