@@ -53,6 +53,7 @@ $string['resultpageheader'] = 'View detailed results';
 $string['resultpagetitle'] = 'View detailed results for course {$a->name}';
 $string['automaticcheck'] = 'Last automatic check';
 $string['lastactivityedition'] = 'Last activity change';
+$string['lastactivityedition_notimestamp'] = 'No date found';
 $string['automaticcheckempty'] = 'The checks have never been launched for this course';
 $string['humancheckempty'] = 'This course has never been manually checked';
 $string['humancheck'] = 'Last manual check:';
