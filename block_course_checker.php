@@ -109,7 +109,8 @@ class block_course_checker extends block_base {
                 "runscheduled" => task_helper::instance()->is_task_scheduled($COURSE->id),
                 "arecheckersenabled" => plugin_manager::instance()->are_checkers_enabled($COURSE->id),
                 "showdetailsbutton" => $showdetailsbutton,
-                'lastactivityedition' => $lastactivityedition
+                'lastactivityedition' => $lastactivityedition,
+                'lastactivityedition_notimestamp' => get_string('lastactivityedition_notimestamp', 'block_course_checker')
         ]);
 
         return $this->content;
