@@ -25,8 +25,7 @@
 namespace block_course_checker\admin;
 
 use admin_setting_configtextarea;
-use block_course_checker\checkers\checker_link\config;
-use block_course_checker\checkers\checker_link\fetch_url;
+use block_course_checker\checkers\checker_links\config;
 
 defined('MOODLE_INTERNAL') || die();
 

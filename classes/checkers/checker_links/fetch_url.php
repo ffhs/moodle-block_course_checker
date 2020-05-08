@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_course_checker\checkers\checker_link;
+namespace block_course_checker\checkers\checker_links;
 
 use block_course_checker\model\checker_config_trait;
 use curl;
@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class fetch_url
  *
- * @package block_course_checker\checkers\checker_link
+ * @package block_course_checker\checkers\checker_links
  */
 class fetch_url {
     use checker_config_trait;
@@ -68,7 +68,7 @@ class fetch_url {
     public function fetch($url) {
         $parseurl = parse_url($url);
         if ($parseurl["host"] == null) {
-            $this->message = get_string("checker_link_error_undefined", "block_course_checker");
+            $this->message = get_string("checker_links_error_undefined", "block_course_checker");
             $this->ignoreddomain = false;
             $this->successful = false;
             return $this;
@@ -76,7 +76,7 @@ class fetch_url {
         // Skip whitelisted domains.
         if ($this->is_ignored_host($parseurl["host"])) {
             $context = $parseurl + ["url" => $url];
-            $this->message = get_string("checker_link_error_skipped", "block_course_checker", $context);
+            $this->message = get_string("checker_links_error_skipped", "block_course_checker", $context);
             $this->ignoreddomain = true;
             $this->successful = true;
             return $this;
@@ -114,14 +114,14 @@ class fetch_url {
 
             // Code 0: timeout or other curl error.
             $context = $parseurl + ["url" => $url, "curl_errno" => $curl->get_errno(), "curl_error" => $curl->error];
-            $this->message = get_string("checker_link_error_curl", "block_course_checker", $context);
+            $this->message = get_string("checker_links_error_curl", "block_course_checker", $context);
             $this->successful = false;
             return $this;
         }
 
         $context = $parseurl + ["url" => $url, "http_code" => $code];
         if ($code >= 200 && $code < 400) {
-            $this->message = get_string("checker_link_ok", "block_course_checker", $context);
+            $this->message = get_string("checker_links_ok", "block_course_checker", $context);
             $this->successful = true;
             return $this;
         }
@@ -132,7 +132,7 @@ class fetch_url {
         }
 
         // Code != 0 means it's a http error.
-        $this->message = get_string("checker_link_error_code", "block_course_checker", $context);
+        $this->message = get_string("checker_links_error_code", "block_course_checker", $context);
         $this->successful = false;
         return $this;
     }
@@ -153,7 +153,7 @@ class fetch_url {
 
             if (isset($httpresponse['reponse_code']) && (int) $httpresponse['reponse_code'] == 200) {
                 $context = $parseurl + ["url" => $url, "http_code" => "200"];
-                $this->message = get_string("checker_link_ok", "block_course_checker", $context) . " (file_get_contents)";
+                $this->message = get_string("checker_links_ok", "block_course_checker", $context) . " (file_get_contents)";
                 $this->successful = true;
                 return true;
             }

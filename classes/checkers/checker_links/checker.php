@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_course_checker\checkers\checker_link;
+namespace block_course_checker\checkers\checker_links;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -87,7 +87,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             foreach ($instances as $mod) {
                 // Get cm_info object to use for target and resolution link.
                 $cm = $modinfo->get_cm($mod->coursemodule);
-                $target = resolution_link_helper::get_target($cm, 'checker_link');
+                $target = resolution_link_helper::get_target($cm, 'checker_links');
                 $resolutionlink = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
 
                 // For url, we have to check the externalurl too.
@@ -129,7 +129,7 @@ class checker implements check_plugin_interface, mod_type_interface {
     protected function check_course_summary($course) {
         $courseurl = new moodle_url("/course/view.php", ["id" => $course->id]);
         $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
-                get_string("checker_link_summary", "block_course_checker"));
+                get_string("checker_links_summary", "block_course_checker"));
     }
 
     /**
@@ -198,7 +198,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         global $DB;
         $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '', 'id,title,content');
         foreach ($chapters as $chapter) {
-            $target = get_string('checker_link_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
+            $target = get_string('checker_links_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
             $resolutionlink = new moodle_url('/mod/book/edit.php', ['cmid' => $mod->coursemodule, 'id' => $chapter->id]);
             $url = $resolutionlink->out_as_local_url(false);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
@@ -215,7 +215,7 @@ class checker implements check_plugin_interface, mod_type_interface {
 
         $pages = $DB->get_records('wiki_pages', array('subwikiid' => $mod->id), '', 'id,title,cachedcontent');
         foreach ($pages as $page) {
-            $target = get_string('checker_link_wiki_page', 'block_course_checker', (object) ["title" => $page->title]);
+            $target = get_string('checker_links_wiki_page', 'block_course_checker', (object) ["title" => $page->title]);
             $resolutionlink = new moodle_url('/mod/wiki/edit.php', ['pageid' => $page->id]);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($page->cachedcontent), $resolutionlink, $target);
         }

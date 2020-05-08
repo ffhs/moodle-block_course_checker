@@ -26,7 +26,7 @@ use block_course_checker\model\check_edit_form_interface;
 
 defined('MOODLE_INTERNAL') || die();
 
-class checker_link_edit_form implements check_edit_form_interface {
+class checker_links_edit_form implements check_edit_form_interface {
 
     /**
      * @var string $checkername
@@ -46,9 +46,9 @@ class checker_link_edit_form implements check_edit_form_interface {
     public function specific_definition($mform) {
         // Whitelist for block-specific links.
         $mform->addElement('textarea', 'config_link_whitelist',
-                get_string('checker_link_setting_whitelist', 'block_course_checker'));
+                get_string('checker_links_setting_whitelist', 'block_course_checker'));
         $mform->setType('config_link_whitelist', PARAM_TEXT);
-        $mform->addHelpButton('config_link_whitelist', 'checker_link_setting_whitelist', 'block_course_checker');
+        $mform->addHelpButton('config_link_whitelist', 'checker_links_setting_whitelist', 'block_course_checker');
         return $mform;
     }
 

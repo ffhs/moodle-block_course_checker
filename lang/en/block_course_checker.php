@@ -96,8 +96,8 @@ $string['group_blocks'] = 'Block settings';
 // Name and title of each checker.
 $string['checker_groups'] = 'Group submission check';
 $string['checker_groups_display'] = 'Group submission for assignments';
-$string['checker_link'] = 'Links check';
-$string['checker_link_display'] = 'Links in course summary and URL activities';
+$string['checker_links'] = 'Links check';
+$string['checker_links_display'] = 'Links in course summary and URL activities';
 $string['checker_attendance'] = 'Attendance sessions check';
 $string['checker_attendance_display'] = 'Attendance sessions';
 $string['checker_data'] = 'Data activity check';
@@ -116,25 +116,25 @@ $string['checker_blocks'] = 'Blocks check';
 $string['checker_blocks_display'] = 'Blocks exists';
 
 // String specific for the link checker.
-$string['checker_link_activity'] = 'Activity: {$a->name}  ({$a->modname})';
-$string['checker_link_book_chapter'] = 'Book Chapter: {$a->title}';
-$string['checker_link_wiki_page'] = 'Wiki Page: {$a->title}';
-$string['checker_link_summary'] = 'Course summary';
-$string['checker_link_error_curl'] =
+$string['checker_links_activity'] = 'Activity: {$a->name}  ({$a->modname})';
+$string['checker_links_book_chapter'] = 'Book Chapter: {$a->title}';
+$string['checker_links_wiki_page'] = 'Wiki Page: {$a->title}';
+$string['checker_links_summary'] = 'Course summary';
+$string['checker_links_error_curl'] =
         'cURL Error {$a->curl_errno} {$a->curl_error} on {$a->url}'; // You can get any curl info or pare_url field in $a.
-$string['checker_link_error_code'] =
+$string['checker_links_error_code'] =
         'HTTP Error {$a->http_code} on {$a->url}'; // You can get any curl info or pare_url field in $a.
-$string['checker_link_ok'] =
+$string['checker_links_ok'] =
         '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
-$string['checker_link_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
-$string['checker_link_error_undefined'] = 'A undefined error with the link occurred';
-$string['checker_link_setting_timeout'] = 'cURL timeout';
-$string['checker_link_setting_connect_timeout'] = 'cURL connection timeout';
-$string['checker_link_setting_useragent'] = 'User Agent';
-$string['checker_link_setting_useragent_help'] = 'User Agent';
-$string['checker_link_setting_whitelist'] = 'Link checker whitelist';
-$string['checker_link_setting_whitelist_desc'] = 'Note that <code>www.w3.org</code> must be present.';
-$string['checker_link_setting_whitelist_help'] = 'Please add one URL per line e.g. <code>https://moodle.org</code>';
+$string['checker_links_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
+$string['checker_links_error_undefined'] = 'A undefined error with the link occurred';
+$string['checker_links_setting_timeout'] = 'cURL timeout';
+$string['checker_links_setting_connect_timeout'] = 'cURL connection timeout';
+$string['checker_links_setting_useragent'] = 'User Agent';
+$string['checker_links_setting_useragent_help'] = 'User Agent';
+$string['checker_links_setting_whitelist'] = 'Link checker whitelist';
+$string['checker_links_setting_whitelist_desc'] = 'Note that <code>www.w3.org</code> must be present.';
+$string['checker_links_setting_whitelist_help'] = 'Please add one URL per line e.g. <code>https://moodle.org</code>';
 
 // String specific for the group checker.
 $string['groups_deactivated'] = 'Group submission setting is deactivated';
