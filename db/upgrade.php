@@ -96,5 +96,27 @@ function xmldb_block_course_checker_upgrade($oldversion) {
         // Sitestats savepoint reached.
         upgrade_plugin_savepoint(true, 2019071002, 'block', 'course_checker');
     }
+
+    // Migration to change name of checker_link to checker_links.
+    if ($oldversion < 2019121802) {
+        global $DB;
+
+        $query = "SELECT * FROM {config_plugins} WHERE plugin = 'block_course_checker' AND name LIKE 'checker_link%'";
+        $records = $DB->get_records_sql($query);
+        foreach ($records as $record) {
+            $record->name = str_replace('checker_link', 'checker_links', $record->name);
+            $DB->update_record('config_plugins', $record, true);
+        }
+
+        $query = "SELECT * FROM {block_course_checker} WHERE result LIKE '%checker_link%'";
+        $records = $DB->get_records_sql($query);
+        foreach ($records as $record) {
+            $record->result = str_replace('checker_link', 'checker_links', $record->result);
+            $DB->update_record('block_course_checker', $record, true);
+        }
+
+        // Sitestats savepoint reached.
+        upgrade_plugin_savepoint(true, 2019121802, 'block', 'course_checker');
+    }
     return true;
 }
