@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v3.8-r2] (Build: 2020050501) + v3.7-r3 (Build: 2019121802)] - `NOT-RELEASED-YET`
+## [v3.8-r2] (Build: 2020050501) + v3.7-r3 (Build: 2019121802)] - 2020-05-08
+### Changed
+- Renamed `checker_link` to `checker_links` in due of AMOS problems ([issue #33](https://github.com/ffhs/moodle-block_course_checker/issues/33))
 
 ### Fixed
 - Hardcoded lang string ([issue #33](https://github.com/ffhs/moodle-block_course_checker/issues/33))
