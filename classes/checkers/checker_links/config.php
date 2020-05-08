@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace block_course_checker\checkers\checker_link;
+namespace block_course_checker\checkers\checker_links;
 
 use block_course_checker\model\checker_config_trait;
 use coding_exception;
@@ -34,17 +34,17 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class config
  *
- * @package block_course_checker\checkers\checker_link
+ * @package block_course_checker\checkers\checker_links
  */
 class config {
-    const TIMEOUT_SETTING = 'block_course_checker/checker_link_timeout';
+    const TIMEOUT_SETTING = 'block_course_checker/checker_links_timeout';
     const TIMEOUT_DEFAULT = 13;
-    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_link_connect_timeout';
+    const CONNECT_TIMEOUT_SETTING = 'block_course_checker/checker_links_connect_timeout';
     const CONNECT_TIMEOUT_DEFAULT = 5;
-    const WHITELIST_SETTING = 'block_course_checker/checker_link_whitelist';
-    const WHITELIST_HEADING = 'block_course_checker/checker_link_whitelist_heading';
+    const WHITELIST_SETTING = 'block_course_checker/checker_links_whitelist';
+    const WHITELIST_HEADING = 'block_course_checker/checker_links_whitelist_heading';
     const WHITELIST_DEFAULT = 'www.w3.org';
-    const USERAGENT_SETTING = 'block_course_checker/checker_link_useragent';
+    const USERAGENT_SETTING = 'block_course_checker/checker_links_useragent';
     const USERAGENT_DEFAULT = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
     'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
 

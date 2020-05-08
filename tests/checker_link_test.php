@@ -24,17 +24,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use block_course_checker\checkers\checker_link;
+use block_course_checker\checkers\checker_links;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\mod_type_interface;
 
 /**
- * Class block_course_checker_link_testcase
+ * Class block_course_checker_links_testcase
  */
-class block_course_checker_link_testcase extends \advanced_testcase implements mod_type_interface {
+class block_course_checker_links_testcase extends \advanced_testcase implements mod_type_interface {
     /** @var \stdClass $user */
     protected $user;
-    /** @var block_course_checker\checkers\checker_link\checker */
+    /** @var block_course_checker\checkers\checker_links\checker */
     protected $linkchecker;
     /** @var testing_data_generator */
     protected $generator;
@@ -101,7 +101,7 @@ class block_course_checker_link_testcase extends \advanced_testcase implements m
         // Reset the database after test.
         $this->resetAfterTest(true);
         // Get an link checker.
-        $this->linkchecker = new checker_link\checker();
+        $this->linkchecker = new checker_links\checker();
         // Get new data generator helper.
         $this->generator = $this->getDataGenerator();
         // Create a new course.
