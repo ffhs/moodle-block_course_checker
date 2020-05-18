@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_course_checker\resolution_link_helper;
+
 require_once(__DIR__ . "/../../config.php");
 
 // We must be logged-in, but no permission check is made on this side, as discussed with the client.
@@ -45,5 +47,5 @@ $course = get_course($courseid);
 $date = \Datetime::createFromFormat("Y-m-d", $date['year'] . '-' . $date['month'] . '-' . $date['day']);
 $resultpersister = \block_course_checker\result_persister::instance()->save_human_review($course->id, $date, $comment);
 
-$url = new \moodle_url("/course/view.php", ["id" => $courseid]);
+$url = resolution_link_helper::get_link_to_course_view_page($courseid);
 redirect($url);

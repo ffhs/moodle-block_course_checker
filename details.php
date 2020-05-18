@@ -27,6 +27,7 @@ require_once("../../config.php");
 use block_course_checker\event_persister;
 use block_course_checker\event_result;
 use block_course_checker\plugin_manager;
+use block_course_checker\resolution_link_helper;
 use block_course_checker\result_persister;
 
 $courseid = required_param('id', PARAM_INT);
@@ -112,5 +113,5 @@ echo $renderer->renderer([
         "manual_date" => $manualdate ? $manualdate->format("U") : null,
         "has_activity_events" => !empty($activityevents),
         "activity_events" => $activityevents,
-        "back" => new \moodle_url("/course/view.php", ["id" => $courseid])]);
+        "back" => resolution_link_helper::get_link_to_course_view_page($courseid)]);
 echo $OUTPUT->footer();

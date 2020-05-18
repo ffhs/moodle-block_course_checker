@@ -37,19 +37,21 @@ class resolution_link_helper implements mod_type_interface {
 
     /** @var array list of modules which can be linked directly to the module config page */
     const DIRECT_MOD_NAMES = [
-            self::MOD_TYPE_RESOURCE,
-            self::MOD_TYPE_LABEL,
-            self::MOD_TYPE_URL,
+            self::MOD_TYPE_ASSIGN,
             self::MOD_TYPE_BOOK,
-            self::MOD_TYPE_WIKI,
-            self::MOD_TYPE_FEEDBACK,
-            self::MOD_TYPE_QUESTIONNAIRE,
             self::MOD_TYPE_CHOICE,
             self::MOD_TYPE_CHOICEGROUP,
-            self::MOD_TYPE_LESSON,
             self::MOD_TYPE_DATA,
+            self::MOD_TYPE_FEEDBACK,
             self::MOD_TYPE_FORUM,
-            self::MOD_TYPE_QUIZ
+            self::MOD_TYPE_LABEL,
+            self::MOD_TYPE_LESSON,
+            self::MOD_TYPE_PAGE,
+            self::MOD_TYPE_QUESTIONNAIRE,
+            self::MOD_TYPE_QUIZ,
+            self::MOD_TYPE_RESOURCE,
+            self::MOD_TYPE_URL,
+            self::MOD_TYPE_WIKI
     ];
 
     /**
@@ -70,33 +72,40 @@ class resolution_link_helper implements mod_type_interface {
         } else {
             $url = new \moodle_url('/mod/' . $modname . '/view.php', ['id' => $coursemoduleid]);
         }
-        return $url->out_as_local_url(false); // FIXME: Url double decoded ?
+        return $url->out(false);
     }
 
     /**
      * @param $course
      * @return string
-     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    public static function get_link_to_course_view_page($courseid): string {
+        return (new \moodle_url('/course/view.php', [
+                'id' => $courseid
+        ]))->out(false);
+    }
+
+    /**
+     * @param $course
+     * @return string
      * @throws \moodle_exception
      */
     public static function get_link_to_course_edit_page($course): string {
-        $link = (new \moodle_url('/course/edit.php', [
+        return (new \moodle_url('/course/edit.php', [
                 'id' => $course->id
-        ]))->out_as_local_url(false);
-        return $link;
+        ]))->out(false);
     }
 
     /**
      * @param $coursecontext
      * @return string
-     * @throws \coding_exception
      * @throws \moodle_exception
      */
     public static function get_link_to_course_filter_page($coursecontext): string {
-        $link = (new \moodle_url('/filter/manage.php', [
+        return (new \moodle_url('/filter/manage.php', [
                 'contextid' => $coursecontext->id
-        ]))->out_as_local_url(false);
-        return $link;
+        ]))->out(false);
     }
 
     /**

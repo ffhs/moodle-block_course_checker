@@ -53,8 +53,7 @@ class checker implements check_plugin_interface, mod_type_interface {
             // Get cm_info object to use for target and resolution link.
             $cm = $modinfo->get_cm($mod->coursemodule);
             $target = resolution_link_helper::get_target($cm);
-            $url = new \moodle_url('/mod/quiz/edit.php', ['cmid' => $cm->id]);
-            $resolutionlink = $url->out_as_local_url(false); // FIXME: Url double decoded ?
+            $resolutionlink = (new \moodle_url('/mod/quiz/edit.php', ['cmid' => $cm->id]))->out(false);;
             // For all quizzes we like to check if the "Maximum grade" and the "Total of marks" are the same numbers.
             $this->check_quiz_maximum_grade($mod, $resolutionlink, $target);
         }

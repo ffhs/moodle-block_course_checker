@@ -30,6 +30,7 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
+use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface {
     use checker_config_trait;
@@ -72,8 +73,7 @@ class checker implements check_plugin_interface {
 
             $targetcontext = (object) ["name" => strip_tags($block)];
             $target = get_string("blocks_activity", "block_course_checker", $targetcontext);
-            $url = new \moodle_url("/course/view.php", ["id" => $course->id]);
-            $resolutionlink = $url->out_as_local_url(false);
+            $resolutionlink = resolution_link_helper::get_link_to_course_view_page($course->id);
 
             // What are the differences? (if any).
             $comparison = $this->get_comparison_string($refblock, $courseblock);

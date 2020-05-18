@@ -33,6 +33,7 @@ use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\mod_type_interface;
+use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface, mod_type_interface {
     /** @var check_result */
@@ -87,9 +88,8 @@ class checker implements check_plugin_interface, mod_type_interface {
         }
         // Link to activity.
         $cm = $attendances[0];
-        $link = $cm->url ? $cm->url->out_as_local_url() : null;
-        $targetcontext = (object) ["name" => strip_tags($cm->name)];
-        $target = get_string("groups_activity", "block_course_checker", $targetcontext);
+        $target = resolution_link_helper::get_target($cm, 'checker_attendance');
+        $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
         // If there are sessions in the attendance activity.
         if (count($this->get_attendance_sessions($course)) > 0) {
             $message = get_string('attendance_sessionsnotemty', 'block_course_checker');

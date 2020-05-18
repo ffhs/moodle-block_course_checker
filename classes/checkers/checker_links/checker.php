@@ -127,7 +127,7 @@ class checker implements check_plugin_interface, mod_type_interface {
      * @throws moodle_exception
      */
     protected function check_course_summary($course) {
-        $courseurl = new moodle_url("/course/view.php", ["id" => $course->id]);
+        $courseurl = resolution_link_helper::get_link_to_course_view_page($course->id);
         $this->check_urls_with_resolution_url($this->get_urls_from_text($course->summary), $courseurl,
                 get_string("checker_links_summary", "block_course_checker"));
     }
@@ -199,8 +199,7 @@ class checker implements check_plugin_interface, mod_type_interface {
         $chapters = $DB->get_records('book_chapters', array('bookid' => $mod->id), '', 'id,title,content');
         foreach ($chapters as $chapter) {
             $target = get_string('checker_links_book_chapter', 'block_course_checker', (object) ["title" => $chapter->title]);
-            $resolutionlink = new moodle_url('/mod/book/edit.php', ['cmid' => $mod->coursemodule, 'id' => $chapter->id]);
-            $url = $resolutionlink->out_as_local_url(false);
+            $url = (new moodle_url('/mod/book/edit.php', ['cmid' => $mod->coursemodule, 'id' => $chapter->id]))->out(false);
             $this->check_urls_with_resolution_url($this->get_urls_from_text($chapter->content), $url, $target);
         }
     }
