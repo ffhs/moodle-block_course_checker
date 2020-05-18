@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_course_checker\resolution_link_helper;
 use block_course_checker\task_helper;
 
 require_once(__DIR__ . "/../../config.php");
@@ -45,7 +46,7 @@ task_helper::instance()->add_task($courseid, $checker);
 
 
 // Redirect to referer.
-$url = new \moodle_url("/course/view.php", ["id" => $courseid]);
+$url = resolution_link_helper::get_link_to_course_view_page($courseid);
 redirect($url);
 
 

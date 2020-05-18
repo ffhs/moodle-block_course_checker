@@ -32,6 +32,7 @@ use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;
 use block_course_checker\model\checker_config_trait;
 use block_course_checker\model\mod_type_interface;
+use block_course_checker\resolution_link_helper;
 
 class checker implements check_plugin_interface, mod_type_interface {
     use checker_config_trait;
@@ -57,7 +58,8 @@ class checker implements check_plugin_interface, mod_type_interface {
             if (!$cm->uservisible or !$cm->has_view()) {
                 continue;
             }
-            $link = $cm->url ? $cm->url->out_as_local_url() : null;
+            $target = resolution_link_helper::get_target($cm, 'checker_groups');
+            $link = resolution_link_helper::get_link_to_modedit_or_view_page($cm->modname, $cm->id);
             // Get the assignment record from the assignment table.
             // The instance of the course_modules table is used as a foreign key to the assign table.
             $assign = $DB->get_record('assign',
@@ -65,8 +67,6 @@ class checker implements check_plugin_interface, mod_type_interface {
             // Get the settings from the assign table: these are the settings used for group submission.
             $groupmode = $assign->teamsubmission;
             $groupingid = $assign->teamsubmissiongroupingid;
-            $targetcontext = (object) ["name" => strip_tags($cm->name)];
-            $target = get_string("groups_activity", "block_course_checker", $targetcontext);
             // Now the groups settings can be checked.
             // These are the settings of assignment group submission in the corresponding activity.
             // Case 1: the group mode is deactivated -> check okay.
