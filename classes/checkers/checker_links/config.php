@@ -101,7 +101,7 @@ class config {
                         array('blockname' => 'course_checker', 'parentcontextid' => $coursecontext->id));
         foreach ($blockrecords as $b) {
             $blockinstance = block_instance('course_checker', $b);
-            if ($blockinstance->config->link_whitelist) {
+            if (isset($blockinstance->config->link_whitelist) && $blockinstance->config->link_whitelist) {
                 $ignoreddomains = array_filter(array_map('trim', explode("\n", $blockinstance->config->link_whitelist)));
                 $this->ignoredomains = array_merge($ignoreddomains, $this->ignoredomains);
             }
