@@ -1,14 +1,13 @@
 language: php
 
-sudo: false
+addons:
+  postgresql: "9.4"
 
 services:
   - mysql
   - postgresql
+  - docker
 
-addons:
-  postgresql: "9.4"
-  
 cache:
   directories:
     - $HOME/.composer/cache
@@ -29,11 +28,12 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 8.9
-  - nvm use 8.9
+  - nvm install 14.2.0
+  - nvm use 14.2.0
   - cd ../../..
-  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
+  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci dev-master
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
+  - docker run -d -p 127.0.0.1:4444:4444 --net=host -v /dev/shm:/dev/shm selenium/standalone-chrome:3
 
 install:
   - moodle-plugin-ci install
@@ -44,5 +44,9 @@ script:
   - moodle-plugin-ci phpmd
   - moodle-plugin-ci codechecker
   - moodle-plugin-ci validate
+  - moodle-plugin-ci savepoints || true # fix later
+  - moodle-plugin-ci mustache || true # fix later
   - moodle-plugin-ci grunt
+  - moodle-plugin-ci phpdoc || true # fix later
   - moodle-plugin-ci phpunit
+  - moodle-plugin-ci behat --profile chrome --dump
