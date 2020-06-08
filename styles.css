@@ -77,8 +77,8 @@
     }
 }
 
-.course_checker .fa-input {
-    font-family: FontAwesome, ‘Helvetica Neue’, Helvetica, Arial, sans-serif;
+.course_checker .rerun .fa-stack {
+    margin: 2px 0;
 }
 
 .course_checker .hummancheck_dateinput {

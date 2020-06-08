@@ -37,20 +37,24 @@
     <input type="hidden" name="checker" value="{{checker}}">
     <input type="hidden" name="courseid" value="{{course_id}}">
     <input type="hidden" name="token" value="{{token}}">
-    {{! See https://fontawesome.com/cheatsheet?from=io for the HTML Code of "REDO" }}
-    <input type="submit" class="btn btn-secondary fa-input" value="&#xf01e;" title="{{#str}}rerun_col_block_header, block_course_checker{{/str}}">
+    <button type="submit" class="btn btn-secondary pull-right" title="{{#str}}rerun_col_block_header, block_course_checker{{/str}}">
+        <i class="fa fa-redo fa-fw" aria-hidden="true"></i>
+    </button>
 </form>
 {{/canrerun}}
 
 {{^canrerun}}
     {{#isenabled}}
-        <div class="btn btn-secondary disabled" title="{{#str}}rerun_disabled_col_block_header, block_course_checker{{/str}}">
-            <i class="fa fa-redo"></i>
+        <div class="btn btn-secondary disabled pull-right" title="{{#str}}rerun_disabled_col_block_header, block_course_checker{{/str}}">
+            <i class="fa fa-redo fa-fw" aria-hidden="true"></i>
         </div>
     {{/isenabled}}
     {{^isenabled}}
-        <div class="btn btn-secondary disabled" title="{{#str}}result_checker_disabled, block_course_checker{{/str}}">
-            <i class="fa fa-redo"></i>
+        <div class="btn btn-secondary disabled p-0 pull-right" title="{{#str}}result_checker_disabled, block_course_checker{{/str}}">
+            <span class="fa-stack">
+                <i class="fa fa-slash fa-stack-1x" aria-hidden="true"></i>
+                <i class="fa fa-redo fa-stack-1x" aria-hidden="true"></i>
+            </span>
         </div>
     {{/isenabled}}
 {{/canrerun}}
