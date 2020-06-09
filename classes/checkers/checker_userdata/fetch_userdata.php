@@ -52,7 +52,7 @@ class fetch_userdata implements mod_type_interface {
                 break;
             case self::MOD_TYPE_GLOSSARY:
                 require_once($CFG->dirroot . '/mod/glossary/lib.php');
-                $glossary = $DB->get_record('data', array('id' => $cm->instance), '*', MUST_EXIST);
+                $glossary = $DB->get_record('glossary', array('id' => $cm->instance), '*', MUST_EXIST);
                 $options = ['includenotapproved' => true];
                 list($records) = glossary_get_entries_by_search($glossary, $cm->context, '', 1, 'CONCEPT', 'ASC', 0,
                         999, $options);
