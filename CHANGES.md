@@ -5,11 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [v3.9-r1 (Build: 202006XX00) + v3.8-r3 (Build: 2020050502) + v3.7-r4 (Build: 2019121803)] - 2020-xx-xx
+### Added
+- Simple behat scenario `addblockinstance` ([issue #35](https://github.com/ffhs/moodle-block_course_checker/issues/35))
+
 ### Changed
 - Reworked `re-run` buttons ([commit 7067c97](https://github.com/ffhs/moodle-block_course_checker/commit/7067c979387d3d957568ed4afe3f40dc7099f8cf))
+- Adapt `user_has_role_in_course` method ([issue #37](https://github.com/ffhs/moodle-block_course_checker/issues/37))
 
 ### Fixed
 - Bugfix in `checker_userdata` to fetch glossary ([commit dac81cb](https://github.com/ffhs/moodle-block_course_checker/commit/dac81cb3bbaa680698c57536ec3d89db2a87ce91))
+- Fix double coded local `URLs` ([issue #36](https://github.com/ffhs/moodle-block_course_checker/issues/36))
+- Get rid of notice when `link_whitelist` is not set in course block ([issue #34](https://github.com/ffhs/moodle-block_course_checker/issues/34))
 
 ## [v3.8-r2 (Build: 2020050501) + v3.7-r3 (Build: 2019121802)] - 2020-05-08
 ### Changed
