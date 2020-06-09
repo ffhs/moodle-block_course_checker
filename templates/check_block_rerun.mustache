@@ -38,7 +38,7 @@
     <input type="hidden" name="courseid" value="{{course_id}}">
     <input type="hidden" name="token" value="{{token}}">
     <button type="submit" class="btn btn-secondary pull-right" title="{{#str}}rerun_col_block_header, block_course_checker{{/str}}">
-        <i class="fa fa-redo fa-fw" aria-hidden="true"></i>
+        <i class="fa fa-redo" aria-hidden="true"></i>
     </button>
 </form>
 {{/canrerun}}
@@ -46,7 +46,7 @@
 {{^canrerun}}
     {{#isenabled}}
         <div class="btn btn-secondary disabled pull-right" title="{{#str}}rerun_disabled_col_block_header, block_course_checker{{/str}}">
-            <i class="fa fa-redo fa-fw" aria-hidden="true"></i>
+            <i class="fa fa-redo" aria-hidden="true"></i>
         </div>
     {{/isenabled}}
     {{^isenabled}}
