@@ -128,6 +128,7 @@ $string['checker_links_ok'] =
         '{$a->url} is valid (Code {$a->http_code})'; // You can get any curl info or pare_url field in $a.
 $string['checker_links_error_skipped'] = 'The domain {$a->host} is whitelisted for {$a->url}';
 $string['checker_links_error_undefined'] = 'A undefined error with the link occurred';
+$string['checker_links_error_httpsecurity'] = 'The given domain {$a} is blacklisted by checking its address and port number against the black/white lists in Moodle HTTP security.';
 $string['checker_links_setting_timeout'] = 'cURL timeout';
 $string['checker_links_setting_connect_timeout'] = 'cURL connection timeout';
 $string['checker_links_setting_useragent'] = 'User Agent';

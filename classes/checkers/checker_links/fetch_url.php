@@ -73,9 +73,28 @@ class fetch_url {
             $this->successful = false;
             return $this;
         }
-        // Skip whitelisted domains.
-        if ($this->is_ignored_host($parseurl["host"])) {
+
+        // Check URL against Moodle HTTP security settings.
+        $curlhelper = new \core\files\curl_security_helper;
+        if ($curlhelper->url_is_blocked($url)) {
+            $this->message = get_string("checker_links_error_httpsecurity", "block_course_checker", $url);
+            $this->ignoreddomain = true;
+            $this->successful = true;
+            return $this;
+        }
+
+        // Skip whitelisted domain.
+        if ($this->is_ignored_domain($parseurl["host"])) {
             $context = $parseurl + ["url" => $url];
+            $this->message = get_string("checker_links_error_skipped", "block_course_checker", $context);
+            $this->ignoreddomain = true;
+            $this->successful = true;
+            return $this;
+        }
+
+        // Skip whitelisted URL.
+        if ($this->is_ignored_url($url)) {
+            $context = ["host" => $this->ignoreddomain, "url" => $url];
             $this->message = get_string("checker_links_error_skipped", "block_course_checker", $context);
             $this->ignoreddomain = true;
             $this->successful = true;
@@ -184,12 +203,28 @@ class fetch_url {
     }
 
     /**
-     * Tells if an url should be skipped.
+     * Tells if a domain should be skipped.
      *
-     * @param string $host
+     * @param string $domain
      * @return boolean
      */
-    protected function is_ignored_host(string $host) {
-        return in_array($host, $this->config->ignoredomains);
+    protected function is_ignored_domain(string $domain) {
+        return in_array($domain, $this->config->ignoredomains);
+    }
+
+    /**
+     * Tells if a URL should be skipped.
+     *
+     * @param string $url
+     * @return bool
+     */
+    protected function is_ignored_url(string $url) {
+        foreach ($this->config->ignoredomains as $ignoredomain) {
+            if (strpos($url, $ignoredomain)) {
+                $this->ignoreddomain = $ignoredomain;
+                return true;
+            }
+        }
+        return false;
     }
 }
