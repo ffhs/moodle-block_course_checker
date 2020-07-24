@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v3.9-r1] (Build: 2020062400) + v3.8-r3 (Build: 2020050502) + v3.7-r4 (Build: 2019121803)] - 2020-06-24
+## [v3.9-r2 (Build: 2020062401) + v3.8-r4 (Build: 2020050503) + v3.7-r5 (Build: 2019121804)] - 2020-07-24
+### Changed
+- Improve `checker_links_whitelist` to enable URL paths and custom port ([issue #39](https://github.com/ffhs/moodle-block_course_checker/issues/39), [pull request #40](https://github.com/ffhs/moodle-block_course_checker/pull/40))
+
+## [v3.9-r1 (Build: 2020062400) + v3.8-r3 (Build: 2020050502) + v3.7-r4 (Build: 2019121803)] - 2020-06-24
 ### Added
 - Simple behat scenario `addblockinstance` ([issue #35](https://github.com/ffhs/moodle-block_course_checker/issues/35))
 
