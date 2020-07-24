@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_course_checker';
-$plugin->version = 2020050502;
+$plugin->version = 2020050503;
 $plugin->requires = 2019111800;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v3.8-r3';
+$plugin->release = 'v3.8-r4';
