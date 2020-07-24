@@ -27,12 +27,9 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 14.2.0
-  - nvm use 14.2.0
-  - cd ../../..
-  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci dev-master
+  - cd ../..
+  - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
-  - docker run -d -p 127.0.0.1:4444:4444 --net=host -v /dev/shm:/dev/shm selenium/standalone-chrome:3
 
 install:
   - moodle-plugin-ci install
@@ -47,5 +44,8 @@ script:
   - moodle-plugin-ci mustache || true # fix later
   - moodle-plugin-ci grunt
   - moodle-plugin-ci phpdoc || true # fix later
-  - moodle-plugin-ci phpunit
-  - moodle-plugin-ci behat --profile chrome --dump
+  - moodle-plugin-ci phpunit --coverage-clover
+  - moodle-plugin-ci behat
+
+after_success:
+  - moodle-plugin-ci coveralls-upload
