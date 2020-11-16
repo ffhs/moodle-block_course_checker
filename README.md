@@ -1,4 +1,4 @@
-# Moodle Course Checker [![Build Status](https://travis-ci.org/ffhs/moodle-block_course_checker.svg?branch=master)](https://travis-ci.org/ffhs/moodle-block_course_checker) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=master)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=master)
+# Moodle Course Checker [![Build Status](https://travis-ci.com/ffhs/moodle-block_course_checker.svg?branch=MOODLE_39_STABLE)](https://travis-ci.com/ffhs/moodle-block_course_checker) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=MOODLE_39_STABLE)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=MOODLE_39_STABLE)
 ## A Moodle course checker plugin that improves the quality and eliminate human routine tasks in online courses
 
 This plugin provides a framework that can check a course based on independent checkers. It will
