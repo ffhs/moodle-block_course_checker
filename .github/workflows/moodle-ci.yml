@@ -30,7 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         php: [ '7.3', '7.4' ]
-        moodle-branch: [ 'master', 'MOODLE_310_STABLE' ]
+        moodle-branch: [ 'master', 'MOODLE_311_STABLE' ]
         database: [ pgsql, mariadb ]
 
     steps:
@@ -110,5 +110,5 @@ jobs:
       - name: Coveralls upload
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        if: ${{ matrix.php == '7.4' && matrix.moodle-branch == 'MOODLE_310_STABLE' && matrix.database == 'mariadb'}}
+        if: ${{ matrix.php == '7.4' && matrix.moodle-branch == 'MOODLE_311_STABLE' && matrix.database == 'mariadb'}}
         run: moodle-plugin-ci coveralls-upload

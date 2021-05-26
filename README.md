@@ -1,4 +1,4 @@
-# Moodle Course Checker ![Moodle Plugin CI](https://github.com/ffhs/moodle-block_course_checker/workflows/Moodle%20Plugin%20CI/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=MOODLE_310_STABLE)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=MOODLE_310_STABLE)
+# Moodle Course Checker ![Moodle Plugin CI](https://github.com/ffhs/moodle-block_course_checker/workflows/Moodle%20Plugin%20CI/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=master)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=master)
 
 ## A Moodle course checker plugin that improves the quality and eliminate human routine tasks in online courses
 
@@ -32,7 +32,7 @@ sudo -u apache /usr/bin/php admin/cli/upgrade.php
 
 or GUI (Site administration -> Notifications).
 
-See [MoodleDocs](https://docs.moodle.org/310/en/Installing_plugins) for details on installing Moodle plugins
+See [MoodleDocs](https://docs.moodle.org/311/en/Installing_plugins) for details on installing Moodle plugins
 
 ## Documentation
 
