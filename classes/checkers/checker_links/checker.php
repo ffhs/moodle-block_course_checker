@@ -102,7 +102,11 @@ class checker implements check_plugin_interface, mod_type_interface {
 
                 // For wiki, we have to check the pages too.
                 if ($modname === self::MOD_TYPE_WIKI) {
-                    $this->check_wiki_pages($mod);
+                    $subwikis = $this->get_subwikis($mod->id);
+
+                    foreach ($subwikis as $subwiki) {
+                        $this->check_wiki_pages($subwiki->id);
+                    }
                 }
 
                 // Check modules properties.
@@ -205,17 +209,34 @@ class checker implements check_plugin_interface, mod_type_interface {
     }
 
     /**
-     * @param $mod
+     * Returns the subwikis of a wiki.
+     *
+     * @param int $id The wiki id.
+     * @return array
+     * @throws \dml_exception
+     */
+    protected function get_subwikis(int $id): array {
+        global $DB;
+
+        return $DB->get_records('wiki_subwikis', ['wikiid' => $id]);
+    }
+
+    /**
+     * Checks wiki pages links in content of a subwiki.
+     *
+     * @param int $id The subwiki id.
      * @throws \dml_exception
      * @throws moodle_exception
      */
-    protected function check_wiki_pages($mod) {
+    protected function check_wiki_pages(int $id) {
         global $DB;
 
-        $pages = $DB->get_records('wiki_pages', array('subwikiid' => $mod->id), '', 'id,title,cachedcontent');
+        $pages = $DB->get_records('wiki_pages', ['subwikiid' => $id], '', 'id, title, cachedcontent');
+
         foreach ($pages as $page) {
-            $target = get_string('checker_links_wiki_page', 'block_course_checker', (object) ["title" => $page->title]);
+            $target = get_string('checker_links_wiki_page', 'block_course_checker', (object) ['title' => $page->title]);
             $resolutionlink = new moodle_url('/mod/wiki/edit.php', ['pageid' => $page->id]);
+
             $this->check_urls_with_resolution_url($this->get_urls_from_text($page->cachedcontent), $resolutionlink, $target);
         }
     }
