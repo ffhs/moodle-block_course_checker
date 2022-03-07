@@ -1,4 +1,4 @@
-# Moodle Course Checker [![Build Status](https://travis-ci.org/ffhs/moodle-block_course_checker.svg?branch=master)](https://travis-ci.org/ffhs/moodle-block_course_checker)
+# Moodle Course Checker
 This plugin provides a framework that can check a course based on independent checkers. It will
 help you find misconfiguration in your courses and follow your internal guidelines.
 The checkers can be triggered manually an will be executed by the Moodle AdHoc task system.
@@ -15,7 +15,6 @@ Use git to install this plugin:
 ```bash
 cd /var/www/html/moodle
 git clone https://github.com/ffhs/moodle-block_course_checker.git blocks/course_checker
-echo '/blocks/course_checker/' >> .git/info/exclude
 ```
 
 Then complete upgrade over CLI:
@@ -24,7 +23,7 @@ sudo -u apache /usr/bin/php admin/cli/upgrade.php
 ```
 or GUI (Site administration -> Notifications).
 
-See [MoodleDocs](https://docs.moodle.org/37/en/Installing_plugins) for details on installing Moodle plugins
+See [MoodleDocs](https://docs.moodle.org/36/en/Installing_plugins) for details on installing Moodle plugins
 
 ## Documentation
 This plugin provides interfaces and well defined result objects to extend this plugin. New useful checkers and issue notifications are highly appropriated
