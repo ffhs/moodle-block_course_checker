@@ -1,4 +1,4 @@
-# Moodle Course Checker [![Build Status](https://travis-ci.com/ffhs/moodle-block_course_checker.svg?branch=MOODLE_39_STABLE)](https://travis-ci.com/ffhs/moodle-block_course_checker) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=MOODLE_39_STABLE)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=MOODLE_39_STABLE)
+# Moodle Course Checker ![Moodle Plugin CI](https://github.com/ffhs/moodle-block_course_checker/workflows/Moodle%20Plugin%20CI/badge.svg?branch=MOODLE_39_STABLE) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=MOODLE_39_STABLE)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=MOODLE_39_STABLE)
 ## A Moodle course checker plugin that improves the quality and eliminate human routine tasks in online courses
 
 This plugin provides a framework that can check a course based on independent checkers. It will
@@ -6,7 +6,7 @@ help you find misconfiguration in your courses and follow your internal guidelin
 The checkers can be triggered manually an will be executed by the Moodle AdHoc task system.
 
 ## Requirements
-This plugin should be compatible with Moodle 3.7+
+This plugin should be compatible with Moodle 3.9+
  - You have to set up a cron to run the checkers
  - `php-ext-curl` should be on (for the link checker)
  
@@ -17,7 +17,6 @@ Use git to install this plugin:
 ```bash
 cd /var/www/html/moodle
 git clone https://github.com/ffhs/moodle-block_course_checker.git blocks/course_checker
-echo '/blocks/course_checker/' >> .git/info/exclude
 ```
 
 Then complete upgrade over CLI:
@@ -26,7 +25,7 @@ sudo -u apache /usr/bin/php admin/cli/upgrade.php
 ```
 or GUI (Site administration -> Notifications).
 
-See [MoodleDocs](https://docs.moodle.org/37/en/Installing_plugins) for details on installing Moodle plugins
+See [MoodleDocs](https://docs.moodle.org/39/en/Installing_plugins) for details on installing Moodle plugins
 
 ## Documentation
 This plugin provides interfaces and well defined result objects to extend this plugin. New useful checkers and issue notifications are highly appropriated
