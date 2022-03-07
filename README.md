@@ -1,4 +1,4 @@
-# Moodle Course Checker ![Moodle Plugin CI](https://github.com/ffhs/moodle-block_course_checker/workflows/Moodle%20Plugin%20CI/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=master)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=master)
+# Moodle Course Checker ![Moodle Plugin CI](https://github.com/ffhs/moodle-block_course_checker/workflows/Moodle%20Plugin%20CI/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=master)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=master)
 
 ## A Moodle course checker plugin that improves the quality and eliminate human routine tasks in online courses
 
@@ -7,7 +7,7 @@ The checkers can be triggered manually an will be executed by the Moodle AdHoc t
 
 ## Requirements
 
-This plugin should be compatible with Moodle 3.7+
+This plugin should be compatible with Moodle 3.11+
 
 - You have to set up a cron to run the checkers
 - `php-ext-curl` should be on (for the link checker)
@@ -21,7 +21,6 @@ Use git to install this plugin:
 ```bash
 cd /var/www/html/moodle
 git clone https://github.com/ffhs/moodle-block_course_checker.git blocks/course_checker
-echo '/blocks/course_checker/' >> .git/info/exclude
 ```
 
 Then complete upgrade over CLI:

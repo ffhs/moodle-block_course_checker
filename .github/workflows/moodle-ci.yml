@@ -10,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:9.6
+        image: postgres:10
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -18,7 +18,7 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
       mariadb:
-        image: mariadb:10
+        image: mariadb:10.5
         env:
           MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
@@ -108,6 +108,7 @@ jobs:
         run: moodle-plugin-ci behat --profile chrome
 
       - name: Coveralls upload
+        continue-on-error: true # This step will show errors but will not fail
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         if: ${{ matrix.php == '7.4' && matrix.moodle-branch == 'MOODLE_311_STABLE' && matrix.database == 'mariadb'}}
