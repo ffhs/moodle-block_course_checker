@@ -26,8 +26,6 @@ namespace block_course_checker\admin;
 
 use block_course_checker\checker_helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 class admin_setting_pickmodules extends \admin_setting_configmulticheckbox {
     /** @var array Array of modules */
     private $modules;

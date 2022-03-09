@@ -24,8 +24,6 @@ namespace block_course_checker\model;
 
 use coding_exception;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This is an interface made to run a single check.
  */

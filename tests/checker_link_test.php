@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_course_checker;
 
 use block_course_checker\checkers\checker_links;
 use block_course_checker\model\check_result_interface;
@@ -31,14 +31,14 @@ use block_course_checker\model\mod_type_interface;
 /**
  * Class block_course_checker_links_testcase
  */
-class block_course_checker_links_testcase extends \advanced_testcase implements mod_type_interface {
+class checker_link_test extends \advanced_testcase implements mod_type_interface {
     /** @var \stdClass $user */
     protected $user;
-    /** @var block_course_checker\checkers\checker_links\checker */
+    /** @var \block_course_checker\checkers\checker_links\checker */
     protected $linkchecker;
-    /** @var testing_data_generator */
+    /** @var \testing_data_generator */
     protected $generator;
-    /** @var stdClass */
+    /** @var \stdClass */
     protected $course;
 
     /**
@@ -70,8 +70,8 @@ class block_course_checker_links_testcase extends \advanced_testcase implements 
     /**
      * @param $urlactivitycheckurls
      * @param bool $assert
-     * @throws coding_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function assert_links_in_url_activity($urlactivitycheckurls, $assert = true) {
         $this->init();
@@ -112,8 +112,8 @@ class block_course_checker_links_testcase extends \advanced_testcase implements 
      * @param null $course
      * @param array $record
      * @param array $options
-     * @return stdClass
-     * @throws coding_exception
+     * @return \stdClass
+     * @throws \coding_exception
      */
     protected function create_new_url_activity($course = null, $record = [], $options = []) {
         if ($course === null) {
@@ -124,15 +124,15 @@ class block_course_checker_links_testcase extends \advanced_testcase implements 
         if (!isset($options['visible'])) {
             $options['visible'] = 1;
         }
-        /** @var mod_assign_generator $plugingenerator */
+        /** @var \mod_assign_generator $plugingenerator */
         $plugingenerator = $this->generator->get_plugin_generator('mod_' . self::MOD_TYPE_URL);
         return $plugingenerator->create_instance($record);
     }
 
     /**
      * @param $assertion
-     * @throws coding_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     protected function run_linkchecker($assertion): void {
         /** @var check_result_interface $result */

@@ -24,8 +24,6 @@
 
 namespace block_course_checker\output;
 
-defined('MOODLE_INTERNAL') || die();
-
 class footer_renderer extends \plugin_renderer_base {
     public function renderer($context) {
         return $this->render_from_template("block_course_checker/footer", $context);

@@ -28,8 +28,6 @@ use block_course_checker\result_group;
 use block_course_checker\result_persister;
 use block_course_checker\task_helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 class block_course_checker extends block_base {
     /**
      * @inheritdoc

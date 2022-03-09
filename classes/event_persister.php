@@ -25,8 +25,6 @@
 
 namespace block_course_checker;
 
-defined('MOODLE_INTERNAL') || die();
-
 use block_course_checker\model\event_persister_interface;
 
 class event_persister implements event_persister_interface {

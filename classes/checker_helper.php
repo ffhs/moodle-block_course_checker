@@ -26,8 +26,6 @@ namespace block_course_checker;
 
 use block_course_checker\model\mod_type_interface;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class checker_helper
  *

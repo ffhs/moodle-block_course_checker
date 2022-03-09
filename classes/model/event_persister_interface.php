@@ -21,8 +21,6 @@
 
 namespace block_course_checker\model;
 
-defined('MOODLE_INTERNAL') || die();
-
 interface event_persister_interface {
 
     /**

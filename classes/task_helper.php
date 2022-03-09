@@ -28,8 +28,6 @@ use core\message\message;
 use core\task\manager;
 use core_user;
 
-defined('MOODLE_INTERNAL') || die();
-
 class task_helper {
 
     /**

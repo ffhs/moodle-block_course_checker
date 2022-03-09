@@ -113,7 +113,9 @@ function user_has_given_role_in_course($userid, $courseid, $roles) {
  * @return bool
  */
 function is_valid_domain_name($domainname) {
-    return (1 === preg_match("/^((http[s]?:\/\/)?[a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*(?::\d+)?(\/[a-z\d.]*)*$/i", $domainname) // Valid chars.
+    return (1 ===
+        preg_match("/^((http[s]?:\/\/)?[a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*(?::\d+)?(\/[a-z\d.]*)*$/i", $domainname)
+        // Valid chars.
             && 1 === preg_match("/^.{1,253}$/", $domainname) // Overall length check.
             && 1 === preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)); // Length of each label.
 }

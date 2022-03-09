@@ -26,8 +26,6 @@ namespace block_course_checker\output;
 
 use block_course_checker\model\checker_config_trait;
 
-defined('MOODLE_INTERNAL') || die();
-
 class block_renderer extends \plugin_renderer_base {
     use checker_config_trait;
 
