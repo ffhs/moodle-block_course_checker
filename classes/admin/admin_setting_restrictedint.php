@@ -25,8 +25,6 @@
 
 namespace block_course_checker\admin;
 
-defined('MOODLE_INTERNAL') || die();
-
 class admin_setting_restrictedint extends \admin_setting_configtext {
     /**
      * @var int|null

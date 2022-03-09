@@ -27,8 +27,6 @@ namespace block_course_checker\model;
 
 use dml_exception;
 
-defined('MOODLE_INTERNAL') || die();
-
 trait checker_config_trait {
     /**
      * Read a setting based on plugin name.

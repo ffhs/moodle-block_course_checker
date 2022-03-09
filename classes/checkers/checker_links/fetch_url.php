@@ -29,8 +29,6 @@ use block_course_checker\model\checker_config_trait;
 use curl;
 use Exception;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class fetch_url
  *
@@ -115,8 +113,8 @@ class fetch_url {
                 "CURLOPT_HTTPHEADER" => $httpheader,
                 "CURLOPT_CONNECTTIMEOUT" => $this->config->connecttimeout,
                 "CURLOPT_TIMEOUT" => $this->config->timeout,
-                "CURLOPT_FOLLOWLOCATION" => 1,  // Follows redirects.
-                "CURLOPT_MAXREDIRS" => 3,   // Maximal number of redirects 301,302
+                "CURLOPT_FOLLOWLOCATION" => 1,  // Follow redirects.
+                "CURLOPT_MAXREDIRS" => 3,   // Maximal number of redirects 301, 302.
                 "CURLOPT_USERAGENT" => $this->config->useragent, // Default Moodle USERAGENT causing problems.
                 "CURLOPT_SSL_VERIFYHOST" => 0,
                 "CURLOPT_SSL_VERIFYPEER" => 0,

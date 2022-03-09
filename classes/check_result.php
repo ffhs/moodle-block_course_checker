@@ -24,8 +24,6 @@
 
 namespace block_course_checker;
 
-defined('MOODLE_INTERNAL') || die();
-
 use block_course_checker\model\check_result_interface;
 
 class check_result implements check_result_interface {

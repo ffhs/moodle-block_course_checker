@@ -29,8 +29,6 @@ use context_course;
 use dml_exception;
 use stdClass;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class config
  *

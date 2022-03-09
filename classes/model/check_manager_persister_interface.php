@@ -21,8 +21,6 @@
 
 namespace block_course_checker\model;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Goal is to persist/load tests results for all checks in a specific course.
  * TODO Improve this.

@@ -31,8 +31,6 @@ namespace block_course_checker;
 
 use core\task\adhoc_task;
 
-defined('MOODLE_INTERNAL') || die();
-
 class run_checker_task extends adhoc_task {
 
     /**

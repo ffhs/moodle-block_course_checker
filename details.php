@@ -43,7 +43,7 @@ $PAGE->set_heading(get_string("resultpageheader", "block_course_checker", $cours
 $PAGE->set_pagelayout('report');
 
 if (!has_capability('block/course_checker:view_report', $context)) {
-    print_error('resultpermissiondenied', 'block_course_checker');
+    throw new moodle_exception('resultpermissiondenied', 'block_course_checker');
 }
 
 // Load previous check results.

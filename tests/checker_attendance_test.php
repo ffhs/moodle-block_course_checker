@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_course_checker;
 
 use block_course_checker\checkers\checker_attendance;
 use block_course_checker\model\check_result_interface;
@@ -30,14 +30,14 @@ use block_course_checker\model\check_result_interface;
 /**
  * Class block_course_checker_attendance_testcase
  */
-class block_course_checker_attendance_testcase extends \advanced_testcase {
+class checker_attendance_test extends \advanced_testcase {
     /** @var \stdClass $user */
     protected $user;
-    /** @var block_course_checker\checkers\checker_attendance\checker */
+    /** @var \block_course_checker\checkers\checker_attendance\checker */
     protected $attendancechecker;
-    /** @var testing_data_generator */
+    /** @var \testing_data_generator */
     protected $generator;
-    /** @var stdClass */
+    /** @var \stdClass */
     protected $course;
     /**
      *
@@ -53,7 +53,7 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
         $this->course = $this->generator->create_course();
     }
     public function test_if_mod_attendance_is_installed() {
-        $details = core_plugin_manager::instance()->get_plugin_info('mod_attendance');
+        $details = \core_plugin_manager::instance()->get_plugin_info('mod_attendance');
         if ($details) {
             $this->assertEquals('attendance', $details->name);
         } else {
@@ -133,15 +133,15 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
     /**
      * @param $course
      * @param array $options
-     * @return stdClass
-     * @throws coding_exception
+     * @return \stdClass
+     * @throws \coding_exception
      */
     protected function create_new_attendance_activity($course, $options = null) {
         $record['course'] = $course->id;
         if (!isset($options['visible'])) {
             $options['visible'] = 1;
         }
-        /** @var mod_attendance_generator $plugingenerator */
+        /** @var \mod_attendance_generator $plugingenerator */
         $plugingenerator = $this->generator->get_plugin_generator('mod_attendance');
         if (!$plugingenerator) {
             $this->markTestSkipped('Skip...');
@@ -150,11 +150,11 @@ class block_course_checker_attendance_testcase extends \advanced_testcase {
     }
     /**
      * @param $attendance
-     * @throws dml_exception
+     * @throws \dml_exception
      */
     protected function create_new_attendance_session($attendance) {
         global $DB;
-        $session = new stdClass();
+        $session = new \stdClass();
         $session->attendanceid = $attendance->id;
         $session->description = '-';
         $DB->insert_record('attendance_sessions', $session);
