@@ -37,7 +37,7 @@ $comment = required_param('human_comment', PARAM_TEXT);
 
 if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
     if ($token != \core\session\manager::get_login_token()) {
-        print_error("invalidtoken", 'block_course_checker');
+        throw new moodle_exception('invalidtoken', 'block_course_checker');
     }
 }
 

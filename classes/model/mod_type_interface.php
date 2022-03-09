@@ -24,8 +24,6 @@
 
 namespace block_course_checker\model;
 
-defined('MOODLE_INTERNAL') || die();
-
 interface mod_type_interface {
     // Module name for assignment activity in Moodle.
     const MOD_TYPE_ASSIGN = 'assign';

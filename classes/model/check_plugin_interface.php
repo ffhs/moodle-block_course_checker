@@ -19,13 +19,13 @@
  * @copyright  2019 Liip SA <elearning@liip.ch>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_course_checker\model;
 
-defined('MOODLE_INTERNAL') || die();
 /**
  * This is an interface made to run a single check.
  */
-interface check_plugin_interface{
+interface check_plugin_interface {
 
     /**
      * @param \stdClass $course The course itself.

@@ -25,8 +25,6 @@
 
 namespace block_course_checker\checkers\checker_links;
 
-defined('MOODLE_INTERNAL') || die();
-
 use block_course_checker\check_result;
 use block_course_checker\resolution_link_helper;
 use block_course_checker\model\check_plugin_interface;

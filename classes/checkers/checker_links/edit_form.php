@@ -24,8 +24,6 @@
 
 use block_course_checker\model\check_edit_form_interface;
 
-defined('MOODLE_INTERNAL') || die();
-
 class checker_links_edit_form implements check_edit_form_interface {
 
     /**

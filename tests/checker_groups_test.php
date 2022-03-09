@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_course_checker;
 
 use block_course_checker\checkers\checker_groups;
 use block_course_checker\model\check_result_interface;
@@ -30,14 +30,14 @@ use block_course_checker\model\check_result_interface;
 /**
  * Class block_course_checker_groups_testcase
  */
-class block_course_checker_groups_testcase extends \advanced_testcase {
+class checker_groups_test extends \advanced_testcase {
     /** @var \stdClass $user */
     protected $user;
-    /** @var block_course_checker\checkers\checker_groups\checker */
+    /** @var \block_course_checker\checkers\checker_groups\checker */
     protected $groupschecker;
-    /** @var testing_data_generator */
+    /** @var \testing_data_generator */
     protected $generator;
-    /** @var stdClass */
+    /** @var \stdClass */
     protected $course;
     /**
      *
@@ -60,8 +60,7 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
         $this->create_new_assignment_activity(
                 $this->course,
                 [
-                        'teamsubmission' => 0,
-                        'teamsubmissiongroupingid' => 0,
+                        'teamsubmission' => 0
                 ]
         );
         $this->run_groupschecker(
@@ -77,8 +76,7 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
         $this->create_new_assignment_activity(
                 $this->course,
                 [
-                        'teamsubmission' => 1,
-                        'teamsubmissiongroupingid' => 0,
+                        'teamsubmission' => 1
                 ]
         );
         $this->run_groupschecker(
@@ -146,8 +144,7 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
      * @param null $course
      * @param array $record
      * @param array $options
-     * @return stdClass
-     * @throws coding_exception
+     * @return \stdClass
      */
     protected function create_new_assignment_activity($course = null, $record = [], $options = []) {
         if ($course === null) {
@@ -158,7 +155,7 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
         if (!isset($options['visible'])) {
             $options['visible'] = 1;
         }
-        /** @var mod_assign_generator $plugingenerator */
+        /** @var \mod_assign_generator $plugingenerator */
         $plugingenerator = $this->generator->get_plugin_generator('mod_assign');
         return $plugingenerator->create_instance($record);
     }
@@ -174,7 +171,7 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
      * @param $grouping
      * @param int $count
      * @return array
-     * @throws coding_exception
+     * @throws \coding_exception
      */
     protected function create_new_groups_in_grouping($grouping, int $count = 1) {
         $record = [];
@@ -192,9 +189,9 @@ class block_course_checker_groups_testcase extends \advanced_testcase {
 
     /**
      * @param $assertion
-     * @throws coding_exception
-     * @throws dml_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     protected function run_groupschecker($assertion): void {
         /** @var check_result_interface $result */

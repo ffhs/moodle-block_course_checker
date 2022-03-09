@@ -25,8 +25,6 @@ namespace block_course_checker;
 use block_course_checker\model\check_result_interface;
 use core\session\manager;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class global_plugin_renderer
  *

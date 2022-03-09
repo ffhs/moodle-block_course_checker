@@ -24,8 +24,6 @@
 
 namespace block_course_checker\checkers\checker_userdata;
 
-defined('MOODLE_INTERNAL') || die();
-
 use block_course_checker\check_result;
 use block_course_checker\model\check_plugin_interface;
 use block_course_checker\model\check_result_interface;

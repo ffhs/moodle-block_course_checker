@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_course_checker;
 
 use block_course_checker\checkers\checker_data;
 use block_course_checker\model\check_result_interface;
@@ -31,14 +31,14 @@ use block_course_checker\model\mod_type_interface;
 /**
  * Class block_course_checker_data_testcase
  */
-class block_course_checker_data_testcase extends \advanced_testcase implements mod_type_interface {
+class checker_data_test extends \advanced_testcase implements mod_type_interface {
     /** @var \stdClass $user */
     protected $user;
-    /** @var block_course_checker\checkers\checker_data\checker */
+    /** @var \block_course_checker\checkers\checker_data\checker */
     protected $checker;
-    /** @var testing_data_generator */
+    /** @var \testing_data_generator */
     protected $datagenerator;
-    /** @var stdClass $course */
+    /** @var \stdClass $course */
     protected $course;
     /** @var $instance */
     protected $instance;
@@ -65,7 +65,7 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
     public function test_field_in_data_activity() {
         $this->init();
 
-        $record = new StdClass();
+        $record = new \stdClass();
         $record->name = 'field-1';
         $record->type = 'text';
 
@@ -83,8 +83,8 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
 
     /**
      * @param bool $assert
-     * @throws coding_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function assert_fields_in_data_activity($assert = true) {
         $this->run_checker(
@@ -99,8 +99,8 @@ class block_course_checker_data_testcase extends \advanced_testcase implements m
 
     /**
      * @param $assertion
-     * @throws coding_exception
-     * @throws moodle_exception
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     protected function run_checker($assertion): void {
         /** @var check_result_interface $result */

@@ -27,8 +27,6 @@ namespace block_course_checker\admin;
 use admin_setting_configtextarea;
 use block_course_checker\checkers\checker_links\config;
 
-defined('MOODLE_INTERNAL') || die();
-
 class admin_setting_domainwhitelist extends admin_setting_configtextarea {
 
     /**

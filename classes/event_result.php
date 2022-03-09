@@ -28,8 +28,6 @@ use block_course_checker\model\event_result_interface;
 use pix_icon;
 use renderer_base;
 
-defined('MOODLE_INTERNAL') || die();
-
 class event_result implements event_result_interface {
     /**
      * Record from the database.
