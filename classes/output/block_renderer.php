@@ -63,7 +63,7 @@ class block_renderer extends \plugin_renderer_base {
                 "action" => new \moodle_url('/blocks/course_checker/update_human_date.php', ['courseid' => $courseid]),
                 "humanreasonpresent" => $humanreasonpresent,
                 "humanplaceholder" => $humanplaceholder,
-                "manualreason" => trim($manualreason),
+                "manualreason" => trim($manualreason ?? ''),
         ];
 
         if (empty($CFG->disablelogintoken) || false == (bool) $CFG->disablelogintoken) {
