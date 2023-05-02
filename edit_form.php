@@ -34,21 +34,15 @@ class block_course_checker_edit_form extends block_edit_form {
     protected $checkereditforms = [];
 
     /**
-     * block_course_checker_edit_form constructor.
+     * Loads the edit forms of checkers.
      *
-     * @param $actionurl
-     * @param $block
-     * @param $page
-     */
-    public function __construct($actionurl, $block, $page) {
-        $this->checkereditforms = $this->get_checker_edit_forms();
-        parent::__construct($actionurl, $block, $page);
-    }
-
-    /**
      * @return array
      */
-    protected function get_checker_edit_forms() {
+    protected function load_checker_edit_forms() {
+        if (count($this->checkereditforms)) {
+            return $this->checkereditforms;
+        }
+
         $checkereditforms = [];
         // Get checker plugins.
         $manager = plugin_manager::instance();
@@ -75,7 +69,9 @@ class block_course_checker_edit_form extends block_edit_form {
             }
             $checkereditforms[] = $checkereditform;
         }
-        return $checkereditforms;
+
+        $this->checkereditforms = $checkereditforms;
+        return $this->checkereditforms;
     }
 
     /**
@@ -84,6 +80,7 @@ class block_course_checker_edit_form extends block_edit_form {
      * @return array
      */
     public function validation($data, $files) {
+        $this->load_checker_edit_forms();
         $errors = parent::validation($data, $files);
         foreach ($this->checkereditforms as $checkereditforms) {
             $errors = $checkereditforms->validation($data, $files, $errors);
@@ -96,6 +93,7 @@ class block_course_checker_edit_form extends block_edit_form {
      * @return mixed|void
      */
     protected function specific_definition($mform) {
+        $this->load_checker_edit_forms();
         foreach ($this->checkereditforms as $checkereditforms) {
             // Load the checkers specific definition.
             $mform->addElement('header', $checkereditforms->checkername . '_header', $checkereditforms->truecheckername);
