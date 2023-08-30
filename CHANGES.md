@@ -4,20 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.00-r1] (Build: 2023081400) - 2023-08-14
+
+### Added
+
+- Release version for Moodle 4.00
+
+### Fixed
+
+- Fix `edit_form.php` ([issue #57](https://github.com/ffhs/moodle-block_course_checker/issues/57))
+
 ## [v3.11-r1] (Build: 2021052600) - 2021-05-26
 
-## Added
+### Added
 
 - GH Actions support
 - Release version for Moodle 3.11
 
-## Removed
+### Removed
 
 - TravisCI support
 
 ## [v3.10-r1] (Build: 2020111600) - 2020-11-16
 
-## Added
+### Added
 
 - Release version for Moodle 3.10
 
