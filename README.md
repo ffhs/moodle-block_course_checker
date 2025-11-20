@@ -1,3 +1,9 @@
+#### **NOTICE: This plugins (block\_course\_checker) is deprecated and new plugins with subplugin support were created.**
+#### **Please check [local\_course\_checker](https://moodle.org/plugins/local_course_checker) and his companion plugin [block\_course\_checker\_info](https://moodle.org/plugins/block_course_checker_info) .**
+#### **Leave this plugin installed so that** **[local\_course\_checker](https://moodle.org/plugins/local_course_checker)** **can copy the settings. Then you are safe to uninstall.**
+
+---
+
 # Moodle Course Checker ![Moodle Plugin CI](https://github.com/ffhs/moodle-block_course_checker/workflows/Moodle%20Plugin%20CI/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/ffhs/moodle-block_course_checker/badge.svg?branch=master)](https://coveralls.io/github/ffhs/moodle-block_course_checker?branch=master)
 
 ## A Moodle course checker plugin that improves the quality and eliminate human routine tasks in online courses
